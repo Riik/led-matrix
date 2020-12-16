@@ -2,4 +2,5 @@
   (lib (name MIC2981)(type Legacy)(uri ${KIPRJMOD}/Libraries/MIC2981.lib)(options "")(descr ""))
   (lib (name LED_MAT)(type Legacy)(uri ${KIPRJMOD}/Libraries/akn_misc.lib)(options "")(descr ""))
   (lib (name myConnectors)(type Legacy)(uri ${KIPRJMOD}/Libraries/myConnectors.lib)(options "")(descr ""))
+  (lib (name TPIC6C595N)(type Legacy)(uri ${KIPRJMOD}/Libraries/TPIC6C595N.lib)(options "")(descr ""))
 )
