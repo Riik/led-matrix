@@ -110,12 +110,12 @@ Wire Wire Line
 Wire Wire Line
 	5050 1800 4850 1800
 $Comp
-L LED_MAT:DISP_LED_MAT_8x8_COM_ANODE D?
+L LED_MAT:DISP_LED_MAT_8x8_COM_ANODE D1
 U 1 1 5FD8261F
 P 5050 2600
-F 0 "D?" H 5725 3687 60  0000 C CNN
+F 0 "D1" H 5725 3687 60  0000 C CNN
 F 1 "DISP_LED_MAT_8x8_COM_ANODE" H 5725 3581 60  0000 C CNN
-F 2 "" H 5150 2550 60  0000 C CNN
+F 2 "akn_misc:LED_8x8_3MM_32x32MM" H 5150 2550 60  0001 C CNN
 F 3 "" H 5150 2550 60  0000 C CNN
 	1    5050 2600
 	1    0    0    -1  
@@ -155,12 +155,12 @@ Wire Wire Line
 Wire Wire Line
 	4200 2500 4350 2500
 $Comp
-L MIC2981:MIC2981_82YN U?
+L MIC2981:MIC2981_82YN U2
 U 1 1 5FD80D89
 P 2600 1800
-F 0 "U?" H 3400 2187 60  0000 C CNN
+F 0 "U2" H 3400 2187 60  0000 C CNN
 F 1 "MIC2981_82YN" H 3400 2081 60  0000 C CNN
-F 2 "PDIP18_N_MCH" H 3400 2040 60  0001 C CNN
+F 2 "footprints:DIL18" H 3400 2040 60  0001 C CNN
 F 3 "" H 2600 1800 60  0000 C CNN
 	1    2600 1800
 	1    0    0    -1  
@@ -236,12 +236,12 @@ VCC
 Text Label 2600 2600 2    50   ~ 0
 VCC
 $Comp
-L TPIC6C595N:TPIC6C595N U?
+L TPIC6C595N:TPIC6C595N U3
 U 1 1 5FE09D0E
 P 9250 2150
-F 0 "U?" H 9250 3088 60  0000 C CNN
+F 0 "U3" H 9250 3088 60  0000 C CNN
 F 1 "TPIC6C595N" H 9250 2982 60  0000 C CNN
-F 2 "N0016A" H 9250 2090 60  0001 C CNN
+F 2 "footprints:TPIC6C595N" H 9250 2090 60  0001 C CNN
 F 3 "" H 9250 2150 60  0000 C CNN
 	1    9250 2150
 	-1   0    0    -1  
@@ -256,100 +256,96 @@ Text Label 1450 2700 3    50   ~ 0
 GND
 Text Label 4200 2600 0    50   ~ 0
 GND
-Text Label 8250 2750 2    50   ~ 0
-GND
 Text Label 10250 1750 0    50   ~ 0
 GND
 $Comp
-L Device:R R?
+L Device:R R3
 U 1 1 5FE118EA
 P 7300 1750
-F 0 "R?" V 7200 1750 50  0000 C CNN
+F 0 "R3" V 7200 1750 50  0000 C CNN
 F 1 "100" V 7400 1750 50  0000 C CNN
-F 2 "" V 7230 1750 50  0001 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric_Pad0.98x0.95mm_HandSolder" V 7230 1750 50  0001 C CNN
 F 3 "~" H 7300 1750 50  0001 C CNN
 	1    7300 1750
 	0    1    1    0   
 $EndComp
 $Comp
-L Device:R R?
+L Device:R R4
 U 1 1 5FE13757
 P 7300 2050
-F 0 "R?" V 7200 2050 50  0000 C CNN
+F 0 "R4" V 7200 2050 50  0000 C CNN
 F 1 "100" V 7400 2050 50  0000 C CNN
-F 2 "" V 7230 2050 50  0001 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric_Pad0.98x0.95mm_HandSolder" V 7230 2050 50  0001 C CNN
 F 3 "~" H 7300 2050 50  0001 C CNN
 	1    7300 2050
 	0    1    1    0   
 $EndComp
 $Comp
-L Device:R R?
+L Device:R R5
 U 1 1 5FE13C09
 P 7300 2350
-F 0 "R?" V 7200 2350 50  0000 C CNN
+F 0 "R5" V 7200 2350 50  0000 C CNN
 F 1 "100" V 7400 2350 50  0000 C CNN
-F 2 "" V 7230 2350 50  0001 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric_Pad0.98x0.95mm_HandSolder" V 7230 2350 50  0001 C CNN
 F 3 "~" H 7300 2350 50  0001 C CNN
 	1    7300 2350
 	0    1    1    0   
 $EndComp
 $Comp
-L Device:R R?
+L Device:R R6
 U 1 1 5FE14227
 P 7300 2650
-F 0 "R?" V 7200 2650 50  0000 C CNN
+F 0 "R6" V 7200 2650 50  0000 C CNN
 F 1 "100" V 7400 2650 50  0000 C CNN
-F 2 "" V 7230 2650 50  0001 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric_Pad0.98x0.95mm_HandSolder" V 7230 2650 50  0001 C CNN
 F 3 "~" H 7300 2650 50  0001 C CNN
 	1    7300 2650
 	0    1    1    0   
 $EndComp
 $Comp
-L Device:R R?
+L Device:R R7
 U 1 1 5FE146EF
 P 7300 2950
-F 0 "R?" V 7200 2950 50  0000 C CNN
+F 0 "R7" V 7200 2950 50  0000 C CNN
 F 1 "100" V 7400 2950 50  0000 C CNN
-F 2 "" V 7230 2950 50  0001 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric_Pad0.98x0.95mm_HandSolder" V 7230 2950 50  0001 C CNN
 F 3 "~" H 7300 2950 50  0001 C CNN
 	1    7300 2950
 	0    1    1    0   
 $EndComp
 $Comp
-L Device:R R?
+L Device:R R2
 U 1 1 5FE14B19
 P 7300 1450
-F 0 "R?" V 7200 1450 50  0000 C CNN
+F 0 "R2" V 7200 1450 50  0000 C CNN
 F 1 "100" V 7400 1450 50  0000 C CNN
-F 2 "" V 7230 1450 50  0001 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric_Pad0.98x0.95mm_HandSolder" V 7230 1450 50  0001 C CNN
 F 3 "~" H 7300 1450 50  0001 C CNN
 	1    7300 1450
 	0    1    1    0   
 $EndComp
 $Comp
-L Device:R R?
+L Device:R R1
 U 1 1 5FE14FC7
 P 7300 1150
-F 0 "R?" V 7200 1150 50  0000 C CNN
+F 0 "R1" V 7200 1150 50  0000 C CNN
 F 1 "100" V 7400 1150 50  0000 C CNN
-F 2 "" V 7230 1150 50  0001 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric_Pad0.98x0.95mm_HandSolder" V 7230 1150 50  0001 C CNN
 F 3 "~" H 7300 1150 50  0001 C CNN
 	1    7300 1150
 	0    1    1    0   
 $EndComp
-Text Label 1450 4050 0    50   ~ 0
+Text Label 1450 3600 0    50   ~ 0
 GND
 Text Label 1050 1800 2    50   ~ 0
 VCC
-Text Label 1450 3900 0    50   ~ 0
-VCC
 $Comp
-L 74xx:74HCT4051 U?
+L 74xx:74HCT4051 U1
 U 1 1 5FD7E6DB
 P 1350 2100
-F 0 "U?" H 1500 2600 50  0000 C CNN
+F 0 "U1" H 1500 2600 50  0000 C CNN
 F 1 "74HCT4051" H 1300 1150 50  0000 C CNN
-F 2 "" H 1350 1700 50  0001 C CNN
+F 2 "footprints:DIP254P762X432-16P" H 1350 1700 50  0001 C CNN
 F 3 "http://www.ti.com/lit/ds/symlink/cd74hct4051.pdf" H 1350 1700 50  0001 C CNN
 	1    1350 2100
 	1    0    0    -1  
@@ -415,12 +411,12 @@ c5
 Text Label 7000 2950 0    50   ~ 0
 c6
 $Comp
-L Device:R R?
+L Device:R R8
 U 1 1 5FE96CA4
 P 7300 3250
-F 0 "R?" V 7200 3250 50  0000 C CNN
+F 0 "R8" V 7200 3250 50  0000 C CNN
 F 1 "100" V 7400 3250 50  0000 C CNN
-F 2 "" V 7230 3250 50  0001 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric_Pad0.98x0.95mm_HandSolder" V 7230 3250 50  0001 C CNN
 F 3 "~" H 7300 3250 50  0001 C CNN
 	1    7300 3250
 	0    1    1    0   
@@ -563,55 +559,88 @@ Wire Bus Line
 	7700 3350 8000 3350
 Text Label 1050 2400 2    50   ~ 0
 GND
-Text Label 1450 4200 0    50   ~ 0
+Text Label 1450 3750 0    50   ~ 0
 s0
 Text Label 1050 2000 2    50   ~ 0
 s0
-Text Label 1450 4350 0    50   ~ 0
+Text Label 1450 3900 0    50   ~ 0
 s1
-Text Label 1450 4500 0    50   ~ 0
+Text Label 1450 4050 0    50   ~ 0
 s2
 Text Label 1050 2100 2    50   ~ 0
 s1
 Text Label 1050 2200 2    50   ~ 0
 s2
-Text Label 1450 4950 0    50   ~ 0
+Text Label 1450 4500 0    50   ~ 0
 r_clk
 Text Label 10250 1950 0    50   ~ 0
 r_clk
-Text Label 1450 4650 0    50   ~ 0
+Text Label 1450 4200 0    50   ~ 0
 serial_in
-Text Label 10250 2550 0    50   ~ 0
-serial_in
-Wire Bus Line
-	8000 1650 8000 3350
-Wire Bus Line
-	7700 1250 7700 3350
-Wire Bus Line
-	6900 1250 6900 3350
-Wire Bus Line
-	6650 1900 6650 3350
-Wire Bus Line
-	2050 1900 2050 2600
-Wire Bus Line
-	2350 1900 2350 2600
-Wire Bus Line
-	4450 1900 4450 2600
-Wire Bus Line
-	4750 1900 4750 2600
-$Comp
-L myConnectors:INPUT_CONN J?
-U 1 1 5FDA3D76
-P 1450 3750
-F 0 "J?" H 1133 3865 50  0000 C CNN
-F 1 "INPUT_CONN" H 1133 3774 50  0000 C CNN
-F 2 "" H 1450 3750 50  0001 C CNN
-F 3 "" H 1450 3750 50  0001 C CNN
-	1    1450 3750
-	1    0    0    -1  
-$EndComp
-Text Label 1450 4800 0    50   ~ 0
+Text Label 1450 4350 0    50   ~ 0
 serial_clk
 Text Label 10250 2350 0    50   ~ 0
 serial_clk
+Text Label 8250 2550 2    50   ~ 0
+serial_out
+Text Label 1450 5800 0    50   ~ 0
+serial_out
+Text Label 1450 5050 0    50   ~ 0
+VCC
+Text Label 1450 5200 0    50   ~ 0
+GND
+Text Label 1450 5350 0    50   ~ 0
+s0
+Text Label 1450 5500 0    50   ~ 0
+s1
+Text Label 1450 5650 0    50   ~ 0
+s2
+Text Label 1450 5950 0    50   ~ 0
+serial_clk
+Text Label 1450 6100 0    50   ~ 0
+r_clk
+Text Label 10250 2550 0    50   ~ 0
+serial_in
+Text Label 8250 2750 2    50   ~ 0
+GND
+$Comp
+L myConnectors:INPUT_CONN J1
+U 1 1 5FE10ADF
+P 1450 3300
+F 0 "J1" H 1133 3415 50  0000 C CNN
+F 1 "INPUT_CONN" H 1133 3324 50  0000 C CNN
+F 2 "Connector_PinHeader_2.00mm:PinHeader_1x08_P2.00mm_Vertical" H 1450 3300 50  0001 C CNN
+F 3 "" H 1450 3300 50  0001 C CNN
+	1    1450 3300
+	1    0    0    -1  
+$EndComp
+$Comp
+L myConnectors:OUTPUT_CONN J2
+U 1 1 5FE11788
+P 1450 4900
+F 0 "J2" H 1133 5015 50  0000 C CNN
+F 1 "OUTPUT_CONN" H 1133 4924 50  0000 C CNN
+F 2 "Connector_PinHeader_2.00mm:PinHeader_1x08_P2.00mm_Vertical" H 1450 4900 50  0001 C CNN
+F 3 "" H 1450 4900 50  0001 C CNN
+	1    1450 4900
+	1    0    0    -1  
+$EndComp
+Text Label 1450 3450 0    50   ~ 0
+VCC
+Wire Bus Line
+	4750 1900 4750 2600
+Wire Bus Line
+	4450 1900 4450 2600
+Wire Bus Line
+	2350 1900 2350 2600
+Wire Bus Line
+	2050 1900 2050 2600
+Wire Bus Line
+	6900 1250 6900 3350
+Wire Bus Line
+	7700 1250 7700 3350
+Wire Bus Line
+	8000 1650 8000 3350
+Wire Bus Line
+	6650 1900 6650 3350
 $EndSCHEMATC
