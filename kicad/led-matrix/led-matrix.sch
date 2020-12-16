@@ -348,21 +348,10 @@ L 74xx:74HCT4051 U?
 U 1 1 5FD7E6DB
 P 1350 2100
 F 0 "U?" H 1500 2600 50  0000 C CNN
-F 1 "74HCT4051" H 1600 2850 50  0000 C CNN
+F 1 "74HCT4051" H 1300 1150 50  0000 C CNN
 F 2 "" H 1350 1700 50  0001 C CNN
 F 3 "http://www.ti.com/lit/ds/symlink/cd74hct4051.pdf" H 1350 1700 50  0001 C CNN
 	1    1350 2100
-	1    0    0    -1  
-$EndComp
-$Comp
-L myConnectors:INPUT_CONN J?
-U 1 1 5FDA3D76
-P 1450 3750
-F 0 "J?" H 1133 3865 50  0000 C CNN
-F 1 "INPUT_CONN" H 1133 3774 50  0000 C CNN
-F 2 "" H 1450 3750 50  0001 C CNN
-F 3 "" H 1450 3750 50  0001 C CNN
-	1    1450 3750
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
@@ -572,20 +561,57 @@ Entry Wire Line
 	8000 2350 8100 2250
 Wire Bus Line
 	7700 3350 8000 3350
-Wire Bus Line
-	4750 1900 4750 2600
-Wire Bus Line
-	4450 1900 4450 2600
-Wire Bus Line
-	2350 1900 2350 2600
-Wire Bus Line
-	2050 1900 2050 2600
-Wire Bus Line
-	6900 1250 6900 3350
-Wire Bus Line
-	7700 1250 7700 3350
+Text Label 1050 2400 2    50   ~ 0
+GND
+Text Label 1450 4200 0    50   ~ 0
+s0
+Text Label 1050 2000 2    50   ~ 0
+s0
+Text Label 1450 4350 0    50   ~ 0
+s1
+Text Label 1450 4500 0    50   ~ 0
+s2
+Text Label 1050 2100 2    50   ~ 0
+s1
+Text Label 1050 2200 2    50   ~ 0
+s2
+Text Label 1450 4950 0    50   ~ 0
+r_clk
+Text Label 10250 1950 0    50   ~ 0
+r_clk
+Text Label 1450 4650 0    50   ~ 0
+serial_in
+Text Label 10250 2550 0    50   ~ 0
+serial_in
 Wire Bus Line
 	8000 1650 8000 3350
 Wire Bus Line
+	7700 1250 7700 3350
+Wire Bus Line
+	6900 1250 6900 3350
+Wire Bus Line
 	6650 1900 6650 3350
+Wire Bus Line
+	2050 1900 2050 2600
+Wire Bus Line
+	2350 1900 2350 2600
+Wire Bus Line
+	4450 1900 4450 2600
+Wire Bus Line
+	4750 1900 4750 2600
+$Comp
+L myConnectors:INPUT_CONN J?
+U 1 1 5FDA3D76
+P 1450 3750
+F 0 "J?" H 1133 3865 50  0000 C CNN
+F 1 "INPUT_CONN" H 1133 3774 50  0000 C CNN
+F 2 "" H 1450 3750 50  0001 C CNN
+F 3 "" H 1450 3750 50  0001 C CNN
+	1    1450 3750
+	1    0    0    -1  
+$EndComp
+Text Label 1450 4800 0    50   ~ 0
+serial_clk
+Text Label 10250 2350 0    50   ~ 0
+serial_clk
 $EndSCHEMATC
