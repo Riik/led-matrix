@@ -231,7 +231,7 @@ Entry Wire Line
 	1950 2400 2050 2500
 Entry Wire Line
 	1950 2500 2050 2600
-Text Label 1350 1600 1    50   ~ 0
+Text Label 1200 1600 2    50   ~ 0
 VCC
 Text Label 2600 2600 2    50   ~ 0
 VCC
@@ -246,13 +246,11 @@ F 3 "" H 9250 2150 60  0000 C CNN
 	1    9250 2150
 	-1   0    0    -1  
 $EndComp
-Text Label 10250 1550 0    50   ~ 0
+Text Label 10450 1550 0    50   ~ 0
 VCC
-Text Label 10250 2150 0    50   ~ 0
+Text Label 10550 2150 0    50   ~ 0
 VCC
 Text Label 1350 2700 3    50   ~ 0
-GND
-Text Label 1450 2700 3    50   ~ 0
 GND
 Text Label 4200 2600 0    50   ~ 0
 GND
@@ -264,7 +262,7 @@ U 1 1 5FE118EA
 P 7300 1750
 F 0 "R3" V 7200 1750 50  0000 C CNN
 F 1 "100" V 7400 1750 50  0000 C CNN
-F 2 "Resistor_SMD:R_0603_1608Metric_Pad0.98x0.95mm_HandSolder" V 7230 1750 50  0001 C CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder" V 7230 1750 50  0001 C CNN
 F 3 "~" H 7300 1750 50  0001 C CNN
 	1    7300 1750
 	0    1    1    0   
@@ -275,7 +273,7 @@ U 1 1 5FE13757
 P 7300 2050
 F 0 "R4" V 7200 2050 50  0000 C CNN
 F 1 "100" V 7400 2050 50  0000 C CNN
-F 2 "Resistor_SMD:R_0603_1608Metric_Pad0.98x0.95mm_HandSolder" V 7230 2050 50  0001 C CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder" V 7230 2050 50  0001 C CNN
 F 3 "~" H 7300 2050 50  0001 C CNN
 	1    7300 2050
 	0    1    1    0   
@@ -286,7 +284,7 @@ U 1 1 5FE13C09
 P 7300 2350
 F 0 "R5" V 7200 2350 50  0000 C CNN
 F 1 "100" V 7400 2350 50  0000 C CNN
-F 2 "Resistor_SMD:R_0603_1608Metric_Pad0.98x0.95mm_HandSolder" V 7230 2350 50  0001 C CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder" V 7230 2350 50  0001 C CNN
 F 3 "~" H 7300 2350 50  0001 C CNN
 	1    7300 2350
 	0    1    1    0   
@@ -297,7 +295,7 @@ U 1 1 5FE14227
 P 7300 2650
 F 0 "R6" V 7200 2650 50  0000 C CNN
 F 1 "100" V 7400 2650 50  0000 C CNN
-F 2 "Resistor_SMD:R_0603_1608Metric_Pad0.98x0.95mm_HandSolder" V 7230 2650 50  0001 C CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder" V 7230 2650 50  0001 C CNN
 F 3 "~" H 7300 2650 50  0001 C CNN
 	1    7300 2650
 	0    1    1    0   
@@ -308,7 +306,7 @@ U 1 1 5FE146EF
 P 7300 2950
 F 0 "R7" V 7200 2950 50  0000 C CNN
 F 1 "100" V 7400 2950 50  0000 C CNN
-F 2 "Resistor_SMD:R_0603_1608Metric_Pad0.98x0.95mm_HandSolder" V 7230 2950 50  0001 C CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder" V 7230 2950 50  0001 C CNN
 F 3 "~" H 7300 2950 50  0001 C CNN
 	1    7300 2950
 	0    1    1    0   
@@ -319,7 +317,7 @@ U 1 1 5FE14B19
 P 7300 1450
 F 0 "R2" V 7200 1450 50  0000 C CNN
 F 1 "100" V 7400 1450 50  0000 C CNN
-F 2 "Resistor_SMD:R_0603_1608Metric_Pad0.98x0.95mm_HandSolder" V 7230 1450 50  0001 C CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder" V 7230 1450 50  0001 C CNN
 F 3 "~" H 7300 1450 50  0001 C CNN
 	1    7300 1450
 	0    1    1    0   
@@ -330,20 +328,18 @@ U 1 1 5FE14FC7
 P 7300 1150
 F 0 "R1" V 7200 1150 50  0000 C CNN
 F 1 "100" V 7400 1150 50  0000 C CNN
-F 2 "Resistor_SMD:R_0603_1608Metric_Pad0.98x0.95mm_HandSolder" V 7230 1150 50  0001 C CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder" V 7230 1150 50  0001 C CNN
 F 3 "~" H 7300 1150 50  0001 C CNN
 	1    7300 1150
 	0    1    1    0   
 $EndComp
 Text Label 1450 3600 0    50   ~ 0
 GND
-Text Label 1050 1800 2    50   ~ 0
-VCC
 $Comp
 L 74xx:74HCT4051 U1
 U 1 1 5FD7E6DB
 P 1350 2100
-F 0 "U1" H 1500 2600 50  0000 C CNN
+F 0 "U1" H 1550 2550 50  0000 C CNN
 F 1 "74HCT4051" H 1300 1150 50  0000 C CNN
 F 2 "Package_DIP:DIP-16_W7.62mm" H 1350 1700 50  0001 C CNN
 F 3 "http://www.ti.com/lit/ds/symlink/cd74hct4051.pdf" H 1350 1700 50  0001 C CNN
@@ -416,7 +412,7 @@ U 1 1 5FE96CA4
 P 7300 3250
 F 0 "R8" V 7200 3250 50  0000 C CNN
 F 1 "100" V 7400 3250 50  0000 C CNN
-F 2 "Resistor_SMD:R_0603_1608Metric_Pad0.98x0.95mm_HandSolder" V 7230 3250 50  0001 C CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder" V 7230 3250 50  0001 C CNN
 F 3 "~" H 7300 3250 50  0001 C CNN
 	1    7300 3250
 	0    1    1    0   
@@ -627,6 +623,66 @@ F 3 "" H 1450 4900 50  0001 C CNN
 $EndComp
 Text Label 1450 3450 0    50   ~ 0
 VCC
+$Comp
+L Device:R R9
+U 1 1 5FE2FB77
+P 10400 2150
+F 0 "R9" V 10300 2150 50  0000 C CNN
+F 1 "10k" V 10500 2150 50  0000 C CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder" V 10330 2150 50  0001 C CNN
+F 3 "~" H 10400 2150 50  0001 C CNN
+	1    10400 2150
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:C_Small C1
+U 1 1 5FE506E1
+P 1350 1500
+F 0 "C1" H 1500 1500 50  0000 L CNN
+F 1 "100 nF" H 1000 1550 50  0000 L CNN
+F 2 "Capacitor_SMD:C_1206_3216Metric_Pad1.33x1.80mm_HandSolder" H 1350 1500 50  0001 C CNN
+F 3 "~" H 1350 1500 50  0001 C CNN
+	1    1350 1500
+	1    0    0    -1  
+$EndComp
+Text Label 1050 1800 2    50   ~ 0
+VCC
+Wire Wire Line
+	1350 1600 1200 1600
+Connection ~ 1350 1600
+Text Label 1350 1400 2    50   ~ 0
+GND
+$Comp
+L Device:C_Small C2
+U 1 1 5FE5FD6A
+P 2600 2700
+F 0 "C2" H 2750 2700 50  0000 L CNN
+F 1 "100 nF" H 2650 2600 50  0000 L CNN
+F 2 "Capacitor_SMD:C_1206_3216Metric_Pad1.33x1.80mm_HandSolder" H 2600 2700 50  0001 C CNN
+F 3 "~" H 2600 2700 50  0001 C CNN
+	1    2600 2700
+	1    0    0    -1  
+$EndComp
+Text Label 2600 2800 3    50   ~ 0
+GND
+$Comp
+L Device:C_Small C3
+U 1 1 5FE60FA7
+P 10250 1450
+F 0 "C3" H 10400 1450 50  0000 L CNN
+F 1 "100 nF" H 10450 1550 50  0000 L CNN
+F 2 "Capacitor_SMD:C_1206_3216Metric_Pad1.33x1.80mm_HandSolder" H 10250 1450 50  0001 C CNN
+F 3 "~" H 10250 1450 50  0001 C CNN
+	1    10250 1450
+	1    0    0    -1  
+$EndComp
+Text Label 10250 1350 0    50   ~ 0
+GND
+Wire Wire Line
+	10250 1550 10450 1550
+Connection ~ 10250 1550
+Text Label 1450 2700 3    50   ~ 0
+GND
 Wire Bus Line
 	4750 1900 4750 2600
 Wire Bus Line
