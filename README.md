@@ -17,3 +17,12 @@ Suitable candidates:
 # Notes to selfs
   - If multiple rows are active, current is split / LEDS are in parallel with respect to the sinking column.
   - We probably need a resistor per sink / column 
+
+# On the subject of the LED matrix 3D model
+For this model, we use two programs: OpenSCAD and FreeCAD. OpenSCAD is used to program the model. To make the model readable for KiCad:
+1. Open FreeCAD
+2. Select View->Workbench->OpenSCAD
+3. Open the *.scad file (File->Open)
+4. In Combo View->Model->Labels & Attributes->2088BS select union
+5. Go to File->Export
+6. Export the model as a STEP with colors (*.step *.stp)
