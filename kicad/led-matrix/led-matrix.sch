@@ -605,7 +605,7 @@ U 1 1 5FE10ADF
 P 1450 3300
 F 0 "J1" H 1133 3415 50  0000 C CNN
 F 1 "INPUT_CONN" H 1133 3324 50  0000 C CNN
-F 2 "Connector_PinHeader_2.00mm:PinHeader_1x08_P2.00mm_Vertical" H 1450 3300 50  0001 C CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x08_P2.54mm_Horizontal" H 1450 3300 50  0001 C CNN
 F 3 "" H 1450 3300 50  0001 C CNN
 	1    1450 3300
 	1    0    0    -1  
@@ -616,7 +616,7 @@ U 1 1 5FE11788
 P 1450 4900
 F 0 "J2" H 1133 5015 50  0000 C CNN
 F 1 "OUTPUT_CONN" H 1133 4924 50  0000 C CNN
-F 2 "Connector_PinHeader_2.00mm:PinHeader_1x08_P2.00mm_Vertical" H 1450 4900 50  0001 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Horizontal" H 1450 4900 50  0001 C CNN
 F 3 "" H 1450 4900 50  0001 C CNN
 	1    1450 4900
 	1    0    0    -1  
