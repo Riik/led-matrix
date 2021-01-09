@@ -16,7 +16,7 @@ Suitable candidates:
 
 # Notes to selfs
   - If multiple rows are active, current is split / LEDS are in parallel with respect to the sinking column.
-  - We probably need a resistor per sink / column 
+  - We probably need a resistor per sink / column
 
 # On the subject of the LED matrix 3D model
 For this model, we use two programs: OpenSCAD and FreeCAD. OpenSCAD is used to program the model. To make the model readable for KiCad:
