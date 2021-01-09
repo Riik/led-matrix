@@ -26,3 +26,10 @@ For this model, we use two programs: OpenSCAD and FreeCAD. OpenSCAD is used to p
 4. In Combo View->Model->Labels & Attributes->2088BS select union
 5. Go to File->Export
 6. Export the model as a STEP with colors (*.step *.stp)
+
+# Selected components
+ - 100 Ohm 1206 [3216 Metric]: Vishay CRCW1206100RFKEA (https://nl.farnell.com/vishay/crcw1206100rfkea/res-100r-1-0-25w-1206-thick-film/dp/1469977,
+ - 10 kOhm 1206 [3216 Metric]: Vishay CRCW120610K0FKEA (https://nl.farnell.com/vishay/crcw120610k0fkea/res-10k-1-0-25w-1206-thick-film/dp/1469970RL,
+ - 100 nF (0.1 uF) 1206 [3216 Metric] capacitor: Vishay VJ1206Y104KXQCW1BC (https://nl.farnell.com/vishay/vj1206y104kxqcw1bc/cap-0-1-f-10v-10-x7r-1206/dp/2896644RL,
+ - Pin header male: https://nl.farnell.com/multicomp/mc34753/header-1-row-r-angle-8way/dp/1593431?ost=mc34753,
+ - Pin header female: https://nl.farnell.com/samtec/ssw-108-02-g-s-ra/receptacle-2-54mm-r-a-single-8way/dp/1668368,

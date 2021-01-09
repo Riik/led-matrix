@@ -116,7 +116,7 @@ P 5050 2600
 F 0 "D1" H 5725 3687 60  0000 C CNN
 F 1 "DISP_LED_MAT_8x8_COM_ANODE" H 5725 3581 60  0000 C CNN
 F 2 "led_matrix:LED_8x8_7.62MM_60.2x60.2MM" H 5150 2550 60  0001 C CNN
-F 3 "" H 5150 2550 60  0000 C CNN
+F 3 "https://www.lc-led.com/products/lc2088tw1c.html" H 5150 2550 60  0001 C CNN
 	1    5050 2600
 	1    0    0    -1  
 $EndComp
@@ -154,17 +154,6 @@ Wire Wire Line
 	4200 2400 4350 2400
 Wire Wire Line
 	4200 2500 4350 2500
-$Comp
-L MIC2981:MIC2981_82YN U2
-U 1 1 5FD80D89
-P 2600 1800
-F 0 "U2" H 3400 2187 60  0000 C CNN
-F 1 "MIC2981_82YN" H 3400 2081 60  0000 C CNN
-F 2 "Package_DIP:DIP-18_W7.62mm" H 3400 2040 60  0001 C CNN
-F 3 "" H 2600 1800 60  0000 C CNN
-	1    2600 1800
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	2600 1800 2450 1800
 Wire Wire Line
@@ -242,7 +231,7 @@ P 9250 2150
 F 0 "U3" H 9250 3088 60  0000 C CNN
 F 1 "TPIC6C595N" H 9250 2982 60  0000 C CNN
 F 2 "Package_DIP:DIP-16_W7.62mm" H 9250 2090 60  0001 C CNN
-F 3 "" H 9250 2150 60  0000 C CNN
+F 3 "https://www.ti.com/lit/ds/symlink/tpic6c595.pdf" H 9250 2150 60  0001 C CNN
 	1    9250 2150
 	-1   0    0    -1  
 $EndComp
@@ -263,7 +252,7 @@ P 7300 1750
 F 0 "R3" V 7200 1750 50  0000 C CNN
 F 1 "100" V 7400 1750 50  0000 C CNN
 F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder" V 7230 1750 50  0001 C CNN
-F 3 "~" H 7300 1750 50  0001 C CNN
+F 3 "https://www.vishay.com/docs/20035/dcrcwe3.pdf" H 7300 1750 50  0001 C CNN
 	1    7300 1750
 	0    1    1    0   
 $EndComp
@@ -274,7 +263,7 @@ P 7300 2050
 F 0 "R4" V 7200 2050 50  0000 C CNN
 F 1 "100" V 7400 2050 50  0000 C CNN
 F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder" V 7230 2050 50  0001 C CNN
-F 3 "~" H 7300 2050 50  0001 C CNN
+F 3 "https://www.vishay.com/docs/20035/dcrcwe3.pdf" H 7300 2050 50  0001 C CNN
 	1    7300 2050
 	0    1    1    0   
 $EndComp
@@ -285,7 +274,7 @@ P 7300 2350
 F 0 "R5" V 7200 2350 50  0000 C CNN
 F 1 "100" V 7400 2350 50  0000 C CNN
 F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder" V 7230 2350 50  0001 C CNN
-F 3 "~" H 7300 2350 50  0001 C CNN
+F 3 "https://www.vishay.com/docs/20035/dcrcwe3.pdf" H 7300 2350 50  0001 C CNN
 	1    7300 2350
 	0    1    1    0   
 $EndComp
@@ -307,7 +296,7 @@ P 7300 2950
 F 0 "R7" V 7200 2950 50  0000 C CNN
 F 1 "100" V 7400 2950 50  0000 C CNN
 F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder" V 7230 2950 50  0001 C CNN
-F 3 "~" H 7300 2950 50  0001 C CNN
+F 3 "https://www.vishay.com/docs/20035/dcrcwe3.pdf" H 7300 2950 50  0001 C CNN
 	1    7300 2950
 	0    1    1    0   
 $EndComp
@@ -318,7 +307,7 @@ P 7300 1450
 F 0 "R2" V 7200 1450 50  0000 C CNN
 F 1 "100" V 7400 1450 50  0000 C CNN
 F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder" V 7230 1450 50  0001 C CNN
-F 3 "~" H 7300 1450 50  0001 C CNN
+F 3 "https://www.vishay.com/docs/20035/dcrcwe3.pdf" H 7300 1450 50  0001 C CNN
 	1    7300 1450
 	0    1    1    0   
 $EndComp
@@ -329,7 +318,7 @@ P 7300 1150
 F 0 "R1" V 7200 1150 50  0000 C CNN
 F 1 "100" V 7400 1150 50  0000 C CNN
 F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder" V 7230 1150 50  0001 C CNN
-F 3 "~" H 7300 1150 50  0001 C CNN
+F 3 "https://www.vishay.com/docs/20035/dcrcwe3.pdf" H 7300 1150 50  0001 C CNN
 	1    7300 1150
 	0    1    1    0   
 $EndComp
@@ -413,7 +402,7 @@ P 7300 3250
 F 0 "R8" V 7200 3250 50  0000 C CNN
 F 1 "100" V 7400 3250 50  0000 C CNN
 F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder" V 7230 3250 50  0001 C CNN
-F 3 "~" H 7300 3250 50  0001 C CNN
+F 3 "https://www.vishay.com/docs/20035/dcrcwe3.pdf" H 7300 3250 50  0001 C CNN
 	1    7300 3250
 	0    1    1    0   
 $EndComp
@@ -606,7 +595,7 @@ P 1450 3300
 F 0 "J1" H 1133 3415 50  0000 C CNN
 F 1 "INPUT_CONN" H 1133 3324 50  0000 C CNN
 F 2 "Connector_PinSocket_2.54mm:PinSocket_1x08_P2.54mm_Horizontal" H 1450 3300 50  0001 C CNN
-F 3 "" H 1450 3300 50  0001 C CNN
+F 3 "suddendocs.samtec.com/productspecs/tsw-ssw.pdf" H 1450 3300 50  0001 C CNN
 	1    1450 3300
 	1    0    0    -1  
 $EndComp
@@ -617,7 +606,7 @@ P 1450 4900
 F 0 "J2" H 1133 5015 50  0000 C CNN
 F 1 "OUTPUT_CONN" H 1133 4924 50  0000 C CNN
 F 2 "Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Horizontal" H 1450 4900 50  0001 C CNN
-F 3 "" H 1450 4900 50  0001 C CNN
+F 3 "http://www.farnell.com/datasheets/3148567.pdf" H 1450 4900 50  0001 C CNN
 	1    1450 4900
 	1    0    0    -1  
 $EndComp
@@ -630,7 +619,7 @@ P 10400 2150
 F 0 "R9" V 10300 2150 50  0000 C CNN
 F 1 "10k" V 10500 2150 50  0000 C CNN
 F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder" V 10330 2150 50  0001 C CNN
-F 3 "~" H 10400 2150 50  0001 C CNN
+F 3 "https://www.vishay.com/docs/20035/dcrcwe3.pdf" H 10400 2150 50  0001 C CNN
 	1    10400 2150
 	0    1    1    0   
 $EndComp
@@ -641,7 +630,7 @@ P 1350 1500
 F 0 "C1" H 1500 1500 50  0000 L CNN
 F 1 "100 nF" H 1000 1550 50  0000 L CNN
 F 2 "Capacitor_SMD:C_1206_3216Metric_Pad1.33x1.80mm_HandSolder" H 1350 1500 50  0001 C CNN
-F 3 "~" H 1350 1500 50  0001 C CNN
+F 3 "https://www.vishay.com/docs/28548/vjw1bcbascomseries.pdf" H 1350 1500 50  0001 C CNN
 	1    1350 1500
 	1    0    0    -1  
 $EndComp
@@ -659,7 +648,7 @@ P 2600 2700
 F 0 "C2" H 2750 2700 50  0000 L CNN
 F 1 "100 nF" H 2650 2600 50  0000 L CNN
 F 2 "Capacitor_SMD:C_1206_3216Metric_Pad1.33x1.80mm_HandSolder" H 2600 2700 50  0001 C CNN
-F 3 "~" H 2600 2700 50  0001 C CNN
+F 3 "https://www.vishay.com/docs/28548/vjw1bcbascomseries.pdf" H 2600 2700 50  0001 C CNN
 	1    2600 2700
 	1    0    0    -1  
 $EndComp
@@ -672,7 +661,7 @@ P 10250 1450
 F 0 "C3" H 10400 1450 50  0000 L CNN
 F 1 "100 nF" H 10450 1550 50  0000 L CNN
 F 2 "Capacitor_SMD:C_1206_3216Metric_Pad1.33x1.80mm_HandSolder" H 10250 1450 50  0001 C CNN
-F 3 "~" H 10250 1450 50  0001 C CNN
+F 3 "https://www.vishay.com/docs/28548/vjw1bcbascomseries.pdf" H 10250 1450 50  0001 C CNN
 	1    10250 1450
 	1    0    0    -1  
 $EndComp
@@ -683,6 +672,17 @@ Wire Wire Line
 Connection ~ 10250 1550
 Text Label 1450 2700 3    50   ~ 0
 GND
+$Comp
+L MIC2981:MIC2981_82YN U2
+U 1 1 5FD80D89
+P 2600 1800
+F 0 "U2" H 3400 2187 60  0000 C CNN
+F 1 "MIC2981_82YN" H 3400 2081 60  0000 C CNN
+F 2 "Package_DIP:DIP-18_W7.62mm" H 3400 2040 60  0001 C CNN
+F 3 "http://ww1.microchip.com/downloads/en/devicedoc/mic2981.pdf" H 2600 1800 60  0001 C CNN
+	1    2600 1800
+	1    0    0    -1  
+$EndComp
 Wire Bus Line
 	4750 1900 4750 2600
 Wire Bus Line
