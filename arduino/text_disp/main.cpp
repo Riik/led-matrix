@@ -9,18 +9,6 @@
 SPISettings settingsA(16000, MSBFIRST, SPI_MODE0);
 uint8_t screen_buff[8];
 static int pinout = 9;
-void setup() {
-  SPI.begin();
-  SPI.beginTransaction(settingsA);
-  pinMode(7, OUTPUT);
-  pinMode(8, OUTPUT);
-  pinMode(9, OUTPUT);
-  pinMode(10, OUTPUT);
-  digitalWrite(7, LOW);
-  digitalWrite(8, LOW);
-  digitalWrite(9, LOW);
-  digitalWrite(10, LOW);
-}
 
 void load_font_character(const uint8_t chr_idx){
   const uint8_t* chr_offset = font+CHAR_LENGTH_BYTES*chr_idx;
@@ -38,6 +26,19 @@ inline void toggle_shift_registers(){
   digitalWrite(R_CLK, LOW);
 }
 
+void setup() {
+  SPI.begin();
+  SPI.beginTransaction(settingsA);
+  pinMode(7, OUTPUT);
+  pinMode(8, OUTPUT);
+  pinMode(9, OUTPUT);
+  pinMode(10, OUTPUT);
+  digitalWrite(7, LOW);
+  digitalWrite(8, LOW);
+  digitalWrite(9, LOW);
+  digitalWrite(10, LOW);
+}
+
 
 void loop() {
   for(int k = 64; k < 256; k++){
@@ -51,4 +52,9 @@ void loop() {
       }
     }
   }
+}
+
+int main(void){
+  setup();
+  for(;;) loop();
 }
