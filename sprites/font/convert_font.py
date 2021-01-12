@@ -25,6 +25,12 @@ for row in range(grid_height):
 
         hex_string = ",".join([hex(bits_to_byte(byte)) for byte in char_data])
         output.append(hex_string)
-with open("font_converted.tsv", 'w') as o:
+with open("font_converted.tsv", 'w') as o, open("c_array.txt", 'w') as ot:
     for idx, hex_string in enumerate(output):
         o.write("\t".join([str(idx), chr(idx), hex_string]) + "\n")
+    ot.write("{\n")
+    for idx, hex_string in enumerate(output):
+            # ot.write("\t{" + hex_string + "},\n")
+            ot.write("\t" + hex_string + ",\n")
+    ot.write("};")
+print(f"Wrote {len(output)} characters of 8 bytes each")
