@@ -1,10 +1,13 @@
 #include <SPI.h>
+#include <avr/pgmspace.h>
 #include "font.cpp"
 #define CHAR_LENGTH_BYTES 8
 #define S0 8
 #define S1 9
 #define S2 10
 #define R_CLK 7
+
+extern "C" void __cxa_pure_virtual() { abort(); }
 
 SPISettings settingsA(16000, MSBFIRST, SPI_MODE0);
 uint8_t screen_buff[8];

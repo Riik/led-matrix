@@ -1,4 +1,5 @@
 #include <SPI.h>
+#include <avr/eeprom.h>.
 #include "font.cpp"
 #define CHAR_LENGTH_BYTES 8
 #define S0 8
