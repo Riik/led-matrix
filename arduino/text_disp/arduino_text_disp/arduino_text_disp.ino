@@ -11,12 +11,19 @@
 #define N_PANELS 1
 #define N_FRAMES (N_PANELS + 2) // margin both left and right
 #define FRAME_REPEAT_COUNT 6
+#define INPUT_BUFF_SIZE 80
 
 SPISettings settingsA(16000, LSBFIRST, SPI_MODE0);
 uint8_t screen_buff[N_FRAMES*FRAME_LENGTH_BYTES];
-char display_message[] = "Dag amice Dirks, hoe maakt u het?";
+
+char message_receive_buff[INPUT_BUFF_SIZE];
+char message_display_buff[INPUT_BUFF_SIZE] = "Hello world!";
+uint8_t input_char_count = 0;
+uint8_t message_size = 15;
+bool string_complete = false; 
 
 void setup() {
+  Serial.begin(115200);
   SPI.begin();
   SPI.beginTransaction(settingsA);
   pinMode(R_CLK, OUTPUT);
@@ -61,9 +68,32 @@ void shift_screen_buff_left(){
   }
 }
 
-void loop() {
-  for (int m = 0; m < sizeof(display_message); m++) {
-    load_font_character(display_message[m], 2);
+void serialEvent() {
+  if(input_char_count >= INPUT_BUFF_SIZE){
+    string_complete = true;
+    return;
+  }
+  while (Serial.available()) {
+    input_char_count++;
+    char in_char = (char)Serial.read();
+    if (in_char == '\n') {
+      string_complete = true;
+      return;
+    }
+    message_receive_buff[input_char_count] = in_char;
+  }
+}
+
+void loop() {  
+  for (int m = 0; m < message_size; m++) {
+    if(string_complete){
+      memcpy(message_display_buff, message_receive_buff, INPUT_BUFF_SIZE);
+      message_size = input_char_count;
+      input_char_count = 0;
+      string_complete = false;
+      break;
+    }
+    load_font_character(message_display_buff[m], 2);
     for (int k = 0; k < 8; k++) {
       shift_screen_buff_left();
       for (int j = 0; j < FRAME_REPEAT_COUNT; j++) {
