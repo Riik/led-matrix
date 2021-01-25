@@ -1,11 +1,11 @@
 CC:=arm-linux-gnueabihf-gcc
 SRCDIR:=src/
 CFILES:=$(wildcard $(SRCDIR)*.c)
-INC:= -Iinc/
+INC:= -Iinc/ -Ilibgpiod/include
 LIBDIR:=
 CFLAGS:=-std=gnu18 -Wall -Wfatal-errors -march=armv8-a+crc+simd -mfpu=vfpv3-d16 -mfloat-abi=hard
 CPPFLAGS:=$(INC) -MMD -MP
-LDFLAGS:=
+LDFLAGS:=-Llibgpiod/lib -lgpiod
 ODIR:=obj/
 DEBUGODIR=$(ODIR)debug/
 RELEASEODIR=$(ODIR)release/

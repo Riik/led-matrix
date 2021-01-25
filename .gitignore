@@ -54,3 +54,4 @@ raspberrypi/obj
 raspberrypi/final
 raspberrypi/final_debug
 raspberrypi/upload.sh
+raspberrypi/libgpiod
