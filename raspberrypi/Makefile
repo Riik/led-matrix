@@ -22,11 +22,9 @@ DEBUG_TARGET := final_debug
 all: release debug
 
 release: CFLAGS += -O2 -Werror
-release: CXXFLAGS += -O2 -Werror
 release: $(RELEASE_TARGET)
 
 debug: CFLAGS += -Og -ggdb
-debug: CXXFLAGS += -Og -ggdb
 debug: CPPFLAGS += -DDEBUG
 debug: $(DEBUG_TARGET)
 
