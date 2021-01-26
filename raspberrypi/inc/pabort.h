@@ -2,6 +2,7 @@
 #define PARBORT_H
 
 #include <stdnoreturn.h>
+#include <errno.h>
 
 #define pabort(s) pabort_complete(__FILE__, __LINE__, s, errno)
 
