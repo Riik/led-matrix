@@ -3,9 +3,9 @@ SRCDIR:=src/
 CFILES:=$(wildcard $(SRCDIR)*.c)
 INC:= -Iinc/ -Ilibgpiod/include
 LIBDIR:=
-CFLAGS:=-std=gnu18 -Wall -Wfatal-errors -march=armv8-a+crc+simd -mfpu=vfpv3-d16 -mfloat-abi=hard
+CFLAGS:=-std=gnu18 -Wall -Wfatal-errors -march=armv8-a+crc+simd -mfpu=vfpv3-d16 -mfloat-abi=hard -pthread
 CPPFLAGS:=$(INC) -MMD -MP
-LDFLAGS:=-Llibgpiod/lib -lgpiod
+LDFLAGS:=-Llibgpiod/lib -lgpiod -pthread
 ODIR:=obj/
 DEBUGODIR=$(ODIR)debug/
 RELEASEODIR=$(ODIR)release/
