@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include <stdint.h>
 #include <stdatomic.h>
@@ -83,31 +84,30 @@ static void *driveLeds(void *param)
         goto driveLeds_releaseLine;
     }
     // Prepare the SPI output
-    struct spi_ioc_transfer *tr = calloc(rows, sizeof(struct spi_ioc_transfer));
-    for (size_t r = 0; r < rows; ++r) {
-        tr[r].len = 1;
-        tr[r].speed_hz = 50000000;
-        tr[r].bits_per_word = 8;
-    }
+    struct spi_ioc_transfer tr;
+    memset(&tr, 0, sizeof(tr));
+    tr.len = rows;
+    tr.speed_hz = 50000000;
+    tr.bits_per_word = 8;
     struct timespec deadline;
     clock_gettime(CLOCK_MONOTONIC, &deadline);
-    const uint_fast8_t zeros = 0;
+    uint_fast8_t *zeros = calloc(rows, sizeof(uint_fast8_t));
+    if (zeros == NULL) {
+        fprintf(stderr, "Allocating zeros array failed");
+        goto driveLeds_releaseLine;
+    }
     threadInit = true;
     while(!threadStop) {
         for (size_t row = 0; row < 8; ++row) {
             uint_fast8_t* buf = getActiveBuf();
             int bulkValue[3] = {row & 0x1 ? 1 : 0, row & 0x2 ? 1 : 0, row & 0x4 ? 1 : 0};
-            for (size_t r = 0; r < rows; ++r) {
-                tr[r].tx_buf = (unsigned long)&zeros;
-            }
-            ioctl(spifd, SPI_IOC_MESSAGE(rows), tr);
+            tr.tx_buf = (unsigned long)zeros;
+            ioctl(spifd, SPI_IOC_MESSAGE(1), &tr);
             gpiod_line_set_value(rckLine, 1);
             gpiod_line_set_value(rckLine, 0);
             gpiod_line_set_value_bulk(&sBulk, &bulkValue[0]);
-            for (size_t r = 0; r < rows; ++r) {
-                tr[r].tx_buf = (unsigned long)&buf[row*rows + r];
-            }
-            ioctl(spifd, SPI_IOC_MESSAGE(rows), tr);
+            tr.tx_buf = (unsigned long)&buf[row*rows];
+            ioctl(spifd, SPI_IOC_MESSAGE(1), &tr);
             gpiod_line_set_value(rckLine, 1);
             gpiod_line_set_value(rckLine, 0);
             deadline.tv_nsec += 1000000;
@@ -118,7 +118,7 @@ static void *driveLeds(void *param)
             clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &deadline, NULL);
         }
     }
-    free(tr);
+    free(zeros);
 driveLeds_releaseLine:
     gpiod_line_release(rckLine);
 driveLeds_releaseBulk:
