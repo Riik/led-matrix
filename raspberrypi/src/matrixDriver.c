@@ -94,9 +94,9 @@ static void *driveLeds(void *param)
     const uint_fast8_t zeros = 0;
     threadInit = true;
     while(!threadStop) {
-        for (size_t col = 0; col < 8; ++col) {
+        for (size_t row = 0; row < 8; ++row) {
             uint_fast8_t* buf = getActiveBuf();
-            int bulkValue[3] = {col & 0x1 ? 1 : 0, col & 0x2 ? 1 : 0, col & 0x4 ? 1 : 0};
+            int bulkValue[3] = {row & 0x1 ? 1 : 0, row & 0x2 ? 1 : 0, row & 0x4 ? 1 : 0};
             for (size_t r = 0; r < rows; ++r) {
                 tr[r].tx_buf = (unsigned long)&zeros;
             }
@@ -105,7 +105,7 @@ static void *driveLeds(void *param)
             gpiod_line_set_value(rckLine, 0);
             gpiod_line_set_value_bulk(&sBulk, &bulkValue[0]);
             for (size_t r = 0; r < rows; ++r) {
-                tr[r].tx_buf = (unsigned long)&buf[col*rows + r];
+                tr[r].tx_buf = (unsigned long)&buf[row*rows + r];
             }
             ioctl(spifd, SPI_IOC_MESSAGE(rows), tr);
             gpiod_line_set_value(rckLine, 1);
