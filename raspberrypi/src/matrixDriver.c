@@ -20,12 +20,11 @@
 
 /**On the pin layout:
  * SPI:
- *  SPI0 is in use, so that GPIO 10 is MOSI and GPIO11 is SCLK.
+ *  SPI0 is in use, so that GPIO 10 is MOSI, GPIO11 is SCLK and GPIO8 is CS0 (rck).
  * GPIO:
  *  14: S0
  *  15: S1
  *  18: S2
- *  12: r_clk
 */
 
 static uint_fast8_t* bufActive;
@@ -71,17 +70,11 @@ static void *driveLeds(void *param)
         fprintf(stderr, "Getting the S-lines as bulk failed");
         goto driveLeds_closeChip;
     }
-    struct gpiod_line *rckLine = gpiod_chip_get_line(chip, 12);
-    if (rckLine == NULL) {
-        fprintf(stderr, "Getting the rck line failed");
-        goto driveLeds_releaseBulk;
-    }
     // Set the GPIO lines to output and 0
     suc = gpiod_line_request_bulk_output(&sBulk, "prog", &sLineDefaults[0]);
-    suc |= gpiod_line_request_output(rckLine, "prog", 0);
     if (suc != 0) {
         fprintf(stderr, "Setting the gpio lines as output to 0 failed");
-        goto driveLeds_releaseLine;
+        goto driveLeds_releaseBulk;
     }
     // Prepare the SPI output
     struct spi_ioc_transfer tr;
@@ -94,7 +87,7 @@ static void *driveLeds(void *param)
     uint_fast8_t *zeros = calloc(rows, sizeof(uint_fast8_t));
     if (zeros == NULL) {
         fprintf(stderr, "Allocating zeros array failed");
-        goto driveLeds_releaseLine;
+        goto driveLeds_releaseBulk;
     }
     threadInit = true;
     while(!threadStop) {
@@ -103,13 +96,9 @@ static void *driveLeds(void *param)
             int bulkValue[3] = {row & 0x1 ? 1 : 0, row & 0x2 ? 1 : 0, row & 0x4 ? 1 : 0};
             tr.tx_buf = (unsigned long)zeros;
             ioctl(spifd, SPI_IOC_MESSAGE(1), &tr);
-            gpiod_line_set_value(rckLine, 1);
-            gpiod_line_set_value(rckLine, 0);
             gpiod_line_set_value_bulk(&sBulk, &bulkValue[0]);
             tr.tx_buf = (unsigned long)&buf[row*rows];
             ioctl(spifd, SPI_IOC_MESSAGE(1), &tr);
-            gpiod_line_set_value(rckLine, 1);
-            gpiod_line_set_value(rckLine, 0);
             deadline.tv_nsec += 1000000;
             if(deadline.tv_nsec >= 1000000000) {
                 deadline.tv_nsec -= 1000000000;
@@ -119,8 +108,6 @@ static void *driveLeds(void *param)
         }
     }
     free(zeros);
-driveLeds_releaseLine:
-    gpiod_line_release(rckLine);
 driveLeds_releaseBulk:
     gpiod_line_release_bulk(&sBulk);
 driveLeds_closeChip:
