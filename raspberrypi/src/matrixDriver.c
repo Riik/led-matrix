@@ -51,8 +51,7 @@ static void *driveLeds(void *param)
     const char *spidev = "/dev/spidev0.0";
     unsigned int sLineOffsets[] = {14, 15, 18};
     const int sLineDefaults[] = {0, 0, 0};
-    size_t rows = (size_t)param;
-    rows /= 8;
+    size_t colCount = (size_t)param;
     int spifd = open(spidev, O_RDWR);
     if (spifd < 0) {
         fprintf(stderr, "Opening spidev failed");
@@ -79,25 +78,25 @@ static void *driveLeds(void *param)
     // Prepare the SPI output
     struct spi_ioc_transfer tr;
     memset(&tr, 0, sizeof(tr));
-    tr.len = rows;
+    tr.len = colCount / LED_MATRIX_ROW_COUNT;
     tr.speed_hz = 50000000;
     tr.bits_per_word = 8;
     struct timespec deadline;
     clock_gettime(CLOCK_MONOTONIC, &deadline);
-    uint_fast8_t *zeros = calloc(rows, sizeof(uint_fast8_t));
+    uint_fast8_t *zeros = calloc(colCount / LED_MATRIX_ROW_COUNT, sizeof(uint_fast8_t));
     if (zeros == NULL) {
         fprintf(stderr, "Allocating zeros array failed");
         goto driveLeds_releaseBulk;
     }
     threadInit = true;
     while(!threadStop) {
-        for (size_t row = 0; row < 8; ++row) {
+        for (size_t row = 0; row < LED_MATRIX_ROW_COUNT; ++row) {
             uint_fast8_t* buf = getActiveBuf();
             int bulkValue[3] = {row & 0x1 ? 1 : 0, row & 0x2 ? 1 : 0, row & 0x4 ? 1 : 0};
             tr.tx_buf = (unsigned long)zeros;
             ioctl(spifd, SPI_IOC_MESSAGE(1), &tr);
             gpiod_line_set_value_bulk(&sBulk, &bulkValue[0]);
-            tr.tx_buf = (unsigned long)&buf[row*rows];
+            tr.tx_buf = (unsigned long)&buf[row*(colCount / LED_MATRIX_ROW_COUNT)];
             ioctl(spifd, SPI_IOC_MESSAGE(1), &tr);
             deadline.tv_nsec += 1000000;
             if(deadline.tv_nsec >= 1000000000) {
@@ -118,17 +117,17 @@ driveLeds_exit:
     return NULL;
 }
 
-bool startLedDriving(size_t rows)
+bool startLedDriving(size_t colCount)
 {
-    if (rows == 0 || rows % 8 != 0) {
+    if (colCount == 0 || colCount % LED_MATRIX_ROW_COUNT != 0) {
         errno = EINVAL;
         goto startLedDriving_err;
     }
-    bufActive = calloc(rows, sizeof(uint_fast8_t));
+    bufActive = calloc(colCount, sizeof(uint_fast8_t));
     if (bufActive == NULL) {
         goto startLedDriving_err;
     }
-    bufInactive = calloc(rows, sizeof(uint_fast8_t));
+    bufInactive = calloc(colCount, sizeof(uint_fast8_t));
     if (bufInactive == NULL) {
         goto startLedDriving_bufActive;
     }
@@ -139,7 +138,7 @@ bool startLedDriving(size_t rows)
         goto startLedDriving_requestSem;
     }
 
-    int err = pthread_create(&driveLedsThread, NULL, driveLeds, (void*)rows);
+    int err = pthread_create(&driveLedsThread, NULL, driveLeds, (void*)colCount);
     if (err != 0) {
         errno = err;
         goto startLedDriving_okSem;

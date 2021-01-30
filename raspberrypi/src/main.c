@@ -9,7 +9,7 @@
 #include "pabort.h"
 #include "fontTranslation.h"
 
-const size_t rowLen = 8;
+static const size_t colCount = 8;
 atomic_bool halt = false;
 
 static void intHandler(int i) {
@@ -26,7 +26,7 @@ int main(void)
         .sa_handler = intHandler
     };
     sigaction(SIGINT, &act, NULL);
-    if (!startLedDriving(rowLen)){
+    if (!startLedDriving(colCount)){
         pabort("startLedDriving failed");
     }
     // Translate the text
@@ -46,8 +46,8 @@ int main(void)
         memcpy(&tiles[(strlen(text) + 1 + i) * TILE_SIZE_ROWS_COLS], p, TILE_SIZE_BYTE);
     }
     // Prepare one tile
-    uint_fast8_t* tile = calloc(8, sizeof(tiles[0]));
-    memcpy(tile, tiles, 8*sizeof(tiles[0]));
+    uint_fast8_t* tile = calloc(colCount, sizeof(tiles[0]));
+    memcpy(tile, tiles, colCount*sizeof(tiles[0]));
     size_t rowIndex = 8;
     size_t bitIndex = 0;
 
@@ -58,7 +58,8 @@ int main(void)
         memcpy(b, tile, sizeof(b[0])*8);
         ledDriverSwapBuffer();
         // Update our tile
-        for (size_t i = 0; i < 8; ++i) {
+        // TODO fix this for colcount > 8
+        for (size_t i = 0; i < LED_MATRIX_ROW_COUNT; ++i) {
             uint_fast8_t newRow = tiles[rowIndex + i];
             newRow >>= bitIndex;
             tile[i] = tile[i] >> 1 | newRow << 7;
@@ -67,7 +68,7 @@ int main(void)
         if (bitIndex >= 8) {
             bitIndex = 0;
             rowIndex += 8;
-            if (rowIndex >= colCount)
+            if (rowIndex >= colCount * 8)
                 rowIndex = 0;
         }
         deadline.tv_nsec += 40000000;

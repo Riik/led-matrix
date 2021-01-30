@@ -4,13 +4,15 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#define LED_MATRIX_ROW_COUNT 8
+
 /**Start a thread wich will copy the active buffer to the LED matrix
  * @param cols The amount of columns (driven by SPI). Cannot be zero. Must be a multiple of 8.
  * @return true if success, false if error. 
  *
  * @warning Call this function first to prevent initialization issues.
  */
-bool startLedDriving(size_t rows);
+bool startLedDriving(size_t colCount);
 
 /**Introduce new data for the matrix driver to display.
  * @param newBuf A buffer filled with the new data.
