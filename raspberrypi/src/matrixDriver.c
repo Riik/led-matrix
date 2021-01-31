@@ -12,9 +12,7 @@
 #include <sys/ioctl.h>
 #include <linux/ioctl.h>
 #include <linux/spi/spidev.h>
-#include <pthread.h>
-#include <semaphore.h>
-#include <signal.h>
+#include <threads.h>
 
 #include "matrixDriver.h"
 
@@ -31,23 +29,38 @@ static unsigned int brightnessPercentage = 100;
 static uint_fast8_t* bufActive;
 static uint_fast8_t* bufInactive;
 static atomic_bool threadStop = false;
-static atomic_bool threadInit = false;
-static pthread_t driveLedsThread;
-static sem_t swapRequestSem;
-static sem_t swapOkSem;
+static thrd_t driveLedsThread;
+static cnd_t swapCond;
+static mtx_t swapMutex;
+
+static int thrdRetvalToErrno(const int thrd_ret)
+{
+    switch (thrd_ret)
+    {
+        case thrd_busy:
+            return EBUSY;
+        case thrd_error:
+            return EINVAL;
+        case thrd_nomem:
+            return ENOMEM;
+        default:
+            return 0;
+    }
+}
 
 static uint_fast8_t *getActiveBuf(void)
 {
-    if (sem_trywait(&swapRequestSem) == 0) {
+    if (mtx_trylock(&swapMutex) == thrd_success) {
         uint_fast8_t *temp = bufActive;
         bufActive = bufInactive;
         bufInactive = temp;
-        sem_post(&swapOkSem);
+        mtx_unlock(&swapMutex);
+        cnd_signal(&swapCond);
     }
     return bufActive;
 }
 
-static void *driveLeds(void *param)
+static int driveLeds(void *param)
 {
     const char *spidev = "/dev/spidev0.0";
     unsigned int sLineOffsets[] = {14, 15, 18};
@@ -89,7 +102,6 @@ static void *driveLeds(void *param)
         fprintf(stderr, "Allocating zeros array failed");
         goto driveLeds_releaseBulk;
     }
-    threadInit = true;
     while(!threadStop) {
         const long totalNsecSleep = 1000000;
         long nsecSleepOn;
@@ -135,7 +147,7 @@ driveLeds_closeChip:
 driveLeds_closeSpi:
     close(spifd);
 driveLeds_exit:
-    return NULL;
+    return 0;
 }
 
 bool startLedDriving(size_t colCount)
@@ -152,29 +164,28 @@ bool startLedDriving(size_t colCount)
     if (bufInactive == NULL) {
         goto startLedDriving_bufActive;
     }
-    if (sem_init(&swapRequestSem, 0, 0) == -1) {
+    int suc;
+    if ((suc = cnd_init(&swapCond)) != thrd_success) {
+        errno = thrdRetvalToErrno(suc);
         goto startLedDriving_bufInactive;
     }
-    if (sem_init(&swapOkSem, 0, 0) == -1) {
-        goto startLedDriving_requestSem;
+    if ((suc = mtx_init(&swapMutex, mtx_plain)) != thrd_success) {
+        errno = thrdRetvalToErrno(suc);
+        goto startLedDriving_destroyCond;
     }
-
-    int err = pthread_create(&driveLedsThread, NULL, driveLeds, (void*)colCount);
-    if (err != 0) {
-        errno = err;
-        goto startLedDriving_okSem;
+    if ((suc = mtx_lock(&swapMutex)) != thrd_success) {
+        errno = thrdRetvalToErrno(suc);
+        goto startLedDriving_destroyMtx;
     }
-    while(!threadInit) {
-        if (pthread_kill(driveLedsThread, 0) == ESRCH) {
-            errno = ESRCH;
-            goto startLedDriving_okSem;
-        }
+    if ((suc = thrd_create(&driveLedsThread, driveLeds, (void*)colCount)) != thrd_success) {
+        errno = thrdRetvalToErrno(suc);
+        goto startLedDriving_destroyMtx;
     }
     return true;
-startLedDriving_okSem:
-    sem_destroy(&swapOkSem);
-startLedDriving_requestSem:
-    sem_destroy(&swapRequestSem);
+startLedDriving_destroyMtx:
+    mtx_destroy(&swapMutex);
+startLedDriving_destroyCond:
+    cnd_destroy(&swapCond);
 startLedDriving_bufInactive:
     free(bufInactive);
 startLedDriving_bufActive:
@@ -186,17 +197,16 @@ startLedDriving_err:
 void stopLedDriving(void)
 {
     threadStop = true;
-    pthread_join(driveLedsThread, NULL);
-    free(bufActive);
+    thrd_join(driveLedsThread, NULL);
+    mtx_destroy(&swapMutex);
+    cnd_destroy(&swapCond);
     free(bufInactive);
-    sem_destroy(&swapOkSem);
-    sem_destroy(&swapRequestSem);
+    free(bufActive);
 }
 
 void ledDriverSwapBuffer(void)
 {
-    sem_post(&swapRequestSem);
-    sem_wait(&swapOkSem);
+    cnd_wait(&swapCond, &swapMutex);
 }
 
 uint_fast8_t *ledDriverGetInactiveBuffer(void)
