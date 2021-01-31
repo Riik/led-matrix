@@ -4,6 +4,13 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+/**The LED driver outputs line by line.
+ * There are always 8 rows, current hardware does not allow anything else.
+ * The amount of columns is always a multiple of 8 with a minimum of 8.
+ * One uint_fast8_t first 8 pixels. This means that there are (amount of columns) / 8 uint_fast8_t per row.
+ * An important footnote is that the first uint_fast8_t is transmitted first, meaning that it will end up
+ * on the last 8 columns.*/
+
 #define LED_MATRIX_ROW_COUNT 8
 
 /**Start a thread wich will copy the active buffer to the LED matrix
