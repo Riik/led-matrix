@@ -90,8 +90,8 @@ static void *driveLeds(void *param)
     }
     threadInit = true;
     while(!threadStop) {
+        uint_fast8_t* buf = getActiveBuf();
         for (size_t row = 0; row < LED_MATRIX_ROW_COUNT; ++row) {
-            uint_fast8_t* buf = getActiveBuf();
             int bulkValue[3] = {row & 0x1 ? 1 : 0, row & 0x2 ? 1 : 0, row & 0x4 ? 1 : 0};
             tr.tx_buf = (unsigned long)zeros;
             ioctl(spifd, SPI_IOC_MESSAGE(1), &tr);
