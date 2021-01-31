@@ -10,7 +10,7 @@
 #include "fontTranslation.h"
 
 static const size_t colCount = 8;
-atomic_bool halt = false;
+static atomic_bool halt = false;
 
 static void intHandler(int i) {
     (void)i;
