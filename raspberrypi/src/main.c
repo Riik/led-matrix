@@ -17,8 +17,7 @@ static void intHandler(int i) {
     halt = true;
 }
 
-const char* text = "Dag amice Van der Vlist";
-const char* text2 = ". Met mij gaat het prima. Hoe maakt u het? ";
+static const char* text = "Hello, world! ";
 
 int main(void)
 {
@@ -30,23 +29,17 @@ int main(void)
         pabort("startLedDriving failed");
     }
     // Translate the text
-    uint_fast8_t* tiles = calloc(strlen(text) + strlen(text2) + 1, TILE_SIZE_BYTE);
-    const size_t colCount = (strlen(text) + strlen(text2) + 1) *8;
+    size_t textLen = strlen(text);
+    if (textLen < colCount)
+        textLen = colCount;
+    const size_t tileCount = textLen * TILE_SIZE_ROWS_COLS;
+    uint_fast8_t* tiles = calloc(textLen, TILE_SIZE_BYTE);
     for (size_t i = 0; i < strlen(text); ++i) {
         const uint_fast8_t* p = charToTile(text[i]);
         memcpy(&tiles[i * TILE_SIZE_ROWS_COLS], p, TILE_SIZE_BYTE);
     }
-    // Keep p out of scope
-    {
-        const uint_fast8_t* p = charToTile(7);
-        memcpy(&tiles[strlen(text) * TILE_SIZE_ROWS_COLS], p, TILE_SIZE_BYTE);
-    }
-    for (size_t i = 0; i < strlen(text2); ++i) {
-        const uint_fast8_t* p = charToTile(text2[i]);
-        memcpy(&tiles[(strlen(text) + 1 + i) * TILE_SIZE_ROWS_COLS], p, TILE_SIZE_BYTE);
-    }
     // Prepare one tile
-    uint_fast8_t* tile = calloc(colCount, sizeof(tiles[0]));
+    uint_fast8_t* tile = calloc((colCount / LED_MATRIX_ROW_COUNT) * LED_MATRIX_ROW_COUNT, sizeof(tiles[0]));
     memcpy(tile, tiles, colCount*sizeof(tiles[0]));
     size_t rowIndex = 8;
     size_t bitIndex = 0;
@@ -68,7 +61,7 @@ int main(void)
         if (bitIndex >= 8) {
             bitIndex = 0;
             rowIndex += 8;
-            if (rowIndex >= colCount * 8)
+            if (rowIndex >= tileCount)
                 rowIndex = 0;
         }
         deadline.tv_nsec += 40000000;
