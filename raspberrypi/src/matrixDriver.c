@@ -27,6 +27,7 @@
  *  18: S2
 */
 
+static unsigned int brightnessPercentage = 100;
 static uint_fast8_t* bufActive;
 static uint_fast8_t* bufInactive;
 static atomic_bool threadStop = false;
@@ -90,15 +91,35 @@ static void *driveLeds(void *param)
     }
     threadInit = true;
     while(!threadStop) {
+        const long totalNsecSleep = 1000000;
+        long nsecSleepOn;
+        long nsecSleepOff;
         uint_fast8_t* buf = getActiveBuf();
+        if (brightnessPercentage == 0) {
+            nsecSleepOn = 0;
+            nsecSleepOff = totalNsecSleep;
+        } else {
+            nsecSleepOn = totalNsecSleep / (100 / brightnessPercentage);
+            nsecSleepOff = totalNsecSleep - nsecSleepOn;
+        }
         for (size_t row = 0; row < LED_MATRIX_ROW_COUNT; ++row) {
             int bulkValue[3] = {row & 0x1 ? 1 : 0, row & 0x2 ? 1 : 0, row & 0x4 ? 1 : 0};
             tr.tx_buf = (unsigned long)zeros;
             ioctl(spifd, SPI_IOC_MESSAGE(1), &tr);
             gpiod_line_set_value_bulk(&sBulk, &bulkValue[0]);
+            if (nsecSleepOff != 0) {
+                deadline.tv_nsec += nsecSleepOff;
+                if (deadline.tv_nsec >= 1000000000) {
+                    deadline.tv_nsec -= 1000000000;
+                    deadline.tv_sec++;
+                }
+                clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &deadline, NULL);
+                if (nsecSleepOn == 0)
+                    continue;
+            }
             tr.tx_buf = (unsigned long)&buf[row*(colCount / LED_MATRIX_ROW_COUNT)];
             ioctl(spifd, SPI_IOC_MESSAGE(1), &tr);
-            deadline.tv_nsec += 1000000;
+            deadline.tv_nsec += nsecSleepOn;
             if(deadline.tv_nsec >= 1000000000) {
                 deadline.tv_nsec -= 1000000000;
                 deadline.tv_sec++;
@@ -181,4 +202,11 @@ void ledDriverSwapBuffer(void)
 uint_fast8_t *ledDriverGetInactiveBuffer(void)
 {
     return bufInactive;
+}
+
+bool ledDriverSetBrightnessPercentage(unsigned int newBrightnessPercentage) {
+    if (newBrightnessPercentage > 100)
+        return false;
+   brightnessPercentage = newBrightnessPercentage;
+   return true;
 }

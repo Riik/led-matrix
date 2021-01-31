@@ -36,6 +36,9 @@ uint_fast8_t *ledDriverGetInactiveBuffer(void);
 /**Stop driving the LED. Includes resource cleanup. Only returns after the thread has died.*/
 void stopLedDriving(void);
 
+/**Set the brightness (percentage, 0 - 100)
+ * @return false if new brightness is above 100, true otherwise.*/
+bool ledDriverSetBrightnessPercentage(unsigned int newBrightnessPercentage);
 
 
 #endif //MATRIX_DRIVER_H

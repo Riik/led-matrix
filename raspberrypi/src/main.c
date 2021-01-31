@@ -43,6 +43,9 @@ int main(void)
     memcpy(tile, tiles, colCount*sizeof(tiles[0]));
     size_t rowIndex = 8;
     size_t bitIndex = 0;
+    unsigned int curBrightness = 100;
+    bool brightnessFalling = true;
+    ledDriverSetBrightnessPercentage(curBrightness);
 
     struct timespec deadline;
     clock_gettime(CLOCK_MONOTONIC, &deadline);
@@ -61,8 +64,17 @@ int main(void)
         if (bitIndex >= 8) {
             bitIndex = 0;
             rowIndex += 8;
-            if (rowIndex >= tileCount)
+            if (rowIndex >= tileCount) {
                 rowIndex = 0;
+            }
+            // Update brightness
+            curBrightness += brightnessFalling ? -2 : +2;
+            ledDriverSetBrightnessPercentage(curBrightness);
+            if (curBrightness == 0) {
+                brightnessFalling = false;
+            } else if (curBrightness == 100) {
+                brightnessFalling = true;
+            }
         }
         deadline.tv_nsec += 40000000;
         if(deadline.tv_nsec >= 1000000000) {
