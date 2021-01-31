@@ -71,6 +71,11 @@ int main(void)
         }
         clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &deadline, NULL);
     }
+    // Clear the LED matrix
+    uint_fast8_t *b = ledDriverGetInactiveBuffer();
+    memset(b, 0, sizeof(b[0])*colCount);
+    ledDriverSwapBuffer();
+
     stopLedDriving();
     free(tiles);
     free(tile);
