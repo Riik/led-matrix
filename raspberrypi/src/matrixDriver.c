@@ -66,6 +66,7 @@ static int driveLeds(void *param)
     unsigned int sLineOffsets[] = {14, 15, 18};
     const int sLineDefaults[] = {0, 0, 0};
     size_t colCount = (size_t)param;
+    size_t spiMsgSize = colCount/LED_MATRIX_ROW_COUNT;
     int spifd = open(spidev, O_RDWR);
     if (spifd < 0) {
         fprintf(stderr, "Opening spidev failed");
@@ -97,7 +98,7 @@ static int driveLeds(void *param)
     tr.bits_per_word = 8;
     struct timespec deadline;
     clock_gettime(CLOCK_MONOTONIC, &deadline);
-    uint_fast8_t *zeros = calloc(colCount / LED_MATRIX_ROW_COUNT, sizeof(uint_fast8_t));
+    uint_fast8_t *zeros = calloc(spiMsgSize, sizeof(uint_fast8_t));
     if (zeros == NULL) {
         fprintf(stderr, "Allocating zeros array failed");
         goto driveLeds_releaseBulk;
@@ -129,7 +130,7 @@ static int driveLeds(void *param)
                 if (nsecSleepOn == 0)
                     continue;
             }
-            tr.tx_buf = (unsigned long)&buf[row*(colCount / LED_MATRIX_ROW_COUNT)];
+            tr.tx_buf = (unsigned long)&buf[row*(spiMsgSize)];
             ioctl(spifd, SPI_IOC_MESSAGE(1), &tr);
             deadline.tv_nsec += nsecSleepOn;
             if(deadline.tv_nsec >= 1000000000) {
