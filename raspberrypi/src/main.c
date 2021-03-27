@@ -9,7 +9,8 @@
 #include "pabort.h"
 #include "fontTranslation.h"
 
-static const size_t colCount = 16;
+static const size_t tileCount = 4;
+
 static atomic_bool halt = false;
 
 static void intHandler(int i) {
@@ -21,6 +22,7 @@ static const char* text = "Woooww, dat is gaaf";
 
 int main(void)
 {
+    const size_t colCount = tileCount*8;
     struct sigaction act = {
         .sa_handler = intHandler
     };
@@ -32,21 +34,20 @@ int main(void)
     // so make sure that is the case.
     size_t textTilesCount = strlen(text);
     const size_t textTileArrLen = textTilesCount * TILE_SIZE_ROWS_COLS;
-    const size_t outputTilesCount = colCount/TILE_SIZE_ROWS_COLS;
     uint_fast8_t* textTiles = calloc(textTileArrLen, sizeof(uint_fast8_t));
     for (size_t i = 0; i < strlen(text); ++i) {
         const uint_fast8_t* p = charToTile(text[i]);
         memcpy(&textTiles[i * TILE_SIZE_ROWS_COLS], p, TILE_SIZE_BYTE);
     }
     // Prepare the output tiles
-    uint_fast8_t* outputTiles = calloc(LED_MATRIX_ROW_COUNT*outputTilesCount, sizeof(textTiles[0]));
-    size_t *rowIndex = calloc(outputTilesCount, sizeof(size_t));
+    uint_fast8_t* outputTiles = calloc(textTileArrLen, sizeof(textTiles[0]));
+    size_t *rowIndex = calloc(tileCount, sizeof(size_t));
     {
         size_t tileStart = 0;
-        for (size_t i = 0; i < outputTilesCount; ++i) {
+        for (size_t i = 0; i < tileCount; ++i) {
             memcpy(&outputTiles[i*LED_MATRIX_ROW_COUNT], &textTiles[tileStart], LED_MATRIX_ROW_COUNT * sizeof(outputTiles[0]));
             tileStart += LED_MATRIX_ROW_COUNT;
-            if (tileStart > textTilesCount) {
+            if (tileStart > textTileArrLen) {
                 tileStart = 0;
             }
             rowIndex[i] = tileStart;
@@ -62,14 +63,14 @@ int main(void)
     while(!halt) {
         uint_fast8_t *b = ledDriverGetInactiveBuffer();
         for (size_t row = 0; row < LED_MATRIX_ROW_COUNT; ++row) {
-            for (size_t rStart = 0; rStart < outputTilesCount; ++rStart) {
-                size_t actTile = outputTilesCount - 1 - rStart;
-                b[row * outputTilesCount + rStart] = outputTiles[row + actTile*LED_MATRIX_ROW_COUNT];
+            for (size_t rStart = 0; rStart < tileCount; ++rStart) {
+                size_t actTile = tileCount - 1 - rStart;
+                b[row * tileCount + rStart] = outputTiles[row + actTile*LED_MATRIX_ROW_COUNT];
             }
         }
         ledDriverSwapBuffer();
         // Update our tile
-        for (size_t j = 0; j < outputTilesCount; ++j) {
+        for (size_t j = 0; j < tileCount; ++j) {
             for (size_t i = 0; i < LED_MATRIX_ROW_COUNT; ++i) {
                 uint_fast8_t newRow = textTiles[rowIndex[j] + i];
                 newRow >>= bitIndex;
@@ -79,7 +80,7 @@ int main(void)
         bitIndex++;
         if (bitIndex >= LED_MATRIX_ROW_COUNT) {
             bitIndex = 0;
-            for (size_t i = 0; i < outputTilesCount; ++i) {
+            for (size_t i = 0; i < tileCount; ++i) {
                 rowIndex[i] += LED_MATRIX_ROW_COUNT;
                 if (rowIndex[i] >= textTileArrLen) {
                     rowIndex[i] = 0;
