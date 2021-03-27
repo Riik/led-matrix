@@ -15,6 +15,7 @@
 #include <threads.h>
 
 #include "matrixDriver.h"
+#include "thrdRetvalToErrno.h"
 
 /**On the pin layout:
  * SPI:
@@ -33,20 +34,10 @@ static thrd_t driveLedsThread;
 static cnd_t swapCond;
 static mtx_t swapMutex;
 
-static int thrdRetvalToErrno(const int thrd_ret)
-{
-    switch (thrd_ret)
-    {
-        case thrd_busy:
-            return EBUSY;
-        case thrd_error:
-            return EINVAL;
-        case thrd_nomem:
-            return ENOMEM;
-        default:
-            return 0;
-    }
-}
+struct ThreadParam {
+    size_t ledMatrixCount;
+    const char *progName;
+};
 
 static uint_fast8_t *getActiveBuf(void)
 {
@@ -65,7 +56,8 @@ static int driveLeds(void *param)
     const char *spidev = "/dev/spidev0.0";
     unsigned int sLineOffsets[] = {14, 15, 18};
     const int sLineDefaults[] = {0, 0, 0};
-    size_t colCount = (size_t)param;
+    struct ThreadParam *tParam = param;
+    size_t colCount = tParam->ledMatrixCount * LED_MATRIX_COL_COUNT_PER_MATRIX;
     size_t spiMsgSize = colCount/LED_MATRIX_ROW_COUNT;
     int spifd = open(spidev, O_RDWR);
     if (spifd < 0) {
@@ -85,7 +77,7 @@ static int driveLeds(void *param)
         goto driveLeds_closeChip;
     }
     // Set the GPIO lines to output and 0
-    suc = gpiod_line_request_bulk_output(&sBulk, "prog", &sLineDefaults[0]);
+    suc = gpiod_line_request_bulk_output(&sBulk, tParam->progName, &sLineDefaults[0]);
     if (suc != 0) {
         fprintf(stderr, "Setting the gpio lines as output to 0 failed");
         goto driveLeds_releaseBulk;
@@ -148,18 +140,23 @@ driveLeds_closeChip:
 driveLeds_closeSpi:
     close(spifd);
 driveLeds_exit:
+    free(tParam);
     return 0;
 }
 
-bool startLedDriving(size_t colCount)
+bool startLedDriving(size_t ledMatrixCount, const char* argv0)
 {
-    if (colCount == 0 || colCount % LED_MATRIX_ROW_COUNT != 0) {
-        errno = EINVAL;
+    const size_t colCount = ledMatrixCount * LED_MATRIX_ROW_COUNT;
+
+    struct ThreadParam *p = calloc(1, sizeof(struct ThreadParam));
+    if (p == NULL) {
         goto startLedDriving_err;
     }
+    p->progName = argv0;
+    p->ledMatrixCount = ledMatrixCount;
     bufActive = calloc(colCount, sizeof(uint_fast8_t));
     if (bufActive == NULL) {
-        goto startLedDriving_err;
+        goto startLedDriving_freeThreadParam;
     }
     bufInactive = calloc(colCount, sizeof(uint_fast8_t));
     if (bufInactive == NULL) {
@@ -178,7 +175,7 @@ bool startLedDriving(size_t colCount)
         errno = thrdRetvalToErrno(suc);
         goto startLedDriving_destroyMtx;
     }
-    if ((suc = thrd_create(&driveLedsThread, driveLeds, (void*)colCount)) != thrd_success) {
+    if ((suc = thrd_create(&driveLedsThread, driveLeds, (void*)p)) != thrd_success) {
         errno = thrdRetvalToErrno(suc);
         goto startLedDriving_destroyMtx;
     }
@@ -191,6 +188,8 @@ startLedDriving_bufInactive:
     free(bufInactive);
 startLedDriving_bufActive:
     free(bufActive);
+startLedDriving_freeThreadParam:
+    free(p);
 startLedDriving_err:
     return false;
 }

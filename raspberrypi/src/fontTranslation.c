@@ -260,11 +260,35 @@ const uint_fast8_t font[] = {
     0x0,    0x0,    0x3c,   0x3c,   0x3c,   0x3c,   0x0,    0x0,
     0x0,    0x0,    0x0,    0x0,    0x0,    0x0,    0x0,    0x0};
 
-const size_t fontLen = (sizeof(font) / sizeof(font[0])) / 8;
-
-
 const uint_fast8_t *charToTile(const char c)
 {
     size_t i = (size_t)c;
     return &font[i * 8];
+}
+
+struct RenderingBufferObject *textToRBO(const char* c, const size_t strlen)
+{
+    struct RenderingBufferObject* rbo = calloc(1, sizeof(struct RenderingBufferObject));
+    if (rbo == NULL)
+        return NULL;
+    rbo->data = calloc(8*strlen, sizeof(*rbo->data));
+    if (rbo->data == NULL)
+        return NULL;
+    for (size_t i = 0; i < strlen; ++i){
+        const uint_fast8_t* tile = charToTile(c[i]);
+        for (size_t j = 0; j < 8; ++j) {
+            rbo->data[j*strlen + i] = tile[j];
+        }
+    }
+    rbo->yLen = 8;
+    rbo->xLen = 8*strlen;
+    rbo->elemsPerRow = strlen;
+    return rbo;
+}
+
+void destroyTextRBO(struct RenderingBufferObject* rbo)
+{
+    if (rbo->data != NULL)
+        free(rbo->data);
+    free(rbo);
 }
