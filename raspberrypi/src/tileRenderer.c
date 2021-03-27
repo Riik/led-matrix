@@ -16,9 +16,9 @@ bool initRenderer(const size_t ledMatrixCount, const char* argv0)
     if (!startLedDriving(ledMatrixCount, argv0)) {
         return false;
     }
-    int suc; 
+    int suc;
     if ((suc = mtx_init(&tileRendererMutex, mtx_plain)) != thrd_success) {
-        stopLedDriving(); 
+        stopLedDriving();
         errno = thrdRetvalToErrno(suc);
         return false;
     }
@@ -57,44 +57,64 @@ void renderBufferObject(struct RenderingBufferObject *obj, ssize_t x, ssize_t y)
     ssize_t objectXStart = x;
     ssize_t objectXEnd = x + obj->xLen;
     // Check if the object is even in view. If not, then skip it.
-    if (objectXStart > viewPortXStart && objectXEnd < viewPortXEnd)
+    if (objectXEnd < viewPortXStart || objectXStart > viewPortXEnd)
         return;
-    
+
     // It is in view! Check what exactly is in view
+    // First question: is there an empty space preceeding?
     ssize_t emptyPrefixPixels = 0;
     if (objectXStart > viewPortXStart) {
         emptyPrefixPixels = objectXStart - viewPortXStart;
     }
+
+    // Which pixel is the first one that should be displayed?
     ssize_t objectViewXStart;
-    if (objectXStart <= viewPortXStart) {
+    if (objectXStart >= viewPortXStart) {
         objectViewXStart = 0;
     } else {
-        objectViewXStart = objectXStart - viewPortXStart;
+        objectViewXStart = viewPortXStart - objectXStart;
     }
     size_t objectViewXStartElem = objectViewXStart / 8;
-    size_t objectViewXElem = objectViewXStartElem;
-    size_t objectViewXShift = objectViewXStart % 8;
-    size_t viewStartRow = 0;
-    if (obj->yLen < 8) {
-        viewStartRow = 8 - obj->yLen;
-    }
-    size_t curObjRow = 0;
-    
-    for (size_t j = viewStartRow; j < 8; ++j) {
+    size_t objectViewXCurrentElem = objectViewXStartElem;
+    size_t objectViewXStartPixel = objectViewXStart % 8;
+    size_t objectViewXCurrentPixel = objectViewXStartPixel;
+
+    size_t firstNonEmptyMatrix = emptyPrefixPixels / 8;
+    size_t firstMatrixEmptyPixels = emptyPrefixPixels % 8;
+
+    for (size_t j = 0; j < 8; ++j) {
         for (size_t i = 0; i < matrixCount; ++i) {
-            if (objectViewXElem >= obj->elemsPerRow)
+            if (objectViewXCurrentElem >= obj->elemsPerRow)
+                break;
+            if (i < firstNonEmptyMatrix)
                 continue;
-            uint_fast8_t elem = obj->data[curObjRow*obj->elemsPerRow + objectViewXElem];
-            elem >>= objectViewXShift;
-            objectViewXElem++;
-            if (objectViewXShift != 0 && objectViewXElem < obj->elemsPerRow) {
-                uint_fast8_t otherElem = obj->data[curObjRow*obj->elemsPerRow + objectViewXElem];
-                otherElem <<= (8 - objectViewXShift);
+            size_t pixelsDrawn = 0;
+            // Load the current element
+            uint_fast8_t elem = obj->data[j*obj->elemsPerRow + objectViewXCurrentElem];
+            // Shift it to the right to correct for current pixel
+            elem >>= objectViewXCurrentPixel;
+            pixelsDrawn += 8 - objectViewXCurrentPixel;
+            objectViewXCurrentElem++;
+            if (pixelsDrawn < 8 && objectViewXCurrentElem < obj->elemsPerRow) {
+                uint_fast8_t otherElem = obj->data[j*obj->elemsPerRow + objectViewXCurrentElem];
+                otherElem <<= pixelsDrawn;
                 elem |= otherElem;
+
+            }
+            if (i == firstNonEmptyMatrix) {
+                // Shift it to the left to correct for empty pixels
+                elem <<= firstMatrixEmptyPixels;
+                if (firstMatrixEmptyPixels > objectViewXCurrentPixel) {
+                    objectViewXCurrentPixel += 8 - firstMatrixEmptyPixels;
+                    objectViewXCurrentElem--;
+                } else {
+                    objectViewXCurrentPixel -= firstMatrixEmptyPixels;
+                }
+
             }
             renderBuf[j*matrixCount + (matrixCount - 1 - i)] = elem;
         }
-        curObjRow++;
-        objectViewXElem = objectViewXStartElem;
+        objectViewXCurrentElem = objectViewXStartElem;
+        objectViewXCurrentPixel = objectViewXStartPixel;
     }
 }

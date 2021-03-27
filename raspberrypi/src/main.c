@@ -9,7 +9,7 @@
 #include "pabort.h"
 #include "fontTranslation.h"
 
-static const size_t ledMatrixCount = 3;
+static const size_t ledMatrixCount = 4;
 static atomic_bool halt = false;
 
 static void intHandler(int i) {
@@ -21,6 +21,7 @@ static const char* text = "Woooww, dat is gaaf";
 
 int main(int argc, const char **argv)
 {
+    const ssize_t totalLedMatrixPixels = ledMatrixCount * 8;
     struct sigaction act = {
         .sa_handler = intHandler
     };
@@ -35,7 +36,9 @@ int main(int argc, const char **argv)
 
     struct timespec deadline;
     clock_gettime(CLOCK_MONOTONIC, &deadline);
+    ssize_t viewPortX = -totalLedMatrixPixels;
     while(!halt) {
+        setViewportCoordinates(viewPortX, 0);
         renderBufferObject(tRbo, 0, 0);
         rendererSwapBuffer();
         deadline.tv_nsec += 40000000;
@@ -44,6 +47,10 @@ int main(int argc, const char **argv)
             deadline.tv_sec++;
         }
         clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &deadline, NULL);
+        viewPortX++;
+        if (viewPortX >= tRbo->xLen) {
+            viewPortX = -totalLedMatrixPixels;
+        }
     }
     // Clear the LED matrix
     ledDriverSwapBuffer();
