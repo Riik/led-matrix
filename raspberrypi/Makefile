@@ -14,6 +14,7 @@ RELEASE_OFILES = $(patsubst $(SRCDIR)%,$(RELEASEODIR)%,$(patsubst %.c,%.c.o,$(CF
 ALL_OFILES = $(DEBUG_OFILES) $(RELEASE_OFILES)
 RELEASE_TARGET := final
 DEBUG_TARGET := final_debug
+WERROR_CONFIG := -Werror -Wno-error=unused-variable -Wno-error=unused-but-set-variable
 
 .DEFAULT_GOAL := all
 
@@ -21,7 +22,7 @@ DEBUG_TARGET := final_debug
 
 all: release debug
 
-release: CFLAGS += -O2 -Werror
+release: CFLAGS += -O2 $(WERROR_CONFIG)
 release: $(RELEASE_TARGET)
 
 debug: CFLAGS += -Og -ggdb
