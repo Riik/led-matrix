@@ -3,7 +3,7 @@ SRCDIR:=src/
 CFILES:=$(wildcard $(SRCDIR)*.c)
 INC:= -Iinc/ -Ilibgpiod/include
 LIBDIR:=
-CFLAGS:=-std=gnu18 -Wall -Wfatal-errors -march=armv8-a+crc+simd -mfpu=vfpv3-d16 -mfloat-abi=hard -pthread
+CFLAGS:=-std=gnu18 -Wall -Wfatal-errors -Wshadow -march=armv8-a+crc+simd -mfpu=vfpv3-d16 -mfloat-abi=hard -pthread
 CPPFLAGS:=$(INC) -MMD -MP
 LDFLAGS:=-Llibgpiod/lib -lgpiod -pthread
 ODIR:=obj/
@@ -14,6 +14,7 @@ RELEASE_OFILES = $(patsubst $(SRCDIR)%,$(RELEASEODIR)%,$(patsubst %.c,%.c.o,$(CF
 ALL_OFILES = $(DEBUG_OFILES) $(RELEASE_OFILES)
 RELEASE_TARGET := final
 DEBUG_TARGET := final_debug
+WERROR_CONFIG := -Werror -Wno-error=unused-variable -Wno-error=unused-but-set-variable
 
 .DEFAULT_GOAL := all
 
@@ -21,7 +22,7 @@ DEBUG_TARGET := final_debug
 
 all: release debug
 
-release: CFLAGS += -O2 -Werror
+release: CFLAGS += -O2 $(WERROR_CONFIG)
 release: $(RELEASE_TARGET)
 
 debug: CFLAGS += -Og -ggdb

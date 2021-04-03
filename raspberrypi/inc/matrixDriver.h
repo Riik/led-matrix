@@ -12,6 +12,7 @@
  * on the last 8 columns.*/
 
 #define LED_MATRIX_ROW_COUNT 8
+#define LED_MATRIX_COL_COUNT_PER_MATRIX 8
 
 /**Start a thread wich will copy the active buffer to the LED matrix
  * @param cols The amount of columns (driven by SPI). Cannot be zero. Must be a multiple of 8.
@@ -19,7 +20,7 @@
  *
  * @warning Call this function first to prevent initialization issues.
  */
-bool startLedDriving(size_t colCount);
+bool startLedDriving(size_t ledMatrixCount, const char* argv0);
 
 /**Introduce new data for the matrix driver to display.
  * @param newBuf A buffer filled with the new data.
