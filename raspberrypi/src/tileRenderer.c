@@ -62,7 +62,7 @@ void renderBufferObject(struct RenderingBufferObject *obj, ssize_t x, ssize_t y)
 
     // It is in view! Check what exactly is in view
     // First question: is there an empty space preceeding?
-    ssize_t emptyPrefixPixels = 0;
+    size_t emptyPrefixPixels = 0;
     if (objectXStart > viewPortXStart) {
         emptyPrefixPixels = objectXStart - viewPortXStart;
     }
@@ -74,18 +74,22 @@ void renderBufferObject(struct RenderingBufferObject *obj, ssize_t x, ssize_t y)
     } else {
         objectViewXStart = viewPortXStart - objectXStart;
     }
-    size_t objectViewXStartElem = objectViewXStart / 8;
+    const size_t objectViewXStartElem = objectViewXStart / 8;
     size_t objectViewXCurrentElem = objectViewXStartElem;
-    size_t objectViewXStartPixel = objectViewXStart % 8;
+    const size_t objectViewXStartPixel = objectViewXStart % 8;
     size_t objectViewXCurrentPixel = objectViewXStartPixel;
 
-    size_t firstNonEmptyMatrix = emptyPrefixPixels / 8;
-    size_t firstMatrixEmptyPixels = emptyPrefixPixels % 8;
+    const size_t firstNonEmptyMatrix = emptyPrefixPixels / 8;
+    const size_t firstMatrixEmptyPixels = emptyPrefixPixels % 8;
+
+    size_t finalElementMaskLen = obj->elemsPerRow*8 - obj->xLen;
+    uint_fast8_t finalElementMask = 0;
+    if (finalElementMaskLen > 0) {
+        finalElementMask = (1 << (8 - finalElementMaskLen)) - 1;
+    }
 
     for (size_t j = 0; j < 8; ++j) {
         for (size_t i = firstNonEmptyMatrix; i < matrixCount; ++i) {
-            if (objectViewXCurrentElem >= obj->elemsPerRow)
-                break;
             size_t pixelsDrawn = 0;
             // Load the current element
             uint_fast8_t elem = obj->data[j*obj->elemsPerRow + objectViewXCurrentElem];
@@ -102,15 +106,26 @@ void renderBufferObject(struct RenderingBufferObject *obj, ssize_t x, ssize_t y)
             if (i == firstNonEmptyMatrix) {
                 // Shift it to the left to correct for empty pixels
                 elem <<= firstMatrixEmptyPixels;
-                if (firstMatrixEmptyPixels > objectViewXCurrentPixel) {
+                if (firstMatrixEmptyPixels > objectViewXCurrentPixel && firstMatrixEmptyPixels + obj->xLen > 8) {
                     objectViewXCurrentPixel += 8 - firstMatrixEmptyPixels;
                     objectViewXCurrentElem--;
                 } else {
                     objectViewXCurrentPixel -= firstMatrixEmptyPixels;
                 }
+            }
 
+            if (objectViewXCurrentElem >= obj->elemsPerRow) {
+                uint_fast8_t mask = finalElementMask;
+                if (i == firstNonEmptyMatrix) {
+                    mask <<= firstMatrixEmptyPixels;
+                    mask >>= objectViewXStartPixel;
+                }
+                elem &= mask;
             }
             renderBuf[j*matrixCount + (matrixCount - 1 - i)] = elem;
+            if (objectViewXCurrentElem >= obj->elemsPerRow) {
+                break;
+            }
         }
         objectViewXCurrentElem = objectViewXStartElem;
         objectViewXCurrentPixel = objectViewXStartPixel;

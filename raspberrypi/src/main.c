@@ -31,6 +31,14 @@ int main(int argc, const char **argv)
     }
     struct RenderingBufferObject* tRbo = textToRBO(text, strlen(text));
 
+    struct RenderingBufferObject littleCube;
+    littleCube.data = calloc(2, sizeof(*littleCube.data));
+    littleCube.xLen = 2;
+    littleCube.yLen = 2;
+    littleCube.elemsPerRow = 1;
+
+    memset(littleCube.data, 0xff, sizeof(*littleCube.data)*2);
+
     unsigned int curBrightness = 100;
     ledDriverSetBrightnessPercentage(curBrightness);
 
@@ -39,7 +47,7 @@ int main(int argc, const char **argv)
     ssize_t viewPortX = -totalLedMatrixPixels;
     while(!halt) {
         setViewportCoordinates(viewPortX, 0);
-        renderBufferObject(tRbo, 0, 0);
+        renderBufferObject(&littleCube, 0, 0);
         rendererSwapBuffer();
         deadline.tv_nsec += 40000000;
         if(deadline.tv_nsec >= 1000000000) {
@@ -48,7 +56,7 @@ int main(int argc, const char **argv)
         }
         clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &deadline, NULL);
         viewPortX++;
-        if (viewPortX >= tRbo->xLen) {
+        if (viewPortX >= littleCube.xLen) {
             viewPortX = -totalLedMatrixPixels;
         }
     }
