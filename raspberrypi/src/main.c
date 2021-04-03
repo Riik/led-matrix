@@ -45,10 +45,12 @@ int main(int argc, const char **argv)
     struct timespec deadline;
     clock_gettime(CLOCK_MONOTONIC, &deadline);
     ssize_t viewPortX = -totalLedMatrixPixels;
+    ssize_t viewPortY = -7;
     while(!halt) {
-        setViewportCoordinates(viewPortX, 0);
+        setViewportCoordinates(viewPortX, viewPortY);
         renderBufferObject(&littleCube, 0, 0);
         renderBufferObject(&littleCube, 4, 0);
+        renderBufferObject(&littleCube, 0, 4);
         rendererSwapBuffer();
         deadline.tv_nsec += 40000000;
         while (deadline.tv_nsec >= 1000000000) {
@@ -59,7 +61,12 @@ int main(int argc, const char **argv)
         viewPortX++;
         if (viewPortX >= littleCube.xLen + 4) {
             viewPortX = -totalLedMatrixPixels;
+            viewPortY++;
+            if (viewPortY >= 6 ) {
+                viewPortY = -7;
+            }
         }
+
     }
     // Clear the LED matrix
     ledDriverSwapBuffer();

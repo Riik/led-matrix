@@ -60,7 +60,16 @@ void renderBufferObject(struct RenderingBufferObject *obj, ssize_t x, ssize_t y)
     if (objectXEnd < viewPortXStart || objectXStart > viewPortXEnd)
         return;
 
+    ssize_t viewPortYStart = viewPortY;
+    ssize_t viewPortYEnd = viewPortY + LED_MATRIX_ROW_COUNT;
+    ssize_t objectYStart = y;
+    ssize_t objectYEnd = y + obj->yLen;
+
+    if (objectYEnd < viewPortYStart || objectYStart > viewPortYEnd)
+        return;
+
     // It is in view! Check what exactly is in view
+    // First, handle the x part
     // First question: is there an empty space preceeding?
     size_t emptyPrefixPixels = 0;
     if (objectXStart > viewPortXStart) {
@@ -88,11 +97,22 @@ void renderBufferObject(struct RenderingBufferObject *obj, ssize_t x, ssize_t y)
         finalElementMask = (1 << (8 - finalElementMaskLen)) - 1;
     }
 
-    for (size_t j = 0; j < 8; ++j) {
+    // Now, handle the y part.
+    size_t emptyPrefixLines = 0;
+    if (objectYEnd < viewPortYEnd) {
+        emptyPrefixLines = viewPortYEnd - objectYEnd;
+    }
+    size_t objectStartLine = 0;
+    if (objectYEnd > viewPortYEnd) {
+        objectStartLine = objectYEnd - viewPortYEnd;
+    }
+    size_t objectEndLine = obj->yLen;
+
+    for (size_t j = emptyPrefixLines; j < 8; ++j) {
         for (size_t i = firstNonEmptyMatrix; i < matrixCount && objectViewXCurrentElem < obj->elemsPerRow; ++i) {
             size_t pixelsDrawn = 0;
             // Load the current element
-            uint_fast8_t elem = obj->data[j*obj->elemsPerRow + objectViewXCurrentElem];
+            uint_fast8_t elem = obj->data[objectStartLine*obj->elemsPerRow + objectViewXCurrentElem];
             if (objectViewXCurrentElem + 1 >= obj->elemsPerRow) {
                 elem &= finalElementMask;
             }
@@ -101,13 +121,12 @@ void renderBufferObject(struct RenderingBufferObject *obj, ssize_t x, ssize_t y)
             pixelsDrawn += 8 - objectViewXCurrentPixel;
             objectViewXCurrentElem++;
             if (pixelsDrawn < 8 && objectViewXCurrentElem < obj->elemsPerRow) {
-                uint_fast8_t otherElem = obj->data[j*obj->elemsPerRow + objectViewXCurrentElem];
+                uint_fast8_t otherElem = obj->data[objectStartLine*obj->elemsPerRow + objectViewXCurrentElem];
                 if (objectViewXCurrentElem + 1 >= obj->elemsPerRow) {
                     otherElem &= finalElementMask;
                 }
                 otherElem <<= pixelsDrawn;
                 elem |= otherElem;
-
             }
 
             // If it is the first or last element, we might have to merge with existing data.
@@ -136,5 +155,9 @@ void renderBufferObject(struct RenderingBufferObject *obj, ssize_t x, ssize_t y)
         }
         objectViewXCurrentElem = objectViewXStartElem;
         objectViewXCurrentPixel = objectViewXStartPixel;
+        objectStartLine += 1;
+        if (objectStartLine >= objectEndLine) {
+            break;
+        }
     }
 }
