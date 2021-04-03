@@ -83,11 +83,9 @@ void renderBufferObject(struct RenderingBufferObject *obj, ssize_t x, ssize_t y)
     size_t firstMatrixEmptyPixels = emptyPrefixPixels % 8;
 
     for (size_t j = 0; j < 8; ++j) {
-        for (size_t i = 0; i < matrixCount; ++i) {
+        for (size_t i = firstNonEmptyMatrix; i < matrixCount; ++i) {
             if (objectViewXCurrentElem >= obj->elemsPerRow)
                 break;
-            if (i < firstNonEmptyMatrix)
-                continue;
             size_t pixelsDrawn = 0;
             // Load the current element
             uint_fast8_t elem = obj->data[j*obj->elemsPerRow + objectViewXCurrentElem];
