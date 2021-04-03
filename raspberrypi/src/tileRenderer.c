@@ -89,22 +89,30 @@ void renderBufferObject(struct RenderingBufferObject *obj, ssize_t x, ssize_t y)
     }
 
     for (size_t j = 0; j < 8; ++j) {
-        for (size_t i = firstNonEmptyMatrix; i < matrixCount; ++i) {
+        for (size_t i = firstNonEmptyMatrix; i < matrixCount && objectViewXCurrentElem < obj->elemsPerRow; ++i) {
             size_t pixelsDrawn = 0;
             // Load the current element
             uint_fast8_t elem = obj->data[j*obj->elemsPerRow + objectViewXCurrentElem];
+            if (objectViewXCurrentElem + 1 >= obj->elemsPerRow) {
+                elem &= finalElementMask;
+            }
             // Shift it to the right to correct for current pixel
             elem >>= objectViewXCurrentPixel;
             pixelsDrawn += 8 - objectViewXCurrentPixel;
             objectViewXCurrentElem++;
             if (pixelsDrawn < 8 && objectViewXCurrentElem < obj->elemsPerRow) {
                 uint_fast8_t otherElem = obj->data[j*obj->elemsPerRow + objectViewXCurrentElem];
+                if (objectViewXCurrentElem + 1 >= obj->elemsPerRow) {
+                    otherElem &= finalElementMask;
+                }
                 otherElem <<= pixelsDrawn;
                 elem |= otherElem;
 
             }
+
+            // If it is the first or last element, we might have to merge with existing data.
             if (i == firstNonEmptyMatrix) {
-                // Shift it to the left to correct for empty pixels
+                // Shift the element to correct for empty pixels
                 elem <<= firstMatrixEmptyPixels;
                 if (firstMatrixEmptyPixels > objectViewXCurrentPixel && firstMatrixEmptyPixels + obj->xLen > 8) {
                     objectViewXCurrentPixel += 8 - firstMatrixEmptyPixels;
@@ -112,19 +120,18 @@ void renderBufferObject(struct RenderingBufferObject *obj, ssize_t x, ssize_t y)
                 } else {
                     objectViewXCurrentPixel -= firstMatrixEmptyPixels;
                 }
-            }
-
-            if (objectViewXCurrentElem >= obj->elemsPerRow) {
+                uint_fast8_t mask = ~(255 << firstMatrixEmptyPixels);
+                // Merge with existing element
+                uint_fast8_t oldElem = renderBuf[j*matrixCount + (matrixCount - 1 - i)] & mask;
+                renderBuf[j*matrixCount + (matrixCount - 1 - i)] = elem | oldElem;
+            } else if (objectViewXCurrentElem >= obj->elemsPerRow) {
                 uint_fast8_t mask = finalElementMask;
-                if (i == firstNonEmptyMatrix) {
-                    mask <<= firstMatrixEmptyPixels;
-                    mask >>= objectViewXStartPixel;
-                }
-                elem &= mask;
-            }
-            renderBuf[j*matrixCount + (matrixCount - 1 - i)] = elem;
-            if (objectViewXCurrentElem >= obj->elemsPerRow) {
-                break;
+                mask >>= objectViewXCurrentPixel;
+                uint_fast8_t oldElem = renderBuf[j*matrixCount + (matrixCount - 1 - i)];
+                oldElem &= ~mask;
+                renderBuf[j*matrixCount + (matrixCount - 1 - i)] = elem | oldElem;
+            } else {
+                renderBuf[j*matrixCount + (matrixCount - 1 - i)] = elem;
             }
         }
         objectViewXCurrentElem = objectViewXStartElem;

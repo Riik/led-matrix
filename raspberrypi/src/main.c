@@ -48,15 +48,16 @@ int main(int argc, const char **argv)
     while(!halt) {
         setViewportCoordinates(viewPortX, 0);
         renderBufferObject(&littleCube, 0, 0);
+        renderBufferObject(&littleCube, 4, 0);
         rendererSwapBuffer();
         deadline.tv_nsec += 40000000;
-        if(deadline.tv_nsec >= 1000000000) {
+        while (deadline.tv_nsec >= 1000000000) {
             deadline.tv_nsec -= 1000000000;
             deadline.tv_sec++;
         }
         clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &deadline, NULL);
         viewPortX++;
-        if (viewPortX >= littleCube.xLen) {
+        if (viewPortX >= littleCube.xLen + 4) {
             viewPortX = -totalLedMatrixPixels;
         }
     }
