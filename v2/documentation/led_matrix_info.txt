@@ -1,0 +1,13 @@
+
+
+Led Matrix 8x8 with 3.75 mm pitch between the LED's. LED color is red.
+
+Specifications:
+
+    16 pins connections
+    Dimensions: 37.6x37.6mm
+    Input voltage: 1.96-2.0 V
+    Current:  20 mA
+
+Pinout is indicated in the product images.
+
