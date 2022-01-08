@@ -92,7 +92,7 @@ void renderBufferObject(struct RenderingBufferObject *obj, ssize_t x, ssize_t y)
     const size_t firstMatrixEmptyPixels = emptyPrefixPixels % 8;
 
     size_t finalElementMaskLen = obj->elemsPerRow*8 - obj->xLen;
-    uint_fast8_t finalElementMask = 0;
+    uint_fast8_t finalElementMask = 0xff;
     if (finalElementMaskLen > 0) {
         finalElementMask = (1 << (8 - finalElementMaskLen)) - 1;
     }
@@ -139,9 +139,12 @@ void renderBufferObject(struct RenderingBufferObject *obj, ssize_t x, ssize_t y)
                 } else {
                     objectViewXCurrentPixel -= firstMatrixEmptyPixels;
                 }
-                uint_fast8_t mask = ~(255 << firstMatrixEmptyPixels);
+                uint_fast8_t mask = 255;
+                if (objectViewXCurrentElem >= obj->elemsPerRow) {
+                    mask = finalElementMask >> objectViewXCurrentPixel;
+                }
                 // Merge with existing element
-                uint_fast8_t oldElem = renderBuf[j*matrixCount + (matrixCount - 1 - i)] & mask;
+                uint_fast8_t oldElem = renderBuf[j*matrixCount + (matrixCount - 1 - i)] & ~(mask << firstMatrixEmptyPixels);
                 renderBuf[j*matrixCount + (matrixCount - 1 - i)] = elem | oldElem;
             } else if (objectViewXCurrentElem >= obj->elemsPerRow) {
                 uint_fast8_t mask = finalElementMask;
