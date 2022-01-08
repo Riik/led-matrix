@@ -1,4 +1,4 @@
 (sym_lib_table
-  (lib (name akn_misc)(type Legacy)(uri ${KIPRJMOD}/Libraries/akn_misc.lib)(options "")(descr ""))
-  (lib (name my_connectors)(type Legacy)(uri ${KIPRJMOD}/Libraries/my_connectors.lib)(options "")(descr ""))
+  (lib (name "akn_misc")(type "KiCad")(uri "${KIPRJMOD}/Libraries/akn_misc.kicad_sym")(options "")(descr ""))
+  (lib (name "my_connectors")(type "KiCad")(uri "${KIPRJMOD}/Libraries/my_connectors.kicad_sym")(options "")(descr ""))
 )
