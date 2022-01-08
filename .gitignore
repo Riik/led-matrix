@@ -51,8 +51,8 @@ tags
 # Persistent undo
 [._]*.un~
 #raspberry pi aux files
-raspberrypi/obj
-raspberrypi/final
-raspberrypi/final_debug
-raspberrypi/upload.sh
-raspberrypi/libgpiod
+*/raspberrypi/obj
+*/raspberrypi/final
+*/raspberrypi/final_debug
+*/raspberrypi/upload.sh
+*/raspberrypi/libgpiod
