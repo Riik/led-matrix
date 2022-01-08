@@ -36,21 +36,36 @@ int main(int argc, const char **argv)
     littleCube.xLen = 2;
     littleCube.yLen = 2;
     littleCube.elemsPerRow = 1;
-
     memset(littleCube.data, 0xff, sizeof(*littleCube.data)*2);
+
+    struct RenderingBufferObject bigCube;
+    bigCube.data = calloc(8, sizeof(*bigCube.data));
+    bigCube.xLen = 8;
+    bigCube.yLen = 8;
+    bigCube.elemsPerRow = 1;
+    memset(bigCube.data, 0xff, sizeof(*bigCube.data)*8);
 
     unsigned int curBrightness = 100;
     ledDriverSetBrightnessPercentage(curBrightness);
 
     struct timespec deadline;
     clock_gettime(CLOCK_MONOTONIC, &deadline);
-    ssize_t viewPortX = -totalLedMatrixPixels;
-    ssize_t viewPortY = -7;
+    ssize_t viewPortX = 0;
+    ssize_t viewPortY = 0;
+    bool reverse = false;
+    bool yReverse = true;
     while(!halt) {
         setViewportCoordinates(viewPortX, viewPortY);
+        renderBufferObject(&littleCube, 6, 0);
+        renderBufferObject(&littleCube, 5, 2);
+        renderBufferObject(&littleCube, 4, 4);
+        renderBufferObject(&littleCube, 3, 6);
+        renderBufferObject(&littleCube, 2, 4);
+        renderBufferObject(&littleCube, 1, 2);
         renderBufferObject(&littleCube, 0, 0);
-        renderBufferObject(&littleCube, 4, 0);
-        renderBufferObject(&littleCube, 0, 4);
+
+        renderBufferObject(&bigCube, 16, 0);
+        renderBufferObject(&bigCube, -16, 0);
         rendererSwapBuffer();
         deadline.tv_nsec += 40000000;
         while (deadline.tv_nsec >= 1000000000) {
@@ -58,13 +73,26 @@ int main(int argc, const char **argv)
             deadline.tv_sec++;
         }
         clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &deadline, NULL);
-        viewPortX++;
-        if (viewPortX >= littleCube.xLen + 4) {
-            viewPortX = -totalLedMatrixPixels;
+        if (reverse)
+            viewPortX--;
+        else
+            viewPortX++;
+        if (viewPortX >= littleCube.xLen) {
+            reverse = true;
+        } else if (viewPortX <= -totalLedMatrixPixels + 7) {
+            reverse = false;
+        }
+
+        if (yReverse) {
+            viewPortY--;
+        } else {
             viewPortY++;
-            if (viewPortY >= 6 ) {
-                viewPortY = -7;
-            }
+        }
+
+        if (viewPortY >= 3) {
+            yReverse = true;
+        } else if (viewPortY <= -3) {
+            yReverse = false;
         }
 
     }
@@ -73,5 +101,7 @@ int main(int argc, const char **argv)
 
     destroyTextRBO(tRbo);
     destroyRenderer();
+    free(littleCube.data);
+    free(bigCube.data);
     return EXIT_SUCCESS;
 }
