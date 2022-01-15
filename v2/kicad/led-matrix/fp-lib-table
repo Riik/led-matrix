@@ -1,0 +1,3 @@
+(fp_lib_table
+  (lib (name "led-matrix")(type "KiCad")(uri "${KIPRJMOD}/Footprints/led-matrix.pretty")(options "")(descr ""))
+)
