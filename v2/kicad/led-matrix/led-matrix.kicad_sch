@@ -1626,7 +1626,7 @@
     (uuid 00000000-0000-0000-0000-000061d0c670)
     (property "Reference" "J1" (id 0) (at 38.1 87.1982 0))
     (property "Value" "Conn_02x03_Input" (id 1) (at 38.1 89.5096 0))
-    (property "Footprint" "Connector_PinSocket_2.54mm:PinSocket_2x03_P2.54mm_Horizontal" (id 2) (at 30.48 102.87 0)
+    (property "Footprint" "led-matrix:PinSocket_2x03_P2.54mm_Horizontal" (id 2) (at 30.48 102.87 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "~" (id 3) (at 30.48 96.52 0)
@@ -1780,7 +1780,7 @@
       (reference "D1") (unit 1) (value "1588BS") (footprint "led-matrix:8x8_led_matrix_38mm")
     )
     (path "/00000000-0000-0000-0000-000061d0c670"
-      (reference "J1") (unit 1) (value "Conn_02x03_Input") (footprint "Connector_PinSocket_2.54mm:PinSocket_2x03_P2.54mm_Horizontal")
+      (reference "J1") (unit 1) (value "Conn_02x03_Input") (footprint "led-matrix:PinSocket_2x03_P2.54mm_Horizontal")
     )
     (path "/00000000-0000-0000-0000-000061d0dd4c"
       (reference "J2") (unit 1) (value "Conn_02x03_Output") (footprint "Connector_PinHeader_2.54mm:PinHeader_2x03_P2.54mm_Horizontal")
