@@ -6,10 +6,10 @@
 
   (paper "A4")
   (title_block
-    (title "Ir.")
-    (date "Vandaag")
-    (rev ">0")
-    (company "Ja, leuk")
+    (title "LED MATRIX 2.0")
+    (date "2022-02-04")
+    (rev "1.0")
+    (company "Jacko & Rik PCBs inc.")
   )
 
   (layers
@@ -129,7 +129,7 @@
     (property "Sheetname" "")
     (path "/00000000-0000-0000-0000-000061d0c670")
     (attr through_hole)
-    (fp_text reference "J1" (at -5.65 -2.77 -90) (layer "F.SilkS")
+    (fp_text reference "J1" (at -5.65 -2.77 -90) (layer "F.SilkS") hide
       (effects (font (size 1 1) (thickness 0.15)))
       (tstamp 7549156c-8ad3-4dbd-afd6-0990e83118f0)
     )
@@ -510,7 +510,7 @@
 
   (footprint "led-matrix:logo_scaled" (layer "F.Cu")
     (tedit 0) (tstamp d535e6c8-15ec-4c3a-8fe3-868c6aa50615)
-    (at 128.482113 107.627757)
+    (at 128.4 120.43)
     (attr board_only exclude_from_pos_files exclude_from_bom)
     (fp_text reference "G***" (at 0 0) (layer "F.SilkS") hide
       (effects (font (size 1.524 1.524) (thickness 0.3)))
@@ -1495,7 +1495,7 @@
     (property "Sheetname" "")
     (path "/00000000-0000-0000-0000-000061cd0fa8")
     (attr through_hole)
-    (fp_text reference "D1" (at 0 7 unlocked) (layer "B.SilkS")
+    (fp_text reference "D1" (at 0 7 unlocked) (layer "B.SilkS") hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
       (tstamp edbc17dd-aa76-4d77-81ec-11ed42efea05)
     )
