@@ -1626,7 +1626,7 @@
     (uuid 00000000-0000-0000-0000-000061d0c670)
     (property "Reference" "J1" (id 0) (at 38.1 87.1982 0))
     (property "Value" "Conn_02x03_Input" (id 1) (at 38.1 89.5096 0))
-    (property "Footprint" "Connector_PinSocket_2.54mm:PinSocket_2x03_P2.54mm_Horizontal" (id 2) (at 30.48 102.87 0)
+    (property "Footprint" "led-matrix:PinSocket_2x03_P2.54mm_Horizontal" (id 2) (at 30.48 102.87 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "~" (id 3) (at 30.48 96.52 0)
@@ -1714,7 +1714,7 @@
     (property "Value" "MAX7219" (id 1) (at 54.0894 25.4 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
-    (property "Footprint" "Package_SO:SOIC-24W_7.5x15.4mm_P1.27mm" (id 2) (at 50.8 49.53 0)
+    (property "Footprint" "led-matrix:HandSolder.SOIC-24W_7.5x15.4mm_P1.27mm" (id 2) (at 50.8 49.53 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "https://datasheets.maximintegrated.com/en/ds/MAX7219-MAX7221.pdf" (id 3) (at 53.34 54.61 0)
@@ -1780,7 +1780,7 @@
       (reference "D1") (unit 1) (value "1588BS") (footprint "led-matrix:8x8_led_matrix_38mm")
     )
     (path "/00000000-0000-0000-0000-000061d0c670"
-      (reference "J1") (unit 1) (value "Conn_02x03_Input") (footprint "Connector_PinSocket_2.54mm:PinSocket_2x03_P2.54mm_Horizontal")
+      (reference "J1") (unit 1) (value "Conn_02x03_Input") (footprint "led-matrix:PinSocket_2x03_P2.54mm_Horizontal")
     )
     (path "/00000000-0000-0000-0000-000061d0dd4c"
       (reference "J2") (unit 1) (value "Conn_02x03_Output") (footprint "Connector_PinHeader_2.54mm:PinHeader_2x03_P2.54mm_Horizontal")
@@ -1789,7 +1789,7 @@
       (reference "R1") (unit 1) (value "28 K") (footprint "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder")
     )
     (path "/82db4006-3899-43e0-b593-d936c945d657"
-      (reference "U1") (unit 1) (value "MAX7219") (footprint "Package_SO:SOIC-24W_7.5x15.4mm_P1.27mm")
+      (reference "U1") (unit 1) (value "MAX7219") (footprint "led-matrix:HandSolder.SOIC-24W_7.5x15.4mm_P1.27mm")
     )
   )
 )
