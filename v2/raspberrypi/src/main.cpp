@@ -8,14 +8,11 @@
 
 const char *spidev = "/dev/spidev0.0";
 
-int main(int argc, const char **argv) {
-    int retval = EXIT_SUCCESS;
-
+int main(void) {
     int spifd = open(spidev, O_RDWR);
     if (spifd < 0) {
         fprintf(stderr, "open %s failed\n", spidev);
-        retval = EXIT_FAILURE;
-        goto main_exit;
+        return EXIT_FAILURE;
     }
 
     struct spi_ioc_transfer tr[10] = {{0}};
@@ -58,6 +55,5 @@ int main(int argc, const char **argv) {
     ioctl(spifd, SPI_IOC_MESSAGE(sizeof(tr)/sizeof(tr[0])), &tr[0]);
 
     close(spifd);
-main_exit:
-    return retval;
+    return EXIT_SUCCESS;
 }
