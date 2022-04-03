@@ -29,8 +29,8 @@ class MatrixScreen {
 
     private:
         std::vector<MatrixScreen::PixelColor> screen;
-        const std::size_t matrixCountWidth;
-        const std::size_t matrixCountHeight;
-        const std::size_t pixelCountWidth;
-        const std::size_t pixelCountHeight;
+        std::size_t matrixCountWidth;
+        std::size_t matrixCountHeight;
+        std::size_t pixelCountWidth;
+        std::size_t pixelCountHeight;
 };
