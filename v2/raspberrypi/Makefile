@@ -8,7 +8,7 @@ LIBDIR:=
 CFLAGS:=-std=gnu18
 CXXFLAGS:=-std=gnu++20
 CPPFLAGS:=$(INC) -MMD -MP
-LDFLAGS:=
+LDFLAGS:= -pthread
 ODIR:=obj/
 DEBUGODIR:=$(ODIR)debug/
 RELEASEODIR:=$(ODIR)release/
@@ -20,7 +20,7 @@ ALL_OFILES = $(DEBUG_OFILES) $(RELEASE_OFILES)
 RELEASE_TARGET := final
 DEBUG_TARGET := final_debug
 
-WERROR_CONFIG :=-Wall -Wfatal-errors -Wshadow=local -Werror -Wno-error=unused-variable -Wno-error=unused-but-set-variable
+WERROR_CONFIG :=-Wall -Wshadow=local -Werror -Wno-error=unused-variable -Wno-error=unused-but-set-variable
 ARCH_CONFIG :=-march=armv8-a+crc+simd -mfpu=vfpv3-d16 -mfloat-abi=hard
 
 RELEASE_CPP_CONFIG := $(CPPFLAGS)
