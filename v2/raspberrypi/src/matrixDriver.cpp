@@ -28,7 +28,6 @@ MatrixDriver::MatrixDriver(const std::string &spiDevName, const MatrixScreen &ex
     tr.speed_hz = 10000000;
     tr.len = buf.size();
     tr.tx_buf = (unsigned long)buf.data();
-    tr.cs_change = 1;
 
     // First we transmit a shutdown to every matrix
     for (std::size_t i = 0; i < buf.size(); i += 2) {
@@ -37,6 +36,30 @@ MatrixDriver::MatrixDriver(const std::string &spiDevName, const MatrixScreen &ex
     }
 
     int ret = ioctl(this->spifd, SPI_IOC_MESSAGE(1), &tr);
+    if (ret < 0) {
+        close(this->spifd);
+        throw std::system_error(errno, std::generic_category(), spiDevName);
+    }
+
+    // Disable decode mode
+    for (std::size_t i = 0; i < buf.size(); i += 2) {
+        buf[i] = 0x09;
+        buf[i+1] = 0x00;
+    }
+
+    ret = ioctl(this->spifd, SPI_IOC_MESSAGE(1), &tr);
+    if (ret < 0) {
+        close(this->spifd);
+        throw std::system_error(errno, std::generic_category(), spiDevName);
+    }
+
+    // Disable test mode
+    for (std::size_t i = 0; i < buf.size(); i += 2) {
+        buf[i] = 0x0F;
+        buf[i+1] = 0x00;
+    }
+
+    ret = ioctl(this->spifd, SPI_IOC_MESSAGE(1), &tr);
     if (ret < 0) {
         close(this->spifd);
         throw std::system_error(errno, std::generic_category(), spiDevName);
@@ -120,6 +143,7 @@ void MatrixDriver::screenToSpi(std::stop_token stopToken)
     }
     tr[0].tx_buf = (unsigned long)turnOffBuf.data();
     tr[9].tx_buf = (unsigned long)turnOnBuf.data();
+    tr[9].cs_change = 0;
     for (std::size_t i = 1; i < 9; ++i) {
         tr[i].tx_buf = (unsigned long) matrixContentBuf[i - 1].data();
     }
@@ -139,42 +163,41 @@ void MatrixDriver::screenToSpi(std::stop_token stopToken)
                 // Isolate the pixelcoordinates that belong to this matrix
                 std::size_t pixelRowMin;
                 if (this->physicalConnectionLocation == MatrixDriver::PhysicalConnectionLocation::topLeft) {
-                    pixelRowMin = this->screen.getPixelCountHeight() - matRow*MatrixScreen::matrixPixelCountHeight -
-                        (MatrixScreen::matrixPixelCountHeight);
+                    pixelRowMin = this->screen.getPixelCountHeight() - (matRow + 1)*MatrixScreen::matrixPixelCountHeight;
                 } else {
                     pixelRowMin = matRow*MatrixScreen::matrixPixelCountHeight;
                 }
-                std::size_t pixelRowMax = pixelRowMin + (MatrixScreen::matrixPixelCountHeight - 1);
                 std::size_t pixelColMin = matCol*MatrixScreen::matrixPixelCountWidth;
                 // The matrix index in the total list of matrices. Note that the first byte is shoved all the way through, pointing to
                 // the last matrix.
                 std::size_t curIndex = matrixCount - 1 - (matRow * this->matrixCountWidth + matCol);
                 // Finally, we set the relevant bytes.
+                // A buffer is about a column.
                 for (std::size_t i = 0; i < 8; ++i) {
                     uint8_t &ref = matrixContentBuf[i][2*curIndex + 1];
                     ref = 0;
-                    if (this->screen(pixelRowMax - i, pixelColMin) == MatrixScreen::PixelColor::on) {
+                    if (this->screen(pixelColMin + i, pixelRowMin + 0) == MatrixScreen::PixelColor::on) {
                         ref |= 0x80;
                     }
-                    if (this->screen(pixelRowMax - i, pixelColMin + 1) == MatrixScreen::PixelColor::on) {
+                    if (this->screen(pixelColMin + i, pixelRowMin + 1) == MatrixScreen::PixelColor::on) {
                         ref |= 0x01;
                     }
-                    if (this->screen(pixelRowMax - i, pixelColMin + 2) == MatrixScreen::PixelColor::on) {
+                    if (this->screen(pixelColMin + i, pixelRowMin + 2) == MatrixScreen::PixelColor::on) {
                         ref |= 0x02;
                     }
-                    if (this->screen(pixelRowMax - i, pixelColMin + 3) == MatrixScreen::PixelColor::on) {
+                    if (this->screen(pixelColMin + i, pixelRowMin + 3) == MatrixScreen::PixelColor::on) {
                         ref |= 0x04;
                     }
-                    if (this->screen(pixelRowMax - i, pixelColMin + 4) == MatrixScreen::PixelColor::on) {
+                    if (this->screen(pixelColMin + i, pixelRowMin + 4) == MatrixScreen::PixelColor::on) {
                         ref |= 0x08;
                     }
-                    if (this->screen(pixelRowMax - i, pixelColMin + 5) == MatrixScreen::PixelColor::on) {
+                    if (this->screen(pixelColMin + i, pixelRowMin + 5) == MatrixScreen::PixelColor::on) {
                         ref |= 0x10;
                     }
-                    if (this->screen(pixelRowMax - i, pixelColMin + 6) == MatrixScreen::PixelColor::on) {
+                    if (this->screen(pixelColMin + i, pixelRowMin + 6) == MatrixScreen::PixelColor::on) {
                         ref |= 0x20;
                     }
-                    if (this->screen(pixelRowMax - i, pixelColMin + 7) == MatrixScreen::PixelColor::on) {
+                    if (this->screen(pixelColMin + i, pixelRowMin + 7) == MatrixScreen::PixelColor::on) {
                         ref |= 0x40;
                     }
                 }
