@@ -53,16 +53,16 @@ $(DEBUGODIR)%.c.o: $(SRCDIR)%.c | $(DEBUGODIR)
 	$(CC) $(RELEASE_CPP_CONFIG) $(RELEASE_C_CONFIG) -c $< -o $@
 
 $(DEBUGODIR)%.cpp.o: $(SRCDIR)%.cpp | $(DEBUGODIR)
-	$(CXX) $(RELEASE_CPP_CONFIG) $(RELEASE_CXX_CONFIG) -c $< -o $@
+	$(CXX) $(DEBUG_CPP_CONFIG) $(DEBUG_CXX_CONFIG) -c $< -o $@
 
 $(RELEASEODIR)%.c.o: $(SRCDIR)%.c | $(RELEASEODIR)
 	$(CC) $(DEBUG_CPP_CONFIG) $(DEBUG_C_CONFIG) -c $< -o $@
 
 $(RELEASEODIR)%.cpp.o: $(SRCDIR)%.cpp | $(RELEASEODIR)
-	$(CXX) $(DEBUG_CPP_CONFIG) $(DEBUG_CXX_CONFIG) -c $< -o $@
+	$(CXX) $(RELEASE_CPP_CONFIG) $(RELEASE_CXX_CONFIG) -c $< -o $@
 
 $(DEBUG_TARGET): $(DEBUG_OFILES)
-	$(CXX) -o $@ $^ $(LDFLAGS)
+	$(CXX) -o $@ $^ -g $(LDFLAGS)
 
 $(RELEASE_TARGET): $(RELEASE_OFILES)
 	$(CXX) -o $@ $^ $(LDFLAGS)
