@@ -1,3 +1,6 @@
+#ifndef FRAMELIMITER_HPP
+#define FRAMELIMITER_HPP
+
 #include <chrono>
 
 class FrameLimiter {
@@ -12,3 +15,5 @@ class FrameLimiter {
         std::chrono::time_point<std::chrono::steady_clock> lastWakeTime;
         std::chrono::nanoseconds timePerFrame;
 };
+
+#endif //FRAMELIMITER_HPP

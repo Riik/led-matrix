@@ -1,3 +1,5 @@
+#ifndef MATRIXDRIVER_HPP
+#define MATRIXDRIVER_HPP
 #include <thread>
 #include <semaphore>
 #include <mutex>
@@ -44,3 +46,4 @@ class MatrixDriver {
         void screenToSpi(std::stop_token stopToken);
 
 };
+#endif //MATRIXDRIVER_HPP

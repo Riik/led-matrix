@@ -1,3 +1,5 @@
+#ifndef MATRIXSCREEN_HPP
+#define MATRIXSCREEN_HPP
 #include <vector>
 
 /**
@@ -34,3 +36,4 @@ class MatrixScreen {
         std::size_t pixelCountWidth;
         std::size_t pixelCountHeight;
 };
+#endif //MATRIXSCREEN_HPP
