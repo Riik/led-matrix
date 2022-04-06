@@ -149,7 +149,7 @@ void MatrixDriver::screenToSpi(std::stop_token stopToken)
     }
 
     while(true) {
-        bool success = this->newDataAvailable.try_acquire_for(std::chrono::milliseconds(1));
+        bool success = this->newDataAvailable.try_acquire_for(std::chrono::milliseconds(500));
         if (stopToken.stop_requested()) {
             return;
         }
