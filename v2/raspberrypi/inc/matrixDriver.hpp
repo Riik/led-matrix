@@ -17,9 +17,8 @@ class MatrixDriver {
             bottomLeft
         };
 
-        MatrixDriver(const std::string &spiDevName, const MatrixScreen &exampleScreen,
-                const MatrixDriver::PhysicalConnectionLocation physicalConnectionLocation = MatrixDriver::PhysicalConnectionLocation::topLeft,
-                const uint32_t framesPerSecond = 0);
+        MatrixDriver(const std::string &spiDevName, const MatrixScreen &exampleScreen, const uint32_t framesPerSecond = 0,
+                const MatrixDriver::PhysicalConnectionLocation physicalConnectionLocation = MatrixDriver::PhysicalConnectionLocation::topLeft);
 
         // Forbid copy because of the spidev object and thread safety.
         MatrixDriver(const MatrixDriver&) = delete;

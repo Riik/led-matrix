@@ -6,7 +6,7 @@ const std::string spidev = "/dev/spidev0.0";
 
 int main(void) {
     MatrixScreen screen(1,1);
-    MatrixDriver matrixDriver(spidev, screen, MatrixDriver::PhysicalConnectionLocation::topLeft, 4);
+    MatrixDriver matrixDriver(spidev, screen, 4);
     while(true) {
         screen.resetScreen(MatrixScreen::PixelColor::off);
         screen(0,0) = MatrixScreen::PixelColor::on;

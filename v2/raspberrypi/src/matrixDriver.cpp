@@ -9,8 +9,8 @@
 #include "matrixDriver.hpp"
 
 
-MatrixDriver::MatrixDriver(const std::string &spiDevName, const MatrixScreen &exampleScreen,
-        const MatrixDriver::PhysicalConnectionLocation physicalConnectionLocation, const uint32_t framesPerSecond) :
+MatrixDriver::MatrixDriver(const std::string &spiDevName, const MatrixScreen &exampleScreen, const uint32_t framesPerSecond,
+        const MatrixDriver::PhysicalConnectionLocation physicalConnectionLocation) :
     screen{exampleScreen}, matrixCountWidth{exampleScreen.getMatrixCountWidth()}, matrixCountHeight{exampleScreen.getMatrixCountHeight()},
     physicalConnectionLocation{physicalConnectionLocation}, newDataAvailable{0}, frameLimiter{framesPerSecond}
 {
