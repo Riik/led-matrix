@@ -1,13 +1,23 @@
+#include <atomic>
+#include <csignal>
 
 #include "matrixScreen.hpp"
 #include "matrixDriver.hpp"
 
 const std::string spidev = "/dev/spidev0.0";
+static std::atomic_bool halt = false;
+
+static void sigintHandler(int signum)
+{
+    halt = true;
+}
 
 int main(void) {
+    signal(SIGINT, sigintHandler);
+
     MatrixScreen screen(1,1);
     MatrixDriver matrixDriver(spidev, screen, 4);
-    while(true) {
+    while(!halt) {
         screen.resetScreen(MatrixScreen::PixelColor::off);
         screen(0,0) = MatrixScreen::PixelColor::on;
         screen(1,0) = MatrixScreen::PixelColor::on;
