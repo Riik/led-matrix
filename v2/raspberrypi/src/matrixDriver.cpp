@@ -173,32 +173,14 @@ void MatrixDriver::screenToSpi(std::stop_token stopToken)
                 std::size_t curIndex = matrixCount - 1 - (matRow * this->matrixCountWidth + matCol);
                 // Finally, we set the relevant bytes.
                 // A buffer is about a column.
-                for (std::size_t i = 0; i < 8; ++i) {
+                for (std::size_t i = 0; i < MatrixScreen::matrixPixelCountWidth; ++i) {
                     uint8_t &ref = matrixContentBuf[i][2*curIndex + 1];
                     ref = 0;
-                    if (this->screen(pixelColMin + i, pixelRowMin + 0) == MatrixScreen::PixelColor::on) {
-                        ref |= 0x80;
-                    }
-                    if (this->screen(pixelColMin + i, pixelRowMin + 1) == MatrixScreen::PixelColor::on) {
-                        ref |= 0x01;
-                    }
-                    if (this->screen(pixelColMin + i, pixelRowMin + 2) == MatrixScreen::PixelColor::on) {
-                        ref |= 0x02;
-                    }
-                    if (this->screen(pixelColMin + i, pixelRowMin + 3) == MatrixScreen::PixelColor::on) {
-                        ref |= 0x04;
-                    }
-                    if (this->screen(pixelColMin + i, pixelRowMin + 4) == MatrixScreen::PixelColor::on) {
-                        ref |= 0x08;
-                    }
-                    if (this->screen(pixelColMin + i, pixelRowMin + 5) == MatrixScreen::PixelColor::on) {
-                        ref |= 0x10;
-                    }
-                    if (this->screen(pixelColMin + i, pixelRowMin + 6) == MatrixScreen::PixelColor::on) {
-                        ref |= 0x20;
-                    }
-                    if (this->screen(pixelColMin + i, pixelRowMin + 7) == MatrixScreen::PixelColor::on) {
-                        ref |= 0x40;
+                    for (std::size_t j = 0; j < MatrixScreen::matrixPixelCountHeight; ++j) {
+                        if (this->screen(pixelColMin + i, pixelRowMin + j) == MatrixScreen::PixelColor::on) {
+                            // -1%8 to compensate for hardware error where bit 8 maps to led 0, bit 0 to led 1, etc.
+                            ref |= 1 << ((j-1)%8);
+                        }
                     }
                 }
             }
