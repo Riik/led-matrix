@@ -1,6 +1,7 @@
 #include <system_error>
 #include <algorithm>
 #include <chrono>
+#include <sstream>
 
 #include <fcntl.h>
 #include <sys/ioctl.h>
@@ -99,6 +100,18 @@ MatrixDriver::~MatrixDriver()
 
 void MatrixDriver::setScreen(const MatrixScreen &screen)
 {
+    if (screen.getMatrixCountWidth() != this->screen.getMatrixCountWidth()) {
+        std::stringstream ss;
+        ss << "Matrix count width is incorrect. Expected: " << this->screen.getMatrixCountWidth() << ", got: " << screen.getMatrixCountWidth();
+        throw std::out_of_range(ss.str());
+    }
+
+    if (screen.getMatrixCountHeight() != this->screen.getMatrixCountHeight()) {
+        std::stringstream ss;
+        ss << "Matrix count height is incorrect. Expected: " << this->screen.getMatrixCountHeight() << ", got: " << screen.getMatrixCountHeight();
+        throw std::out_of_range(ss.str());
+    }
+
     this->screenMutex.lock();
     this->screen = screen;
     this->screenMutex.unlock();
