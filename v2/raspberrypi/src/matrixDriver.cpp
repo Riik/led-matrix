@@ -161,13 +161,14 @@ void MatrixDriver::screenToSpi(std::stop_token stopToken)
         tr[i].tx_buf = (unsigned long) matrixContentBuf[i - 1].data();
     }
 
+    std::stop_callback cb(stopToken, [&sem = this->newDataAvailable] {
+        sem.release();
+    });
+
     while(true) {
-        bool success = this->newDataAvailable.try_acquire_for(std::chrono::milliseconds(500));
+        this->newDataAvailable.acquire();
         if (stopToken.stop_requested()) {
             return;
-        }
-        if (!success) {
-            continue;
         }
         this->screenMutex.lock();
         // Now we convert the screen to our buffer.
