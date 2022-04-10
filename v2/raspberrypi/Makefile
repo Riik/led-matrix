@@ -21,7 +21,7 @@ RELEASE_TARGET := final
 DEBUG_TARGET := final_debug
 
 WERROR_CONFIG :=-Wall -Wshadow=local -Werror -Wno-error=unused-variable -Wno-error=unused-but-set-variable
-ARCH_CONFIG :=-march=armv8-a+crc+simd -mfpu=vfpv3-d16 -mfloat-abi=hard
+ARCH_CONFIG :=-mcpu=cortex-a72 -mfloat-abi=hard -mfpu=neon-fp-armv8
 
 RELEASE_CPP_CONFIG := $(CPPFLAGS)
 RELEASE_C_CONFIG := -O2 $(CFLAGS) $(ARCH_CONFIG) $(WERROR_CONFIG)
