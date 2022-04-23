@@ -3,14 +3,19 @@
 
 #include "vector2.hpp"
 
-Vector2::Vector2(const std::array<float, 2> &vector)
-{
-    this->vec = vector;
-}
-
 Vector2::Vector2(const float x, const float y)
 {
     this->vec = {x, y};
+}
+
+bool Vector2::operator==(const Vector2& other) const
+{
+    return this->x() == other.x() && this->y() == other.y();
+}
+
+bool Vector2::operator!=(const Vector2& other) const
+{
+    return !this->operator==(other);
 }
 
 const float* Vector2::data(void) const noexcept

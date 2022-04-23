@@ -10,8 +10,9 @@ class Vector2 {
     public:
         /**Construct a Vector2 from up to four values. Also serves as the default constructor.*/
         Vector2(const float x = 0, const float y = 0);
-        /**Construct a Vector2 from an array.*/
-        Vector2(const std::array<float, 2> &vector);
+
+        bool operator==(const Vector2& other) const;
+        bool operator!=(const Vector2& other) const;
         /**Return a pointer to a c-style array containing the current data in this vector.
          * See also: std::array::data.*/
         const float* data(void) const noexcept;
