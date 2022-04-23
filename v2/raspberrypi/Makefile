@@ -1,73 +1,50 @@
-CC:=arm-linux-gnueabihf-gcc
-CXX:=arm-linux-gnueabihf-g++
-SRCDIR:=src/
-CFILES:=$(wildcard $(SRCDIR)*.c)
-CXXFILES:=$(wildcard $(SRCDIR)*.cpp)
-INC:= -Iinc/
-LIBDIR:=
-CFLAGS:=-std=gnu18
-CXXFLAGS:=-std=gnu++20
-CPPFLAGS:=$(INC) -MMD -MP
-LDFLAGS:= -pthread
-ODIR:=obj/
-DEBUGODIR:=$(ODIR)debug/
-RELEASEODIR:=$(ODIR)release/
-DEBUG_OFILES := $(patsubst $(SRCDIR)%,$(DEBUGODIR)%,$(patsubst %.c,%.c.o,$(CFILES)))
-DEBUG_OFILES += $(patsubst $(SRCDIR)%,$(DEBUGODIR)%,$(patsubst %.cpp,%.cpp.o,$(CXXFILES)))
-RELEASE_OFILES := $(patsubst $(SRCDIR)%,$(RELEASEODIR)%,$(patsubst %.c,%.c.o,$(CFILES)))
-RELEASE_OFILES += $(patsubst $(SRCDIR)%,$(RELEASEODIR)%,$(patsubst %.cpp,%.cpp.o,$(CXXFILES)))
-ALL_OFILES = $(DEBUG_OFILES) $(RELEASE_OFILES)
+include mk/compilers.mk
+include mk/emptyvars.mk
+include mk/predefined.mk
+include mk/flags.mk
+include mk/receipes.mk
+
 RELEASE_TARGET := final
 DEBUG_TARGET := final_debug
+TEST_TARGET := final_test
 
-WERROR_CONFIG :=-Wall -Wshadow=local -Werror -Wno-error=unused-variable -Wno-error=unused-but-set-variable
-ARCH_CONFIG :=-mcpu=cortex-a72 -mfloat-abi=hard -mfpu=neon-fp-armv8
+DIRS := $(shell ls -d */)
+DIRS := $(DIRS:=rules.mk)
+DIRS += ./rules.mk
 
-RELEASE_CPP_CONFIG := $(CPPFLAGS)
-RELEASE_C_CONFIG := -O2 $(CFLAGS) $(ARCH_CONFIG) $(WERROR_CONFIG)
-RELEASE_CXX_CONFIG := -O2 $(CXXFLAGS) $(ARCH_CONFIG) $(WERROR_CONFIG)
+-include $(DIRS)
+-include $(ALLOFILES:%.o=%.d)
 
-DEBUG_CPP_CONFIG := -DDEBUG $(CPPFLAGS)
-DEBUG_C_CONFIG := -Og -ggdb3 $(CFLAGS) $(WERROR_CONFIG)
-DEBUG_CXX_CONFIG := -Og -ggdb3 $(CXXFLAGS) $(WERROR_CONFIG)
+INC := $(addprefix -I,$(INCDIRS))
 
-.DEFAULT_GOAL := all
+.DEFAULT_GOAL := test
 
-.PHONY: all clean debug release
+.PHONY: all test debug release clean
 
-all: release debug
+all: release debug test
 
 release: $(RELEASE_TARGET)
 
 debug: $(DEBUG_TARGET)
 
--include $(DEBUG_OFILES:%.o=%.d)
--include $(RELEASE_OFILES:%.o=%.d)
+test: $(TEST_TARGET)
 
-$(ALL_OFILES) : Makefile
+$(ALLOFILES) : Makefile
 
-$(RELEASEODIR) $(DEBUGODIR) :
-	mkdir -p $@
+$(ODIRS) :
+	$(MKDIR-RECEIPE)
 
-$(DEBUGODIR)%.c.o: $(SRCDIR)%.c | $(DEBUGODIR)
-	$(CC) $(RELEASE_CPP_CONFIG) $(RELEASE_C_CONFIG) -c $< -o $@
+$(RELEASE_TARGET) : $(RELEASE_OFILES)
+	$(ARM-RELEASE-LINKRECEIPE)
 
-$(DEBUGODIR)%.cpp.o: $(SRCDIR)%.cpp | $(DEBUGODIR)
-	$(CXX) $(DEBUG_CPP_CONFIG) $(DEBUG_CXX_CONFIG) -c $< -o $@
+$(DEBUG_TARGET) : $(DEBUG_OFILES)
+	$(ARM-DEBUG-LINKRECEIPE)
 
-$(RELEASEODIR)%.c.o: $(SRCDIR)%.c | $(RELEASEODIR)
-	$(CC) $(DEBUG_CPP_CONFIG) $(DEBUG_C_CONFIG) -c $< -o $@
-
-$(RELEASEODIR)%.cpp.o: $(SRCDIR)%.cpp | $(RELEASEODIR)
-	$(CXX) $(RELEASE_CPP_CONFIG) $(RELEASE_CXX_CONFIG) -c $< -o $@
-
-$(DEBUG_TARGET): $(DEBUG_OFILES)
-	$(CXX) -o $@ $^ -g $(LDFLAGS)
-
-$(RELEASE_TARGET): $(RELEASE_OFILES)
-	$(CXX) -o $@ $^ $(LDFLAGS)
+$(TEST_TARGET) : $(filter-out $(ROOTTESTODIR)main.cpp.o, $(TEST_OFILES))
+	$(X86-TEST-LINKRECEIPE)
 
 clean:
-	rm -rf $(ODIR)
+	rm -rf $(OBJ_DIR)
 	rm -f $(RELEASE_TARGET)
 	rm -f $(DEBUG_TARGET)
+	rm -f $(TEST_TARGET)

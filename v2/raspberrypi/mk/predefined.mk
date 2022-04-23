@@ -1,0 +1,12 @@
+SRCDIR := src/
+INCDIR := inc/
+DEBUG_DIR := debug
+RELEASE_DIR := release
+TEST_DIR := test
+OBJ_DIR := obj
+DEBUGOBJ_DIR := $(OBJ_DIR)/$(DEBUG_DIR)
+RELEASEOBJ_DIR := $(OBJ_DIR)/$(RELEASE_DIR)
+TESTOBJ_DIR := $(OBJ_DIR)/$(TEST_DIR)
+X86-TEST-LIBS :=-lgtest -lgtest_main
+ARM-DEBUG-LIBS :=
+ARM-RELEASE-LIBS :=
