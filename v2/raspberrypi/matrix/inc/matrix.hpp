@@ -4,6 +4,7 @@
 #include <array>
 #include <initializer_list>
 #include <algorithm>
+#include <assert.h>
 
 // An MXN matrix has M Rows and N Columns
 // Matrix is stored row-based: element N-1 is the last element of the first row.
