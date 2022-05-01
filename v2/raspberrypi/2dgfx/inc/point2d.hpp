@@ -10,6 +10,16 @@ namespace Gfx2D {
         public:
             Point(float x, float y) : Matrix<3, 1>({x, y, 1}) {}
             Point(const Matrix<3,1>& mat) : Matrix<3, 1>(mat) {}
+
+            float x() const
+            {
+                return this->arr[0];
+            }
+
+            float y() const
+            {
+                return this->arr[1];
+            }
     };
 }
 #endif //POINT2D_HPP
