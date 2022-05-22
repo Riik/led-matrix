@@ -1,6 +1,7 @@
 #include <system_error>
 #include <algorithm>
 #include <chrono>
+#include <functional>
 #include <sstream>
 
 #include <fcntl.h>
