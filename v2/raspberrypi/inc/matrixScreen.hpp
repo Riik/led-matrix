@@ -29,6 +29,9 @@ class MatrixScreen {
         MatrixScreen::PixelColor operator()(std::size_t width, std::size_t height) const;
         MatrixScreen::PixelColor& operator()(std::size_t width, std::size_t height);
 
+        bool operator==(const MatrixScreen& other) const;
+        bool operator!=(const MatrixScreen& other) const;
+
     private:
         std::vector<MatrixScreen::PixelColor> screen;
         std::size_t matrixCountWidth;

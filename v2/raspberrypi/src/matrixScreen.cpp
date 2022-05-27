@@ -68,3 +68,15 @@ std::size_t MatrixScreen::getPixelCountHeight() const
 {
     return this->pixelCountHeight;
 }
+
+bool MatrixScreen::operator==(const MatrixScreen& other) const
+{
+    return this->matrixCountWidth == other.matrixCountWidth &&
+        this->matrixCountHeight == other.matrixCountHeight &&
+        this->screen == other.screen;
+}
+
+bool MatrixScreen::operator!=(const MatrixScreen& other) const
+{
+    return !this->operator==(other);
+}
