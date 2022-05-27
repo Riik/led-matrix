@@ -66,6 +66,14 @@ class Matrix {
             return this->arr[m*N + n];
         }
 
+        Matrix<M, N>& operator+=(const Matrix<M,N>& other)
+        {
+            for (std::size_t i = 0; i < this->arr.size(); ++i) {
+                this->arr[i] += other.arr[i];
+            }
+            return *this;
+        }
+
 };
 
 template <std::size_t M, std::size_t N>
@@ -92,5 +100,11 @@ Matrix<M,K> operator*(const Matrix<M, N>& lhs, const Matrix<N, K>& rhs)
         }
     }
     return ret;
+}
+
+template <std::size_t M, std::size_t N>
+Matrix<M,N> operator+(Matrix<M,N> lhs, const Matrix<M,N>& rhs)
+{
+    return lhs += rhs;
 }
 #endif //MATRIX_HPP
