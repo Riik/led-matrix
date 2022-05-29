@@ -12,6 +12,9 @@ namespace Gfx2D {
             Point(const Matrix<3,1>& mat) : Matrix<3, 1>({mat(0, 0), mat(1,0), 1}) {}
             Point() : Matrix<3,1>() {}
 
+            // Works as brace-enclosed initializer list constructor
+            Point(const std::array<float, 2>& arr) : Matrix<3, 1>(std::array<float, 3>{arr[0], arr[1], 1.0f}) {}
+
             float x() const
             {
                 return this->arr[0];
