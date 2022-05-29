@@ -14,7 +14,7 @@ namespace Gfx2D {
 
             bool pointIsInTriangle(const Gfx2D::Point& p) const;
 
-            Triangle createTransformedTriangle(const TransformationMatrix& mat);
+            Triangle createTransformedTriangle(const TransformationMatrix& mat) const;
 
 
     };

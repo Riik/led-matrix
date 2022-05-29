@@ -19,7 +19,7 @@ bool Gfx2D::Triangle::pointIsInTriangle(const Gfx2D::Point& p) const
     return !(has_neg && has_pos);
 }
 
-Gfx2D::Triangle Gfx2D::Triangle::createTransformedTriangle(const Gfx2D::TransformationMatrix& mat)
+Gfx2D::Triangle Gfx2D::Triangle::createTransformedTriangle(const Gfx2D::TransformationMatrix& mat) const
 {
     return Gfx2D::Triangle(mat*this->A, mat*this->B, mat*this->C);
 }
