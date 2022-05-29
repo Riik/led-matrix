@@ -9,7 +9,8 @@ namespace Gfx2D {
     {
         public:
             Point(float x, float y) : Matrix<3, 1>({x, y, 1}) {}
-            Point(const Matrix<3,1>& mat) : Matrix<3, 1>(mat) {}
+            Point(const Matrix<3,1>& mat) : Matrix<3, 1>({mat(0, 0), mat(1,0), 1}) {}
+            Point() : Matrix<3,1>() {}
 
             float x() const
             {
@@ -20,6 +21,20 @@ namespace Gfx2D {
             {
                 return this->arr[1];
             }
+
+            Point& operator+=(const Point& other)
+            {
+                for (std::size_t i = 0; i < 2; ++i) {
+                    this->arr[i] += other.arr[i];
+                }
+                this->arr[2] = 1.0f;
+                return *this;
+            }
     };
+
+    inline Point operator+(Point lhs, const Point& rhs)
+    {
+        return lhs += rhs;
+    }
 }
 #endif //POINT2D_HPP

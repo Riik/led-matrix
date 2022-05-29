@@ -11,6 +11,25 @@ Gfx2D::Canvas::Canvas(const MatrixScreen& referenceScreen, const Gfx2D::CanvasDr
     if (backgroundColor == Gfx2D::CanvasDrawable::Color::transparent) {
         throw std::invalid_argument("The background of a canvas cannot be transparent");
     }
+
+    // We now create a matrix which can remap a pixel coordinate to a coordinate in clipping space.
+    // First step is to translate: The bottom left corner cannot be (0,0), it must be the bottom
+    // left corner of the clipping space. Therefore, recenter.
+    float xTrans = (float)(this->referenceScreen.getPixelCountWidth())/2.0f;
+    float yTrans = (float)(this->referenceScreen.getPixelCountHeight())/2.0f;
+    Gfx2D::TransformationMatrix translateMat = Gfx2D::createTranslationMatrix(-xTrans, -yTrans);
+
+    // Now we scale down. Both directions are scaled the same amount to preserve aspect ratio. The shortest side must map to [-1.0, 1.0].
+    float scale;
+    if (xTrans < yTrans) {
+        scale = 1.0f/xTrans;
+    } else {
+        scale = 1.0f/yTrans;
+    }
+    Gfx2D::TransformationMatrix scaleMat = Gfx2D::createScaleMatrix(scale, scale);
+
+    // First translate, then scale.
+    this->pixelTransformation = scaleMat*translateMat;
 }
 
 void Gfx2D::Canvas::addToFrame(const Gfx2D::CanvasDrawable& drawable)
@@ -31,7 +50,7 @@ Gfx2D::CanvasDrawable::Color Gfx2D::Canvas::getColorOfPixel(const Gfx2D::Point& 
     unsigned int offCount = 0;
 
     for (auto c : coordinates) {
-        Gfx2D::Point testPoint = c + pixelIndex;
+        Gfx2D::Point testPoint = this->pixelTransformation * (c + pixelIndex);
         Gfx2D::CanvasDrawable::Color color = Gfx2D::CanvasDrawable::Color::transparent;
         for (auto rit = drawables.crbegin(); rit != drawables.crend(); ++rit) {
             if (rit->get().pointIsInDrawable(testPoint)) {

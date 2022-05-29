@@ -5,8 +5,13 @@
 
 #include "matrixScreen.hpp"
 #include "canvasDrawable.hpp"
+#include "matrix2d.hpp"
 
 namespace Gfx2D {
+    // For the canvas, the center of the screen is at 0,0. The short side (which is both sides if the screen is a square) goes from -1.0 to 1.0.
+    // The long side (if any) follows logically: If the screen is twice as wide as it is high, then the height goes from -1.0 to 1.0 and
+    // the width goes from -2.0 to 2.0. The size of the canvas is called the clipping space, everything outside of it will not be
+    // rendered.
     class Canvas {
         public:
             Canvas(const MatrixScreen& referenceScreen, const CanvasDrawable::Color& backgroundColor);
@@ -21,9 +26,15 @@ namespace Gfx2D {
 
             CanvasDrawable::Color getColorOfPixel(const Gfx2D::Point& pixelIndex) const;
 
-            const MatrixScreen referenceScreen;
-            const CanvasDrawable::Color backgroundColor;
+            MatrixScreen referenceScreen;
+            CanvasDrawable::Color backgroundColor;
             std::vector<std::reference_wrapper<const CanvasDrawable>> drawables;
+
+            Gfx2D::Point bottomLeftCoordinate;
+            float totalHeight;
+            float totalWidth;
+            Gfx2D::TransformationMatrix pixelTransformation;
+
     };
 }
 

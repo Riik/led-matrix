@@ -3,6 +3,7 @@
 #include <gtest/gtest.h>
 
 #include "canvas.hpp"
+#include "matrix2d.hpp"
 
 class SolidColorSquareDrawable: public Gfx2D::CanvasDrawable {
     private:
@@ -12,6 +13,9 @@ class SolidColorSquareDrawable: public Gfx2D::CanvasDrawable {
         SolidColorSquareDrawable(const float xStart, const float xEnd, const float yStart, const float yEnd,
                 const Gfx2D::CanvasDrawable::Color color) : xStart(xStart), xEnd(xEnd), yStart(yStart), yEnd(yEnd),
                 color(color) { }
+        SolidColorSquareDrawable(const Gfx2D::Point& bottomLeft, const Gfx2D::Point& topRight,
+                const Gfx2D::CanvasDrawable::Color color) : xStart(bottomLeft.x()), xEnd(topRight.x()), yStart(bottomLeft.y()),
+                yEnd(topRight.y()), color(color) {}
         bool pointIsInDrawable(const Gfx2D::Point& p) const override final
         {
             return p.x() >= this->xStart && p.x() <= this->xEnd &&
@@ -54,11 +58,12 @@ TEST(canvas, emptyCanvasOn)
 
 TEST(canvas, nonOverlappingSquares)
 {
+    float pixelDelta = 1.0f/8.0f;
     std::vector<SolidColorSquareDrawable> vec = {
-        SolidColorSquareDrawable(0, 1, 0, 1, Gfx2D::CanvasDrawable::Color::on),
-        SolidColorSquareDrawable(7, 8, 0, 1, Gfx2D::CanvasDrawable::Color::on),
-        SolidColorSquareDrawable(0, 1, 7, 8, Gfx2D::CanvasDrawable::Color::on),
-        SolidColorSquareDrawable(7, 8, 7, 8, Gfx2D::CanvasDrawable::Color::on)
+        SolidColorSquareDrawable(-1.0, -1.0 + pixelDelta, -1.0, -1.0 + pixelDelta, Gfx2D::CanvasDrawable::Color::on),
+        SolidColorSquareDrawable(1.0 - pixelDelta, 1.0, -1.0, -1.0 + pixelDelta, Gfx2D::CanvasDrawable::Color::on),
+        SolidColorSquareDrawable(-1.0, -1.0 + pixelDelta, 1.0 - pixelDelta, 1.0, Gfx2D::CanvasDrawable::Color::on),
+        SolidColorSquareDrawable(1.0 - pixelDelta, 1.0, 1.0 - pixelDelta, 1.0, Gfx2D::CanvasDrawable::Color::on)
     };
     MatrixScreen screen(1,1);
     Gfx2D::Canvas canvas = Gfx2D::Canvas(screen, Gfx2D::CanvasDrawable::Color::off);
@@ -78,10 +83,19 @@ TEST(canvas, nonOverlappingSquares)
 
 TEST(canvas, invisibleOverlappingSquares)
 {
-    std::vector<SolidColorSquareDrawable> vec = {
-        SolidColorSquareDrawable(2, 6, 2, 6, Gfx2D::CanvasDrawable::Color::off),
-        SolidColorSquareDrawable(1, 7, 1, 7, Gfx2D::CanvasDrawable::Color::on)
-    };
+    Gfx2D::TransformationMatrix translationMat = Gfx2D::createTranslationMatrix(-4, -4);
+    Gfx2D::TransformationMatrix scaleMat = Gfx2D::createScaleMatrix(0.25f, 0.25f);
+    Gfx2D::TransformationMatrix pixelTransformation = scaleMat*translationMat;
+    std::vector<SolidColorSquareDrawable> vec;
+
+    Gfx2D::Point bottomLeft = pixelTransformation * Gfx2D::Point(2, 2);
+    Gfx2D::Point topRight = pixelTransformation * Gfx2D::Point(6,6);
+    vec.emplace_back(bottomLeft, topRight, Gfx2D::CanvasDrawable::Color::off);
+
+    bottomLeft = pixelTransformation * Gfx2D::Point(1,1);
+    topRight = pixelTransformation * Gfx2D::Point(7,7);
+    vec.emplace_back(bottomLeft, topRight, Gfx2D::CanvasDrawable::Color::on);
+
     MatrixScreen screen(1,1);
     Gfx2D::Canvas canvas = Gfx2D::Canvas(screen, Gfx2D::CanvasDrawable::Color::off);
 
@@ -101,10 +115,19 @@ TEST(canvas, invisibleOverlappingSquares)
 
 TEST(canvas, visibleOverlappingSquares)
 {
-    std::vector<SolidColorSquareDrawable> vec = {
-        SolidColorSquareDrawable(1, 7, 1, 7, Gfx2D::CanvasDrawable::Color::on),
-        SolidColorSquareDrawable(2, 6, 2, 6, Gfx2D::CanvasDrawable::Color::off)
-    };
+    Gfx2D::TransformationMatrix translationMat = Gfx2D::createTranslationMatrix(-4, -4);
+    Gfx2D::TransformationMatrix scaleMat = Gfx2D::createScaleMatrix(0.25f, 0.25f);
+    Gfx2D::TransformationMatrix pixelTransformation = scaleMat*translationMat;
+    std::vector<SolidColorSquareDrawable> vec;
+
+    Gfx2D::Point bottomLeft = pixelTransformation * Gfx2D::Point(1,1);
+    Gfx2D::Point topRight = pixelTransformation * Gfx2D::Point(7,7);
+    vec.emplace_back(bottomLeft, topRight, Gfx2D::CanvasDrawable::Color::on);
+
+    bottomLeft = pixelTransformation * Gfx2D::Point(2, 2);
+    topRight = pixelTransformation * Gfx2D::Point(6,6);
+    vec.emplace_back(bottomLeft, topRight, Gfx2D::CanvasDrawable::Color::off);
+
     MatrixScreen screen(1,1);
     Gfx2D::Canvas canvas = Gfx2D::Canvas(screen, Gfx2D::CanvasDrawable::Color::off);
 
