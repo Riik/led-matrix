@@ -8,17 +8,17 @@ MatrixScreen::MatrixScreen(const std::size_t& matrixCountWidth, const std::size_
     matrixCountHeight{matrixCountHeight}, pixelCountWidth{matrixCountWidth*matrixPixelCountWidth},
     pixelCountHeight{matrixCountHeight*matrixPixelCountHeight}
 {
-    this->screen = std::vector<MatrixScreen::PixelColor>(this->pixelCountWidth*this->pixelCountHeight,
-            MatrixScreen::PixelColor::off);
+    this->screen = std::vector<PixelColor>(this->pixelCountWidth*this->pixelCountHeight,
+            PixelColor::off);
 }
 
-void MatrixScreen::resetScreen(MatrixScreen::PixelColor color)
+void MatrixScreen::resetScreen(PixelColor color)
 {
     std::fill(this->screen.begin(), this->screen.end(), color);
 }
 
 
-MatrixScreen::PixelColor MatrixScreen::operator()(std::size_t width, std::size_t height) const
+PixelColor MatrixScreen::operator()(std::size_t width, std::size_t height) const
 {
     if (width >= this->pixelCountWidth) {
         std::stringstream ss;
@@ -34,7 +34,7 @@ MatrixScreen::PixelColor MatrixScreen::operator()(std::size_t width, std::size_t
 }
 
 
-MatrixScreen::PixelColor& MatrixScreen::operator()(std::size_t width, std::size_t height)
+PixelColor& MatrixScreen::operator()(std::size_t width, std::size_t height)
 {
     if (width >= this->pixelCountWidth) {
         std::stringstream ss;

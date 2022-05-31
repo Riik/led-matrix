@@ -5,10 +5,10 @@
 #include "canvas.hpp"
 #include "point2d.hpp"
 
-Gfx2D::Canvas::Canvas(const MatrixScreen& referenceScreen, const Gfx2D::CanvasDrawable::Color& backgroundColor) :
+Gfx2D::Canvas::Canvas(const MatrixScreen& referenceScreen, const PixelColor& backgroundColor) :
     referenceScreen(referenceScreen), backgroundColor(backgroundColor)
 {
-    if (backgroundColor == Gfx2D::CanvasDrawable::Color::transparent) {
+    if (backgroundColor == PixelColor::transparent) {
         throw std::invalid_argument("The background of a canvas cannot be transparent");
     }
 
@@ -37,7 +37,7 @@ void Gfx2D::Canvas::addToFrame(const Gfx2D::CanvasDrawable& drawable)
     this->drawables.push_back(drawable);
 }
 
-Gfx2D::CanvasDrawable::Color Gfx2D::Canvas::getColorOfPixel(const Gfx2D::Point& pixelIndex) const
+PixelColor Gfx2D::Canvas::getColorOfPixel(const Gfx2D::Point& pixelIndex) const
 {
     static const std::vector<Gfx2D::Point> coordinates = {
         Gfx2D::Point(0.5, 0.0),
@@ -51,20 +51,20 @@ Gfx2D::CanvasDrawable::Color Gfx2D::Canvas::getColorOfPixel(const Gfx2D::Point& 
 
     for (auto c : coordinates) {
         Gfx2D::Point testPoint = this->pixelTransformation * (c + pixelIndex);
-        Gfx2D::CanvasDrawable::Color color = Gfx2D::CanvasDrawable::Color::transparent;
+        PixelColor color = PixelColor::transparent;
         for (auto rit = drawables.crbegin(); rit != drawables.crend(); ++rit) {
             if (rit->get().pointIsInDrawable(testPoint)) {
                 color = rit->get().colorAtPoint(testPoint);
             }
-            if (color != Gfx2D::CanvasDrawable::Color::transparent) {
+            if (color != PixelColor::transparent) {
                 break;
             }
         }
-        if (color == Gfx2D::CanvasDrawable::Color::transparent) {
+        if (color == PixelColor::transparent) {
             color = this->backgroundColor;
         }
 
-        if (color == Gfx2D::CanvasDrawable::Color::on) {
+        if (color == PixelColor::on) {
             onCount++;
         } else {
             offCount++;
@@ -72,9 +72,9 @@ Gfx2D::CanvasDrawable::Color Gfx2D::Canvas::getColorOfPixel(const Gfx2D::Point& 
     }
 
     if (onCount > offCount) {
-        return Gfx2D::CanvasDrawable::Color::on;
+        return PixelColor::on;
     } else {
-        return Gfx2D::CanvasDrawable::Color::off;
+        return PixelColor::off;
     }
 }
 
@@ -84,11 +84,7 @@ const MatrixScreen Gfx2D::Canvas::generateFrame()
 
     for (size_t x = 0; x < output.getPixelCountWidth(); ++x) {
         for (size_t y = 0; y < output.getPixelCountHeight(); ++y) {
-            if (this->getColorOfPixel(Gfx2D::Point(x, y)) == Gfx2D::CanvasDrawable::Color::on) {
-                output(x,y) = MatrixScreen::PixelColor::on;
-            } else {
-                output(x,y) = MatrixScreen::PixelColor::off;
-            }
+            output(x, y) = this->getColorOfPixel(Gfx2D::Point(x, y));
         }
     }
 

@@ -14,7 +14,7 @@ namespace Gfx2D {
     // rendered.
     class Canvas {
         public:
-            Canvas(const MatrixScreen& referenceScreen, const CanvasDrawable::Color& backgroundColor);
+            Canvas(const MatrixScreen& referenceScreen, const PixelColor& backgroundColor);
 
             // Add a new drawable. This also introduces a virtual z coordinate: a drawable added later is considered
             // on top of those added earlier, when more than one drawable covers the same spot.
@@ -24,10 +24,10 @@ namespace Gfx2D {
             const MatrixScreen generateFrame();
         private:
 
-            CanvasDrawable::Color getColorOfPixel(const Gfx2D::Point& pixelIndex) const;
+            PixelColor getColorOfPixel(const Gfx2D::Point& pixelIndex) const;
 
             MatrixScreen referenceScreen;
-            CanvasDrawable::Color backgroundColor;
+            PixelColor backgroundColor;
             std::vector<std::reference_wrapper<const CanvasDrawable>> drawables;
 
             Gfx2D::Point bottomLeftCoordinate;

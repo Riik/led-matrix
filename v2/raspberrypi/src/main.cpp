@@ -24,13 +24,13 @@ int main(void) {
 
     MatrixScreen screen(1,1);
     MatrixDriver matrixDriver(spidev, screen, 24);
-    Gfx2D::Canvas canvas(screen, Gfx2D::CanvasDrawable::Color::off);
+    Gfx2D::Canvas canvas(screen, PixelColor::off);
 
     std::chrono::time_point<std::chrono::steady_clock> lastWakeTime = std::chrono::steady_clock::now();
 
     std::vector<Gfx2D::SolidColorTriangle> vec {
-        Gfx2D::SolidColorTriangle({-0.75, -0.75}, {-0.75, 0.75}, {0.75, -0.75}, Gfx2D::CanvasDrawable::Color::on),
-        Gfx2D::SolidColorTriangle({0.75, 0.75}, {-0.75, 0.75}, {0.75, -0.75}, Gfx2D::CanvasDrawable::Color::on)
+        Gfx2D::SolidColorTriangle({-0.75, -0.75}, {-0.75, 0.75}, {0.75, -0.75}, PixelColor::on),
+        Gfx2D::SolidColorTriangle({0.75, 0.75}, {-0.75, 0.75}, {0.75, -0.75}, PixelColor::on)
     };
 
     float totalRotationRad = 0.0f;

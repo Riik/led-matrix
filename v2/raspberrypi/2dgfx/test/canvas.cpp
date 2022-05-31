@@ -8,13 +8,13 @@
 class SolidColorSquareDrawable: public Gfx2D::CanvasDrawable {
     private:
         const float xStart, xEnd, yStart, yEnd;
-        const Gfx2D::CanvasDrawable::Color color;
+        const PixelColor color;
     public:
         SolidColorSquareDrawable(const float xStart, const float xEnd, const float yStart, const float yEnd,
-                const Gfx2D::CanvasDrawable::Color color) : xStart(xStart), xEnd(xEnd), yStart(yStart), yEnd(yEnd),
+                const PixelColor color) : xStart(xStart), xEnd(xEnd), yStart(yStart), yEnd(yEnd),
                 color(color) { }
         SolidColorSquareDrawable(const Gfx2D::Point& bottomLeft, const Gfx2D::Point& topRight,
-                const Gfx2D::CanvasDrawable::Color color) : xStart(bottomLeft.x()), xEnd(topRight.x()), yStart(bottomLeft.y()),
+                const PixelColor color) : xStart(bottomLeft.x()), xEnd(topRight.x()), yStart(bottomLeft.y()),
                 yEnd(topRight.y()), color(color) {}
         bool pointIsInDrawable(const Gfx2D::Point& p) const override final
         {
@@ -22,7 +22,7 @@ class SolidColorSquareDrawable: public Gfx2D::CanvasDrawable {
                 p.y() >= this->yStart && p.y() <= this->yEnd;
         }
 
-        Gfx2D::CanvasDrawable::Color colorAtPoint(const Gfx2D::Point& /*unused*/) const override final
+        PixelColor colorAtPoint(const Gfx2D::Point& /*unused*/) const override final
         {
             return this->color;
         }
@@ -31,28 +31,28 @@ class SolidColorSquareDrawable: public Gfx2D::CanvasDrawable {
 TEST(canvas, transparentBackground)
 {
     MatrixScreen screen(1,1);
-    EXPECT_ANY_THROW(Gfx2D::Canvas(screen, Gfx2D::CanvasDrawable::Color::transparent));
+    EXPECT_ANY_THROW(Gfx2D::Canvas(screen, PixelColor::transparent));
 }
 
 TEST(canvas, emptyCanvasOff)
 {
     MatrixScreen screen(1,1);
-    Gfx2D::Canvas canvas = Gfx2D::Canvas(screen, Gfx2D::CanvasDrawable::Color::off);
+    Gfx2D::Canvas canvas = Gfx2D::Canvas(screen, PixelColor::off);
     MatrixScreen output = canvas.generateFrame();
-    screen.resetScreen(MatrixScreen::PixelColor::off);
+    screen.resetScreen(PixelColor::off);
     EXPECT_EQ(screen, output);
-    screen.resetScreen(MatrixScreen::PixelColor::on);
+    screen.resetScreen(PixelColor::on);
     EXPECT_NE(screen, output);
 }
 
 TEST(canvas, emptyCanvasOn)
 {
     MatrixScreen screen(1,1);
-    Gfx2D::Canvas canvas = Gfx2D::Canvas(screen, Gfx2D::CanvasDrawable::Color::on);
+    Gfx2D::Canvas canvas = Gfx2D::Canvas(screen, PixelColor::on);
     MatrixScreen output = canvas.generateFrame();
-    screen.resetScreen(MatrixScreen::PixelColor::on);
+    screen.resetScreen(PixelColor::on);
     EXPECT_EQ(screen, output);
-    screen.resetScreen(MatrixScreen::PixelColor::off);
+    screen.resetScreen(PixelColor::off);
     EXPECT_NE(screen, output);
 }
 
@@ -60,23 +60,23 @@ TEST(canvas, nonOverlappingSquares)
 {
     float pixelDelta = 1.0f/8.0f;
     std::vector<SolidColorSquareDrawable> vec = {
-        SolidColorSquareDrawable(-1.0, -1.0 + pixelDelta, -1.0, -1.0 + pixelDelta, Gfx2D::CanvasDrawable::Color::on),
-        SolidColorSquareDrawable(1.0 - pixelDelta, 1.0, -1.0, -1.0 + pixelDelta, Gfx2D::CanvasDrawable::Color::on),
-        SolidColorSquareDrawable(-1.0, -1.0 + pixelDelta, 1.0 - pixelDelta, 1.0, Gfx2D::CanvasDrawable::Color::on),
-        SolidColorSquareDrawable(1.0 - pixelDelta, 1.0, 1.0 - pixelDelta, 1.0, Gfx2D::CanvasDrawable::Color::on)
+        SolidColorSquareDrawable(-1.0, -1.0 + pixelDelta, -1.0, -1.0 + pixelDelta, PixelColor::on),
+        SolidColorSquareDrawable(1.0 - pixelDelta, 1.0, -1.0, -1.0 + pixelDelta, PixelColor::on),
+        SolidColorSquareDrawable(-1.0, -1.0 + pixelDelta, 1.0 - pixelDelta, 1.0, PixelColor::on),
+        SolidColorSquareDrawable(1.0 - pixelDelta, 1.0, 1.0 - pixelDelta, 1.0, PixelColor::on)
     };
     MatrixScreen screen(1,1);
-    Gfx2D::Canvas canvas = Gfx2D::Canvas(screen, Gfx2D::CanvasDrawable::Color::off);
+    Gfx2D::Canvas canvas = Gfx2D::Canvas(screen, PixelColor::off);
 
     for (auto& drawable : vec) {
         canvas.addToFrame(drawable);
     }
     MatrixScreen output = canvas.generateFrame();
-    screen.resetScreen(MatrixScreen::PixelColor::off);
-    screen(0,0) = MatrixScreen::PixelColor::on;
-    screen(7,0) = MatrixScreen::PixelColor::on;
-    screen(7,7) = MatrixScreen::PixelColor::on;
-    screen(0,7) = MatrixScreen::PixelColor::on;
+    screen.resetScreen(PixelColor::off);
+    screen(0,0) = PixelColor::on;
+    screen(7,0) = PixelColor::on;
+    screen(7,7) = PixelColor::on;
+    screen(0,7) = PixelColor::on;
 
     EXPECT_EQ(screen, output);
 }
@@ -90,23 +90,23 @@ TEST(canvas, invisibleOverlappingSquares)
 
     Gfx2D::Point bottomLeft = pixelTransformation * Gfx2D::Point(2, 2);
     Gfx2D::Point topRight = pixelTransformation * Gfx2D::Point(6,6);
-    vec.emplace_back(bottomLeft, topRight, Gfx2D::CanvasDrawable::Color::off);
+    vec.emplace_back(bottomLeft, topRight, PixelColor::off);
 
     bottomLeft = pixelTransformation * Gfx2D::Point(1,1);
     topRight = pixelTransformation * Gfx2D::Point(7,7);
-    vec.emplace_back(bottomLeft, topRight, Gfx2D::CanvasDrawable::Color::on);
+    vec.emplace_back(bottomLeft, topRight, PixelColor::on);
 
     MatrixScreen screen(1,1);
-    Gfx2D::Canvas canvas = Gfx2D::Canvas(screen, Gfx2D::CanvasDrawable::Color::off);
+    Gfx2D::Canvas canvas = Gfx2D::Canvas(screen, PixelColor::off);
 
     for (auto& drawable : vec) {
         canvas.addToFrame(drawable);
     }
     MatrixScreen output = canvas.generateFrame();
-    screen.resetScreen(MatrixScreen::PixelColor::off);
+    screen.resetScreen(PixelColor::off);
     for (size_t x = 1; x < 7; ++x) {
         for (size_t y = 1; y < 7; ++y) {
-            screen(x, y) = MatrixScreen::PixelColor::on;
+            screen(x, y) = PixelColor::on;
         }
     }
 
@@ -122,28 +122,28 @@ TEST(canvas, visibleOverlappingSquares)
 
     Gfx2D::Point bottomLeft = pixelTransformation * Gfx2D::Point(1,1);
     Gfx2D::Point topRight = pixelTransformation * Gfx2D::Point(7,7);
-    vec.emplace_back(bottomLeft, topRight, Gfx2D::CanvasDrawable::Color::on);
+    vec.emplace_back(bottomLeft, topRight, PixelColor::on);
 
     bottomLeft = pixelTransformation * Gfx2D::Point(2, 2);
     topRight = pixelTransformation * Gfx2D::Point(6,6);
-    vec.emplace_back(bottomLeft, topRight, Gfx2D::CanvasDrawable::Color::off);
+    vec.emplace_back(bottomLeft, topRight, PixelColor::off);
 
     MatrixScreen screen(1,1);
-    Gfx2D::Canvas canvas = Gfx2D::Canvas(screen, Gfx2D::CanvasDrawable::Color::off);
+    Gfx2D::Canvas canvas = Gfx2D::Canvas(screen, PixelColor::off);
 
     for (auto& drawable : vec) {
         canvas.addToFrame(drawable);
     }
     MatrixScreen output = canvas.generateFrame();
-    screen.resetScreen(MatrixScreen::PixelColor::off);
+    screen.resetScreen(PixelColor::off);
     for (size_t x = 1; x < 7; ++x) {
         for (size_t y = 1; y < 7; ++y) {
-            screen(x, y) = MatrixScreen::PixelColor::on;
+            screen(x, y) = PixelColor::on;
         }
     }
     for (size_t x = 2; x < 6; ++x) {
         for (size_t y = 2; y < 6; ++y) {
-            screen(x, y) = MatrixScreen::PixelColor::off;
+            screen(x, y) = PixelColor::off;
         }
     }
 
@@ -154,21 +154,21 @@ TEST(canvas, canvasShouldEmptyFrame)
 {
     float pixelDelta = 1.0f/8.0f;
     std::vector<SolidColorSquareDrawable> vec = {
-        SolidColorSquareDrawable(-1.0, -1.0 + pixelDelta, -1.0, -1.0 + pixelDelta, Gfx2D::CanvasDrawable::Color::on)
+        SolidColorSquareDrawable(-1.0, -1.0 + pixelDelta, -1.0, -1.0 + pixelDelta, PixelColor::on)
     };
     MatrixScreen screen(1,1);
-    Gfx2D::Canvas canvas = Gfx2D::Canvas(screen, Gfx2D::CanvasDrawable::Color::off);
+    Gfx2D::Canvas canvas = Gfx2D::Canvas(screen, PixelColor::off);
 
     for (auto& drawable : vec) {
         canvas.addToFrame(drawable);
     }
     MatrixScreen output = canvas.generateFrame();
-    screen.resetScreen(MatrixScreen::PixelColor::off);
-    screen(0,0) = MatrixScreen::PixelColor::on;
+    screen.resetScreen(PixelColor::off);
+    screen(0,0) = PixelColor::on;
 
     EXPECT_EQ(screen, output);
     output = canvas.generateFrame();
-    screen.resetScreen(MatrixScreen::PixelColor::off);
+    screen.resetScreen(PixelColor::off);
     EXPECT_EQ(screen, output);
 }
 
@@ -191,91 +191,91 @@ TEST(canvas, differentMatrixLayouts)
     // First, the center cube
     bottomLeft = pixelTransformation * Gfx2D::Point(2, 2);
     topRight = pixelTransformation * Gfx2D::Point(6,6);
-    vec.emplace_back(bottomLeft, topRight, Gfx2D::CanvasDrawable::Color::on);
+    vec.emplace_back(bottomLeft, topRight, PixelColor::on);
     // Top cube
     bottomLeft = pixelTransformation * Gfx2D::Point(2, 14);
     topRight = pixelTransformation * Gfx2D::Point(6, 18);
-    vec.emplace_back(bottomLeft, topRight, Gfx2D::CanvasDrawable::Color::on);
+    vec.emplace_back(bottomLeft, topRight, PixelColor::on);
     // Bottom cube
     bottomLeft = pixelTransformation * Gfx2D::Point(2, -10);
     topRight = pixelTransformation * Gfx2D::Point(6, -6);
-    vec.emplace_back(bottomLeft, topRight, Gfx2D::CanvasDrawable::Color::on);
+    vec.emplace_back(bottomLeft, topRight, PixelColor::on);
     // Left cube
     bottomLeft = pixelTransformation * Gfx2D::Point(-10, 2);
     topRight = pixelTransformation * Gfx2D::Point(-6, 6);
-    vec.emplace_back(bottomLeft, topRight, Gfx2D::CanvasDrawable::Color::on);
+    vec.emplace_back(bottomLeft, topRight, PixelColor::on);
     // Right cube
     bottomLeft = pixelTransformation * Gfx2D::Point(14, 2);
     topRight = pixelTransformation * Gfx2D::Point(18, 6);
-    vec.emplace_back(bottomLeft, topRight, Gfx2D::CanvasDrawable::Color::on);
+    vec.emplace_back(bottomLeft, topRight, PixelColor::on);
 
     // First of all, a 1x1 ledscreen
     MatrixScreen screen(1,1);
-    Gfx2D::Canvas canvas(screen, Gfx2D::CanvasDrawable::Color::off);
+    Gfx2D::Canvas canvas(screen, PixelColor::off);
     for (auto& drawable : vec) {
         canvas.addToFrame(drawable);
     }
     MatrixScreen output = canvas.generateFrame();
-    screen.resetScreen(MatrixScreen::PixelColor::off);
+    screen.resetScreen(PixelColor::off);
     for (size_t x = 2; x < 6; ++x) {
         for (size_t y = 2; y < 6; ++y) {
-            screen(x, y) = MatrixScreen::PixelColor::on;
+            screen(x, y) = PixelColor::on;
         }
     }
     EXPECT_EQ(screen, output);
 
     // Next, 3 wide, 1 high.
     screen = MatrixScreen(3, 1);
-    canvas = Gfx2D::Canvas(screen, Gfx2D::CanvasDrawable::Color::off);
+    canvas = Gfx2D::Canvas(screen, PixelColor::off);
     for (auto& drawable : vec) {
         canvas.addToFrame(drawable);
     }
     output = canvas.generateFrame();
-    screen.resetScreen(MatrixScreen::PixelColor::off);
+    screen.resetScreen(PixelColor::off);
     // Draw the cube on the left
     for (size_t x = 0; x < 2; ++x) {
         for (size_t y = 2; y < 6; ++y) {
-            screen(x, y) = MatrixScreen::PixelColor::on;
+            screen(x, y) = PixelColor::on;
         }
     }
     // Draw the center cube
     for (size_t x = 10; x < 14; ++x) {
         for (size_t y = 2; y < 6; ++y) {
-            screen(x, y) = MatrixScreen::PixelColor::on;
+            screen(x, y) = PixelColor::on;
         }
     }
     // Draw the right cube
     for (size_t x = 22; x < 24; ++x) {
         for (size_t y = 2; y < 6; ++y) {
-            screen(x, y) = MatrixScreen::PixelColor::on;
+            screen(x, y) = PixelColor::on;
         }
     }
     EXPECT_EQ(screen, output);
 
     // Then, 1 wide, 3 high
     screen = MatrixScreen(1, 3);
-    canvas = Gfx2D::Canvas(screen, Gfx2D::CanvasDrawable::Color::off);
+    canvas = Gfx2D::Canvas(screen, PixelColor::off);
     for (auto& drawable : vec) {
         canvas.addToFrame(drawable);
     }
     output = canvas.generateFrame();
-    screen.resetScreen(MatrixScreen::PixelColor::off);
+    screen.resetScreen(PixelColor::off);
     // Draw the cube on the bottom
     for (size_t x = 2; x < 6; ++x) {
         for (size_t y = 0; y < 2; ++y) {
-            screen(x, y) = MatrixScreen::PixelColor::on;
+            screen(x, y) = PixelColor::on;
         }
     }
     // Draw the center cube
     for (size_t x = 2; x < 6; ++x) {
         for (size_t y = 10; y < 14; ++y) {
-            screen(x, y) = MatrixScreen::PixelColor::on;
+            screen(x, y) = PixelColor::on;
         }
     }
     // Draw the top cube
     for (size_t x = 2; x < 6; ++x) {
         for (size_t y = 22; y < 24; ++y) {
-            screen(x, y) = MatrixScreen::PixelColor::on;
+            screen(x, y) = PixelColor::on;
         }
     }
     EXPECT_EQ(screen, output);
@@ -283,15 +283,15 @@ TEST(canvas, differentMatrixLayouts)
     // Finally, a 3x3 screen. Since aspect ratio is preserved, we expect a bigger 1x1,
     // so only the center cube visible.
     screen = MatrixScreen(3, 3);
-    canvas = Gfx2D::Canvas(screen, Gfx2D::CanvasDrawable::Color::off);
+    canvas = Gfx2D::Canvas(screen, PixelColor::off);
     for (auto& drawable : vec) {
         canvas.addToFrame(drawable);
     }
     output = canvas.generateFrame();
-    screen.resetScreen(MatrixScreen::PixelColor::off);
+    screen.resetScreen(PixelColor::off);
     for (size_t x = 6; x < 18; ++x) {
         for (size_t y = 6; y < 18; ++y) {
-            screen(x, y) = MatrixScreen::PixelColor::on;
+            screen(x, y) = PixelColor::on;
         }
     }
 }

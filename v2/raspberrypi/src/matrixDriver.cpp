@@ -192,7 +192,7 @@ void MatrixDriver::screenToSpi(std::stop_token stopToken)
                     uint8_t &ref = matrixContentBuf[i][2*curIndex + 1];
                     ref = 0;
                     for (std::size_t j = 0; j < MatrixScreen::matrixPixelCountHeight; ++j) {
-                        if (this->screen(pixelColMin + i, pixelRowMin + j) == MatrixScreen::PixelColor::on) {
+                        if (this->screen(pixelColMin + i, pixelRowMin + j) == PixelColor::on) {
                             // -1%8 to compensate for hardware error where bit 8 maps to led 0, bit 0 to led 1, etc.
                             ref |= 1 << ((j-1)%8);
                         }
