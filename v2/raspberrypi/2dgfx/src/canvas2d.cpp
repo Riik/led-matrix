@@ -2,7 +2,7 @@
 #include <array>
 
 #include "matrixScreen.hpp"
-#include "canvas.hpp"
+#include "canvas2d.hpp"
 #include "point2d.hpp"
 
 Gfx2D::Canvas::Canvas(const MatrixScreen& referenceScreen, const PixelColor& backgroundColor) :

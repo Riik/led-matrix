@@ -2,7 +2,7 @@
 
 #include <gtest/gtest.h>
 
-#include "canvas.hpp"
+#include "canvas2d.hpp"
 #include "matrix2d.hpp"
 
 class SolidColorSquareDrawable: public Gfx2D::CanvasDrawable {

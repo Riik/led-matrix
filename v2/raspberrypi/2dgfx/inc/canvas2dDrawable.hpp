@@ -1,5 +1,4 @@
-#ifndef CANVASDRAWABLE_HPP
-#define CANVASDRAWABLE_HPP
+#pragma once
 
 #include "point2d.hpp"
 #include "pixelColor.hpp"
@@ -14,5 +13,3 @@ namespace Gfx2D {
             virtual PixelColor colorAtPoint(const Point& p) const = 0;
     };
 }
-
-#endif //CANVASDRAWABLE_HPP

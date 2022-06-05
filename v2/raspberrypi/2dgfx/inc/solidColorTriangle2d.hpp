@@ -1,6 +1,6 @@
 #pragma once
 
-#include "canvasDrawable.hpp"
+#include "canvas2dDrawable.hpp"
 #include "triangle2d.hpp"
 
 namespace Gfx2D {

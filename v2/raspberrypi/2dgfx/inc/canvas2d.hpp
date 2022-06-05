@@ -1,10 +1,10 @@
-#ifndef CANVAS_HPP
-#define CANVAS_HPP
+#pragma once
+
 #include <vector>
 #include <functional>
 
 #include "matrixScreen.hpp"
-#include "canvasDrawable.hpp"
+#include "canvas2dDrawable.hpp"
 #include "matrix2d.hpp"
 
 namespace Gfx2D {
@@ -38,5 +38,3 @@ namespace Gfx2D {
 
     };
 }
-
-#endif //CANVAS_HPP

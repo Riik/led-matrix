@@ -6,7 +6,7 @@
 #include "matrixScreen.hpp"
 #include "matrixDriver.hpp"
 
-#include "canvas.hpp"
+#include "canvas2d.hpp"
 #include "solidColorTriangle2d.hpp"
 
 const std::string spidev = "/dev/spidev0.0";
