@@ -25,6 +25,7 @@ namespace Gfx2D {
         private:
 
             PixelColor getColorOfPixel(const Gfx2D::Point& pixelIndex) const;
+            PixelColor getColorOfPoint(const Gfx2D::Point& point) const;
 
             MatrixScreen referenceScreen;
             PixelColor backgroundColor;

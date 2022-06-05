@@ -37,6 +37,24 @@ void Gfx2D::Canvas::addToFrame(const Gfx2D::CanvasDrawable& drawable)
     this->drawables.push_back(drawable);
 }
 
+PixelColor Gfx2D::Canvas::getColorOfPoint(const Gfx2D::Point& point) const
+{
+    PixelColor color = PixelColor::transparent;
+    for (auto rit = this->drawables.crbegin(); rit != drawables.crend(); ++rit) {
+        if (rit->get().pointIsInDrawable(point)) {
+            color = rit->get().colorAtPoint(point);
+        }
+        if (color != PixelColor::transparent) {
+            break;
+        }
+    }
+    if (color == PixelColor::transparent) {
+        color = this->backgroundColor;
+    }
+    return color;
+
+}
+
 PixelColor Gfx2D::Canvas::getColorOfPixel(const Gfx2D::Point& pixelIndex) const
 {
     static const std::vector<Gfx2D::Point> coordinates = {
@@ -51,18 +69,7 @@ PixelColor Gfx2D::Canvas::getColorOfPixel(const Gfx2D::Point& pixelIndex) const
 
     for (auto c : coordinates) {
         Gfx2D::Point testPoint = this->pixelTransformation * (c + pixelIndex);
-        PixelColor color = PixelColor::transparent;
-        for (auto rit = drawables.crbegin(); rit != drawables.crend(); ++rit) {
-            if (rit->get().pointIsInDrawable(testPoint)) {
-                color = rit->get().colorAtPoint(testPoint);
-            }
-            if (color != PixelColor::transparent) {
-                break;
-            }
-        }
-        if (color == PixelColor::transparent) {
-            color = this->backgroundColor;
-        }
+        PixelColor color = this->getColorOfPoint(testPoint);
 
         if (color == PixelColor::on) {
             onCount++;
