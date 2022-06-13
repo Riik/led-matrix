@@ -61,5 +61,7 @@ int main(void) {
         }
         matrixDriver.setScreen(canvas.generateFrame());
     }
+    screen.resetScreen(PixelColor::off);
+    matrixDriver.setScreen(screen);
     return EXIT_SUCCESS;
 }
