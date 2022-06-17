@@ -20,10 +20,11 @@ class MatrixDriver {
         MatrixDriver(const std::string &spiDevName, const MatrixScreen &exampleScreen, const uint32_t framesPerSecond = 0,
                 const MatrixDriver::PhysicalConnectionLocation physicalConnectionLocation = MatrixDriver::PhysicalConnectionLocation::topLeft);
 
-        // Forbid copy because of the spidev object and thread safety.
-        MatrixDriver(const MatrixDriver&) = delete;
-
         ~MatrixDriver();
+        // Because this object holds a filedescriptor, which cannot trivially be copied, we need to think about the
+        // rule of three. dup and dup2 exist, but for now this is the easiest solution.
+        MatrixDriver& operator=(const MatrixDriver&) = delete;
+        MatrixDriver(const MatrixDriver&) = delete;
 
         void setScreen(const MatrixScreen &screen);
 
