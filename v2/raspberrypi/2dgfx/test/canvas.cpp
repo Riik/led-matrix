@@ -28,13 +28,13 @@ class SolidColorSquareDrawable: public Gfx2D::CanvasDrawable {
         }
 };
 
-TEST(canvas, transparentBackground)
+TEST(canvas2d, transparentBackground)
 {
     MatrixScreen screen(1,1);
     EXPECT_ANY_THROW(Gfx2D::Canvas(screen, PixelColor::transparent));
 }
 
-TEST(canvas, emptyCanvasOff)
+TEST(canvas2d, emptyCanvasOff)
 {
     MatrixScreen screen(1,1);
     Gfx2D::Canvas canvas = Gfx2D::Canvas(screen, PixelColor::off);
@@ -45,7 +45,7 @@ TEST(canvas, emptyCanvasOff)
     EXPECT_NE(screen, output);
 }
 
-TEST(canvas, emptyCanvasOn)
+TEST(canvas2d, emptyCanvasOn)
 {
     MatrixScreen screen(1,1);
     Gfx2D::Canvas canvas = Gfx2D::Canvas(screen, PixelColor::on);
@@ -56,7 +56,7 @@ TEST(canvas, emptyCanvasOn)
     EXPECT_NE(screen, output);
 }
 
-TEST(canvas, nonOverlappingSquares)
+TEST(canvas2d, nonOverlappingSquares)
 {
     float pixelDelta = 1.0f/8.0f;
     std::vector<SolidColorSquareDrawable> vec = {
@@ -81,7 +81,7 @@ TEST(canvas, nonOverlappingSquares)
     EXPECT_EQ(screen, output);
 }
 
-TEST(canvas, invisibleOverlappingSquares)
+TEST(canvas2d, invisibleOverlappingSquares)
 {
     Gfx2D::TransformationMatrix translationMat = Gfx2D::createTranslationMatrix(-4, -4);
     Gfx2D::TransformationMatrix scaleMat = Gfx2D::createScaleMatrix(0.25f, 0.25f);
@@ -113,7 +113,7 @@ TEST(canvas, invisibleOverlappingSquares)
     EXPECT_EQ(screen, output);
 }
 
-TEST(canvas, visibleOverlappingSquares)
+TEST(canvas2d, visibleOverlappingSquares)
 {
     Gfx2D::TransformationMatrix translationMat = Gfx2D::createTranslationMatrix(-4, -4);
     Gfx2D::TransformationMatrix scaleMat = Gfx2D::createScaleMatrix(0.25f, 0.25f);
@@ -150,7 +150,7 @@ TEST(canvas, visibleOverlappingSquares)
     EXPECT_EQ(screen, output);
 }
 
-TEST(canvas, canvasShouldEmptyFrame)
+TEST(canvas2d, canvasShouldEmptyFrame)
 {
     float pixelDelta = 1.0f/8.0f;
     std::vector<SolidColorSquareDrawable> vec = {
@@ -172,7 +172,7 @@ TEST(canvas, canvasShouldEmptyFrame)
     EXPECT_EQ(screen, output);
 }
 
-TEST(canvas, differentMatrixLayouts)
+TEST(canvas2d, differentMatrixLayouts)
 {
     // This transformation matrix is good enough for our purposes, but we
     // do need to keep in mind that it is mostly incorrect.
