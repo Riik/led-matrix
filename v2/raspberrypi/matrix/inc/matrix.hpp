@@ -1,5 +1,4 @@
-#ifndef MATRIX_HPP
-#define MATRIX_HPP
+#pragma once
 
 #include <array>
 #include <initializer_list>
@@ -107,4 +106,3 @@ Matrix<M,N> operator+(Matrix<M,N> lhs, const Matrix<M,N>& rhs)
 {
     return lhs += rhs;
 }
-#endif //MATRIX_HPP
