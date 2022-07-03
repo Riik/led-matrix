@@ -1,5 +1,5 @@
-DEBUGFLAGS := -DDEBUG -Og -ggdb
-RELEASEFLAGS := -O2
+DEBUGFLAGS := -D_GLIBCXX_DEBUG -DDEBUG -Og -ggdb
+RELEASEFLAGS := -DNDEBUG -O2
 RPI4-ARCHFLAGS :=-mcpu=cortex-a72 -mfloat-abi=hard -mfpu=neon-fp-armv8
 CXXLANGFLAGS := -std=gnu++20
 WARNINGFLAGS := -Wall -Wshadow=local -Werror -Wno-error=unused-variable -Wno-error=unused-but-set-variable
