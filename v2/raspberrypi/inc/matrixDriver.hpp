@@ -26,7 +26,7 @@ class MatrixDriver {
         MatrixDriver& operator=(const MatrixDriver&) = delete;
         MatrixDriver(const MatrixDriver&) = delete;
 
-        void setScreen(const MatrixScreen &screen);
+        void setScreen(MatrixScreen screen);
 
     private:
         MatrixScreen screen;

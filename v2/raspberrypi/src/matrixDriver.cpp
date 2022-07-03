@@ -99,8 +99,9 @@ MatrixDriver::~MatrixDriver()
     close(this->spifd);
 }
 
-void MatrixDriver::setScreen(const MatrixScreen &screen)
+void MatrixDriver::setScreen(MatrixScreen screen)
 {
+#if defined(DEBUG)
     if (screen.getMatrixCountWidth() != this->screen.getMatrixCountWidth()) {
         std::stringstream ss;
         ss << "Matrix count width is incorrect. Expected: " << this->screen.getMatrixCountWidth() << ", got: " << screen.getMatrixCountWidth();
@@ -112,9 +113,10 @@ void MatrixDriver::setScreen(const MatrixScreen &screen)
         ss << "Matrix count height is incorrect. Expected: " << this->screen.getMatrixCountHeight() << ", got: " << screen.getMatrixCountHeight();
         throw std::out_of_range(ss.str());
     }
+#endif //defined(DEBUG)
 
     this->screenMutex.lock();
-    this->screen = screen;
+    this->screen = std::move(screen);
     this->screenMutex.unlock();
     this->newDataAvailable.release();
     this->frameLimiter.waitForNextFrame();
