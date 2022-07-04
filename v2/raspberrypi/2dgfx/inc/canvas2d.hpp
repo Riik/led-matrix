@@ -21,7 +21,7 @@ namespace Gfx2D {
             void addToFrame(const CanvasDrawable& drawable);
 
             // Draw all drawables to a MatrixScreen and then clear the list of drawables.
-            const MatrixScreen generateFrame();
+            MatrixScreen generateFrame();
         private:
 
             PixelColor getColorOfPixel(const Gfx2D::Point& pixelIndex) const;
