@@ -73,16 +73,24 @@ class Matrix {
             return *this;
         }
 
+        Matrix<M, N>& operator-=(const Matrix<M,N>& other)
+        {
+            for (std::size_t i = 0; i < this->arr.size(); ++i) {
+                this->arr[i] -= other.arr[i];
+            }
+            return *this;
+        }
+
 };
 
 template <std::size_t M, std::size_t N>
-Matrix<N,M> operator*(Matrix<M, N> mat, const float& f)
+Matrix<M,N> operator*(Matrix<M, N> mat, const float& f)
 {
     return mat *= f;
 }
 
 template <std::size_t M, std::size_t N>
-Matrix<N,M> operator/(Matrix<M, N> mat, const float& f)
+Matrix<M,N> operator/(Matrix<M, N> mat, const float& f)
 {
     return mat /= f;
 }
@@ -105,4 +113,10 @@ template <std::size_t M, std::size_t N>
 Matrix<M,N> operator+(Matrix<M,N> lhs, const Matrix<M,N>& rhs)
 {
     return lhs += rhs;
+}
+
+template <std::size_t M, std::size_t N>
+Matrix<M,N> operator-(Matrix<M,N> lhs, const Matrix<M,N>& rhs)
+{
+    return lhs -= rhs;
 }

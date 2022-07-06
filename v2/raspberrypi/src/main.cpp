@@ -17,20 +17,31 @@ static void sigintHandler(int signum)
     halt = true;
 }
 
-const float rotationSpeedRadPerSec = 0.5f;
+const float rotationSpeedRadPerSec = 3.0f;
+const float middleRotationRadPerSec = 1.0f;
 
 int main(void) {
     signal(SIGINT, sigintHandler);
 
-    MatrixScreen screen(1,1);
-    MatrixDriver matrixDriver(spidev, screen, 24);
+    MatrixScreen screen(4,4);
+    MatrixDriver matrixDriver(spidev, screen, 60);
     Gfx2D::Canvas canvas(screen, PixelColor::off);
 
     std::chrono::time_point<std::chrono::steady_clock> lastWakeTime = std::chrono::steady_clock::now();
 
     std::vector<Gfx2D::SolidColorTriangle> vec {
         Gfx2D::SolidColorTriangle({-0.75, -0.75}, {-0.75, 0.75}, {0.75, -0.75}, PixelColor::on),
-        Gfx2D::SolidColorTriangle({0.75, 0.75}, {-0.75, 0.75}, {0.75, -0.75}, PixelColor::on)
+        Gfx2D::SolidColorTriangle({0.75, 0.75}, {-0.75, 0.75}, {0.75, -0.75}, PixelColor::off)
+    };
+
+    std::vector<Gfx2D::SolidColorTriangle> vec2 {
+        Gfx2D::SolidColorTriangle({-0.50, -0.50}, {-0.50, 0.50}, {0.50, -0.50}, PixelColor::off),
+        Gfx2D::SolidColorTriangle({0.50, 0.50}, {-0.50, 0.50}, {0.50, -0.50}, PixelColor::on)
+    };
+
+    std::vector<Gfx2D::SolidColorTriangle> vec3 {
+        Gfx2D::SolidColorTriangle({-0.25, -0.25}, {-0.25, 0.25}, {0.25, -0.25}, PixelColor::on),
+        Gfx2D::SolidColorTriangle({0.25, 0.25}, {-0.25, 0.25}, {0.25, -0.25}, PixelColor::off)
     };
 
     float totalRotationRad = 0.0f;
@@ -54,6 +65,12 @@ int main(void) {
         // Therefore, two step: first push them all to some vector, then store references to the contents
         // of that vector in canvas. No memory issues, but very ugly code.
         for (auto& v : vec) {
+            transformedVec.push_back(v.createTransformedTriangle(rotation));
+        }
+        for (auto& v : vec2) {
+            transformedVec.push_back(v.createTransformedTriangle(rotation));
+        }
+        for (auto& v : vec3) {
             transformedVec.push_back(v.createTransformedTriangle(rotation));
         }
         for (auto& v : transformedVec) {

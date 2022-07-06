@@ -31,11 +31,26 @@ namespace Gfx2D {
                 this->arr[2] = 1.0f;
                 return *this;
             }
+
+            Point& operator-=(const Point& other)
+            {
+                for (std::size_t i = 0; i < 2; ++i) {
+                    this->arr[i] -= other.arr[i];
+                }
+                this->arr[2] = 1.0f;
+                return *this;
+            }
+
     };
 
     inline Point operator+(Point lhs, const Point& rhs)
     {
         return lhs += rhs;
+    }
+
+    inline Point operator-(Point lhs, const Point& rhs)
+    {
+        return lhs -= rhs;
     }
 }
 #endif //POINT2D_HPP
