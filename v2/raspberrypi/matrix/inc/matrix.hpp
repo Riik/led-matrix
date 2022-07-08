@@ -76,13 +76,13 @@ class Matrix {
 };
 
 template <std::size_t M, std::size_t N>
-Matrix<N,M> operator*(Matrix<M, N> mat, const float& f)
+Matrix<M,N> operator*(Matrix<M, N> mat, const float& f)
 {
     return mat *= f;
 }
 
 template <std::size_t M, std::size_t N>
-Matrix<N,M> operator/(Matrix<M, N> mat, const float& f)
+Matrix<M,N> operator/(Matrix<M, N> mat, const float& f)
 {
     return mat /= f;
 }
