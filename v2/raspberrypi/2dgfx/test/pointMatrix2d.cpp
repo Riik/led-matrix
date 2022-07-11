@@ -4,14 +4,12 @@
 #include "point2d.hpp"
 #include "matrix2d.hpp"
 
-MATCHER_P(PointEq, exp,  "") {
-    const float delta = 1e-5;
+static void pointEq(const Gfx2D::Point& exp, const Gfx2D::Point& arg)
+{
+    constexpr float delta = 1e-5;
     for (std::size_t i = 0; i < 3; ++i) {
-        if(std::abs(arg(i, 0) - exp(i, 0)) > delta) {
-            return false;
-        }
+        EXPECT_THAT(arg(i, 0), ::testing::FloatNear(exp(i, 0), delta));
     }
-    return true;
 }
 
 TEST(PointMatrix2D, constructor)
@@ -34,7 +32,7 @@ TEST(PointMatrix2D, translation)
     Gfx2D::Point out = translate*a;
     Gfx2D::Point exp(1, -1);
 
-    EXPECT_THAT(out, PointEq(exp));
+    pointEq(exp, out);
 }
 
 TEST(PointMatrix2D, rotation)
@@ -44,7 +42,7 @@ TEST(PointMatrix2D, rotation)
     Gfx2D::TransformationMatrix rotate = Gfx2D::createRotationMatrix(M_PI);
     Gfx2D::Point out = rotate * a;
 
-    EXPECT_THAT(out, PointEq(exp));
+    pointEq(exp, out);
 }
 
 TEST(PointMatrix2D, scaling)
@@ -54,5 +52,5 @@ TEST(PointMatrix2D, scaling)
     Gfx2D::TransformationMatrix scale = Gfx2D::createScaleMatrix(2, 4);
     Gfx2D::Point out = scale * a;
 
-    EXPECT_THAT(out, PointEq(exp));
+    pointEq(exp, out);
 }

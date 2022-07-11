@@ -5,6 +5,8 @@
 
 #include "matrixScreen.hpp"
 #include "matrixDriver.hpp"
+#include "fontToTexture2d.hpp"
+#include "texturedTriangle2d.hpp"
 
 #include "canvas2d.hpp"
 #include "solidColorTriangle2d.hpp"
@@ -17,49 +19,58 @@ static void sigintHandler(int signum)
     halt = true;
 }
 
-const float rotationSpeedRadPerSec = 0.5f;
-
 int main(void) {
     signal(SIGINT, sigintHandler);
 
-    MatrixScreen screen(1,1);
-    MatrixDriver matrixDriver(spidev, screen, 24);
+    MatrixScreen screen(4,4);
+    MatrixDriver matrixDriver(spidev, screen, 60);
     Gfx2D::Canvas canvas(screen, PixelColor::off);
 
+    const std::string text = "Hoi, Rik!";
+    // Translate the text into a bunch of textures
+    std::vector<Gfx2D::Texture> textTextures;
+    for (const char &ch : text) {
+        textTextures.emplace_back(Gfx2D::fontToTexture(ch));
+    }
+    // Now we need a bunch of texturedTriangles to draw the text on
+    float currentXCoordinate = -1.0f;
+    std::vector<Gfx2D::TexturedTriangle> textTriangles;
+    for (const Gfx2D::Texture& texture : textTextures) {
+        textTriangles.push_back(Gfx2D::TexturedTriangle({currentXCoordinate, -1}, {currentXCoordinate, 1}, {currentXCoordinate + 2.0f, -1},
+                texture, {{0,0}, {0,1}, {1,0}}));
+        textTriangles.push_back(Gfx2D::TexturedTriangle({currentXCoordinate + 2.0f, 1}, {currentXCoordinate, 1}, {currentXCoordinate + 2.0f, -1},
+                texture, {{1,1}, {0,1}, {1,0}}));
+        currentXCoordinate += 2.0f;
+    }
+    currentXCoordinate += 1.0f;
+
     std::chrono::time_point<std::chrono::steady_clock> lastWakeTime = std::chrono::steady_clock::now();
-
-    std::vector<Gfx2D::SolidColorTriangle> vec {
-        Gfx2D::SolidColorTriangle({-0.75, -0.75}, {-0.75, 0.75}, {0.75, -0.75}, PixelColor::on),
-        Gfx2D::SolidColorTriangle({0.75, 0.75}, {-0.75, 0.75}, {0.75, -0.75}, PixelColor::on)
-    };
-
-    float totalRotationRad = 0.0f;
+    constexpr float textSpeedPerSec = 2.0f;
+    constexpr float startPosition = -2.0f;
+    float totalMovement = startPosition;
 
     while(!halt) {
         std::chrono::time_point<std::chrono::steady_clock> curTime = std::chrono::steady_clock::now();
         std::chrono::duration<float> diffInSec = curTime - lastWakeTime;
         lastWakeTime = curTime;
-        float rotationRad = rotationSpeedRadPerSec * diffInSec.count();
-        totalRotationRad += rotationRad;
-        if (totalRotationRad >= 2*M_PI) {
-            totalRotationRad -= 2*M_PI;
+        totalMovement += diffInSec.count() * textSpeedPerSec;
+        if (totalMovement > currentXCoordinate) {
+            totalMovement = startPosition;
         }
-        Gfx2D::TransformationMatrix rotation = Gfx2D::createRotationMatrix(totalRotationRad);
-        std::vector<Gfx2D::SolidColorTriangle> transformedVec;
-        // Weird two step thing here, but we are kindof stuck.
-        // We transform the original objects into rotated ones. Someone has to hold on to those
-        // Canvas cannot do it, since canvas only holds references to some interface and knows
-        // nothing about the actual object. Therefore, store it in some new vector, transformedVec.
-        // Butttt, push_back could invalidate old references if a resize triggers.
-        // Therefore, two step: first push them all to some vector, then store references to the contents
-        // of that vector in canvas. No memory issues, but very ugly code.
-        for (auto& v : vec) {
-            transformedVec.push_back(v.createTransformedTriangle(rotation));
+        Gfx2D::TransformationMatrix translation = Gfx2D::createTranslationMatrix(-totalMovement, 0.0f);
+
+        std::vector<Gfx2D::TexturedTriangle> transformedTriangles;
+
+        for (const Gfx2D::TexturedTriangle& triangle : textTriangles) {
+            transformedTriangles.emplace_back(triangle.createTransformedTriangle(translation));
         }
-        for (auto& v : transformedVec) {
-            canvas.addToFrame(v);
+
+        for (const Gfx2D::TexturedTriangle& triangle : transformedTriangles) {
+            canvas.addToFrame(triangle);
         }
         matrixDriver.setScreen(canvas.generateFrame());
     }
+    screen.resetScreen(PixelColor::off);
+    matrixDriver.setScreen(screen);
     return EXIT_SUCCESS;
 }

@@ -85,12 +85,12 @@ PixelColor Gfx2D::Canvas::getColorOfPixel(const Gfx2D::Point& pixelIndex) const
     }
 }
 
-const MatrixScreen Gfx2D::Canvas::generateFrame()
+MatrixScreen Gfx2D::Canvas::generateFrame()
 {
     MatrixScreen output(this->referenceScreen);
 
-    for (size_t x = 0; x < output.getPixelCountWidth(); ++x) {
-        for (size_t y = 0; y < output.getPixelCountHeight(); ++y) {
+    for (size_t y = 0; y < output.getPixelCountHeight(); ++y) {
+        for (size_t x = 0; x < output.getPixelCountWidth(); ++x) {
             output(x, y) = this->getColorOfPixel(Gfx2D::Point(x, y));
         }
     }
