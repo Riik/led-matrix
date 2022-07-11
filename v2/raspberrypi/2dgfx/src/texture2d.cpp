@@ -5,9 +5,9 @@
 
 Gfx2D::Texture::Texture(std::vector<PixelColor> texels, std::size_t texelWidth, std::size_t texelHeight,
         Gfx2D::Texture::WrapMode wrapModeS, Gfx2D::Texture::WrapMode wrapModeT, PixelColor borderColor) :
-    texels(texels), texelWidth(texelWidth), texelHeight(texelHeight), wrapModeS(wrapModeS),
+    texels(std::move(texels)), texelWidth(texelWidth), texelHeight(texelHeight), wrapModeS(wrapModeS),
     wrapModeT(wrapModeT), borderColor(borderColor) {
-        if (texelWidth * texelHeight != texels.size()) {
+        if (texelWidth * texelHeight != this->texels.size()) {
             throw std::invalid_argument("width times height does not match vector size");
         }
 
