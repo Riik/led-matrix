@@ -1,5 +1,4 @@
 #include <cmath>
-#include <cassert>
 #include <stdexcept>
 
 #include "texture2d.hpp"
