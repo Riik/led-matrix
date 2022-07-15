@@ -4,9 +4,15 @@ include mk/predefined.mk
 include mk/flags.mk
 include mk/receipes.mk
 
-RELEASE_TARGET := final
-DEBUG_TARGET := final_debug
-TEST_TARGET := final_test
+HOST_TARGET_DIR := host
+
+RPI4_RELEASE_TARGET := final
+RPI4_DEBUG_TARGET := final_debug
+HOST_TEST_TARGET := $(HOST_TARGET_DIR)/final_test
+HOST_DEBUG_TARGET := $(HOST_TARGET_DIR)/final_debug
+HOST_RELEASE_TARGET := $(HOST_TARGET_DIR)/final
+
+ODIRS += $(HOST_TARGET_DIR)
 
 DIRS := $(shell ls -d */)
 DIRS := $(DIRS:=rules.mk)
@@ -17,34 +23,53 @@ DIRS += ./rules.mk
 
 INC := $(addprefix -I,$(INCDIRS))
 
-.DEFAULT_GOAL := test
+.DEFAULT_GOAL := host-test
 
-.PHONY: all test debug release clean
+.PHONY: all host-test host-debug host-release rpi4-debug rpi4-release clean rpi4 host-build
 
-all: release debug test
+all: rpi4-release rpi4-debug host-test host-debug host-release
 
-release: $(RELEASE_TARGET)
+rpi4: rpi4-release rpi4-debug
 
-debug: $(DEBUG_TARGET)
+host-build: host-release host-debug host-test
 
-test: $(TEST_TARGET)
+rpi4-release: $(RPI4_RELEASE_TARGET)
+
+rpi4-debug: $(RPI4_DEBUG_TARGET)
+
+host-test: $(HOST_TEST_TARGET)
+
+host-debug: $(HOST_DEBUG_TARGET)
+
+host-release: $(HOST_RELEASE_TARGET)
 
 $(ALLOFILES) : Makefile
 
 $(ODIRS) :
 	$(MKDIR-RECEIPE)
 
-$(RELEASE_TARGET) : $(RELEASE_OFILES)
+$(RPI4_RELEASE_TARGET) : $(RPI4_RELEASE_OFILES)
 	$(RPI4-RELEASE-LINKRECEIPE)
 
-$(DEBUG_TARGET) : $(DEBUG_OFILES)
+$(RPI4_DEBUG_TARGET) : $(RPI4_DEBUG_OFILES)
 	$(RPI4-DEBUG-LINKRECEIPE)
 
-$(TEST_TARGET) : $(TEST_OFILES)
+$(HOST_TEST_TARGET) : $(HOST_TEST_OFILES) | $(HOST_TARGET_DIR)
 	$(HOST-TEST-LINKRECEIPE)
+
+$(HOST_DEBUG_TARGET) : $(HOST_DEBUG_OFILES) | $(HOST_TARGET_DIR)
+	$(HOST-DEBUG-LINKRECEIPE)
+
+$(HOST_RELEASE_TARGET) : $(HOST_RELEASE_OFILES) | $(HOST_TARGET_DIR)
+	$(HOST-RELEASE-LINKRECEIPE)
 
 clean:
 	rm -rf $(OBJ_DIR)
-	rm -f $(RELEASE_TARGET)
-	rm -f $(DEBUG_TARGET)
-	rm -f $(TEST_TARGET)
+	rm -f $(RPI4_RELEASE_TARGET)
+	rm -f $(RPI4_DEBUG_TARGET)
+	rm -f $(HOST_TEST_TARGET)
+	rm -f $(HOST_RELEASE_TARGET)
+	rm -f $(HOST_DEBUG_TARGET)
+
+echo:
+	@echo $(ODIRS)
