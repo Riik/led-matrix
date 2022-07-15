@@ -57,5 +57,6 @@ tags
 */raspberrypi/final
 */raspberrypi/final_debug
 */raspberrypi/final_test
+*/raspberrypi/host/*
 */raspberrypi/upload.sh
 */raspberrypi/libgpiod
