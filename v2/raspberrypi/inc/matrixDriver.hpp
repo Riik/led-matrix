@@ -17,7 +17,7 @@ class MatrixDriver {
             bottomLeft
         };
 
-        MatrixDriver(const std::string &spiDevName, const MatrixScreen &exampleScreen, const uint32_t framesPerSecond = 0,
+        MatrixDriver(const std::string &spiDevName, const MatrixScreen &exampleScreen,
                 const MatrixDriver::PhysicalConnectionLocation physicalConnectionLocation = MatrixDriver::PhysicalConnectionLocation::topLeft);
 
         ~MatrixDriver();
@@ -40,8 +40,6 @@ class MatrixDriver {
         std::binary_semaphore newDataAvailable;
         std::mutex spiFdMutex;
         std::mutex screenMutex;
-
-        FrameLimiter frameLimiter;
 
         void screenToSpi(std::stop_token stopToken);
 

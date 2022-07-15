@@ -23,7 +23,8 @@ int main(void) {
     signal(SIGINT, sigintHandler);
 
     MatrixScreen screen(4,4);
-    MatrixDriver matrixDriver(spidev, screen, 60);
+    FrameLimiter frameLimiter(60);
+    MatrixDriver matrixDriver(spidev, screen);
     Gfx2D::Canvas canvas(screen, PixelColor::off);
 
     const std::string text = "Hoi, Rik!";
@@ -69,8 +70,10 @@ int main(void) {
             canvas.addToFrame(triangle);
         }
         matrixDriver.setScreen(canvas.generateFrame());
+        frameLimiter.waitForNextFrame();
     }
     screen.resetScreen(PixelColor::off);
     matrixDriver.setScreen(screen);
+    frameLimiter.waitForNextFrame();
     return EXIT_SUCCESS;
 }

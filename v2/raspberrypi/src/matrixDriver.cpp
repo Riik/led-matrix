@@ -11,10 +11,10 @@
 #include "matrixDriver.hpp"
 
 
-MatrixDriver::MatrixDriver(const std::string &spiDevName, const MatrixScreen &exampleScreen, const uint32_t framesPerSecond,
+MatrixDriver::MatrixDriver(const std::string &spiDevName, const MatrixScreen &exampleScreen,
         const MatrixDriver::PhysicalConnectionLocation physicalConnectionLocation) :
     screen{exampleScreen}, matrixCountWidth{exampleScreen.getMatrixCountWidth()}, matrixCountHeight{exampleScreen.getMatrixCountHeight()},
-    physicalConnectionLocation{physicalConnectionLocation}, newDataAvailable{0}, frameLimiter{framesPerSecond}
+    physicalConnectionLocation{physicalConnectionLocation}, newDataAvailable{0}
 {
     // All spidev stuff will be done c style, since I cant seem to figure out how to do it c++ style.
     this->spifd = open(spiDevName.c_str(), O_RDWR);
@@ -119,7 +119,6 @@ void MatrixDriver::setScreen(MatrixScreen screen)
     this->screen = std::move(screen);
     this->screenMutex.unlock();
     this->newDataAvailable.release();
-    this->frameLimiter.waitForNextFrame();
 }
 
 void MatrixDriver::screenToSpi(std::stop_token stopToken)
