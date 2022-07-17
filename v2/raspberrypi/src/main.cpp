@@ -19,37 +19,10 @@ static void sigintHandler(int signum)
     halt = true;
 }
 
-<<<<<<< HEAD
-const float rotationSpeedRadPerSec = 3.0f;
-const float middleRotationRadPerSec = 1.0f;
-
-=======
->>>>>>> main
 int main(void) {
     signal(SIGINT, sigintHandler);
 
     MatrixScreen screen(4,4);
-<<<<<<< HEAD
-    MatrixDriver matrixDriver(spidev, screen, 60);
-    Gfx2D::Canvas canvas(screen, PixelColor::off);
-
-    std::chrono::time_point<std::chrono::steady_clock> lastWakeTime = std::chrono::steady_clock::now();
-
-    std::vector<Gfx2D::SolidColorTriangle> vec {
-        Gfx2D::SolidColorTriangle({-0.75, -0.75}, {-0.75, 0.75}, {0.75, -0.75}, PixelColor::on),
-        Gfx2D::SolidColorTriangle({0.75, 0.75}, {-0.75, 0.75}, {0.75, -0.75}, PixelColor::off)
-    };
-
-    std::vector<Gfx2D::SolidColorTriangle> vec2 {
-        Gfx2D::SolidColorTriangle({-0.50, -0.50}, {-0.50, 0.50}, {0.50, -0.50}, PixelColor::off),
-        Gfx2D::SolidColorTriangle({0.50, 0.50}, {-0.50, 0.50}, {0.50, -0.50}, PixelColor::on)
-    };
-
-    std::vector<Gfx2D::SolidColorTriangle> vec3 {
-        Gfx2D::SolidColorTriangle({-0.25, -0.25}, {-0.25, 0.25}, {0.25, -0.25}, PixelColor::on),
-        Gfx2D::SolidColorTriangle({0.25, 0.25}, {-0.25, 0.25}, {0.25, -0.25}, PixelColor::off)
-    };
-=======
     FrameLimiter frameLimiter(60);
     MatrixDriver matrixDriver(spidev, screen);
     Gfx2D::Canvas canvas(screen, PixelColor::off);
@@ -71,7 +44,6 @@ int main(void) {
         currentXCoordinate += 2.0f;
     }
     currentXCoordinate += 1.0f;
->>>>>>> main
 
     std::chrono::time_point<std::chrono::steady_clock> lastWakeTime = std::chrono::steady_clock::now();
     constexpr float textSpeedPerSec = 2.0f;
@@ -93,29 +65,15 @@ int main(void) {
         for (const Gfx2D::TexturedTriangle& triangle : textTriangles) {
             transformedTriangles.emplace_back(triangle.createTransformedTriangle(translation));
         }
-<<<<<<< HEAD
-        for (auto& v : vec2) {
-            transformedVec.push_back(v.createTransformedTriangle(rotation));
-        }
-        for (auto& v : vec3) {
-            transformedVec.push_back(v.createTransformedTriangle(rotation));
-        }
-        for (auto& v : transformedVec) {
-            canvas.addToFrame(v);
-=======
 
         for (const Gfx2D::TexturedTriangle& triangle : transformedTriangles) {
             canvas.addToFrame(triangle);
->>>>>>> main
         }
         matrixDriver.setScreen(canvas.generateFrame());
         frameLimiter.waitForNextFrame();
     }
     screen.resetScreen(PixelColor::off);
     matrixDriver.setScreen(screen);
-<<<<<<< HEAD
-=======
     frameLimiter.waitForNextFrame();
->>>>>>> main
     return EXIT_SUCCESS;
 }
