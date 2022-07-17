@@ -9,11 +9,17 @@ int main()
 	// timeout(0);            // no blocking on getch()
 	curs_set(0);           // set the cursor to invisible
 	// printw("Hello World !!!");	/* Print Hello World		  */
-	for(int j = 0; j < 32; j ++){
-		move(j,2*(j%2));
-		for(int i =0; i < 32; i++){
+	for(int j = 0; j < 16; j ++){
+		move(j,5*((j/2)%2));
+		for(int i =0; i < 4; i++){
 			addch(' ' | A_REVERSE);
 			addch(' ' | A_REVERSE);
+			addch(' ' | A_REVERSE);
+			addch(' ' | A_REVERSE);
+			addch(' ' | A_REVERSE);
+			addch(' ');
+			addch(' ');
+			addch(' ');
 			addch(' ');
 			addch(' ');
 		}

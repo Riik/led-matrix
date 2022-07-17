@@ -2,7 +2,7 @@ DEBUGFLAGS := -D_GLIBCXX_DEBUG -DDEBUG -Og -ggdb
 RELEASEFLAGS := -DNDEBUG -O2
 RPI4-ARCHFLAGS :=-mcpu=cortex-a72 -mfloat-abi=hard -mfpu=neon-fp-armv8
 CXXLANGFLAGS := -std=gnu++20
-WARNINGFLAGS := -Wall -Wshadow=local -Werror -Wno-error=unused-variable -Wno-error=unused-but-set-variable
+WARNINGFLAGS := -Wall  -Wno-error=unused-variable
 MAKESUPPORTFLAGS := -MMD -MP
 HOST-TEST-CXXFLAGS := $(CXXLANGFLAGS) $(DEBUGFLAGS) $(WARNINGFLAGS) $(MAKESUPPORTFLAGS)
 RPI4-DEBUG-CXXFLAGS := $(CXXLANGFLAGS) $(DEBUGFLAGS) $(WARNINGFLAGS) $(MAKESUPPORTFLAGS)
