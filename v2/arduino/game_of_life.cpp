@@ -52,12 +52,12 @@ void initMatrix(){
   matrix[2][3] = 1;
   matrix[3][3] = 1;
   matrix[3][4] = 1;
-  matrix[5][5] = 1;
+  matrix[5][5] = 0;
   matrix[5][6] = 1;
   matrix[6][7] = 1;
-  matrix[7][7] = 1;
+  matrix[7][7] = 0;
   matrix[6][6] = 1;
-  matrix[8][7] = 1;
+  matrix[8][7] = 0;
 
   matrix[10][11] = 1;
   matrix[10][10] = 1;
@@ -94,7 +94,7 @@ void stepMatrix(){
 
 int main(){
   initMatrix();
-  for(int t = 0; t < 30; t++){
+  for(;;){
     printf("\033[2J");
     printf("\033[%d;%dH", 0, 0);
     printMatrix();

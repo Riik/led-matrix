@@ -1,14 +1,23 @@
 #include <cmath>
+<<<<<<< HEAD
 #include <cassert>
+=======
+>>>>>>> main
 #include <stdexcept>
 
 #include "texture2d.hpp"
 
 Gfx2D::Texture::Texture(std::vector<PixelColor> texels, std::size_t texelWidth, std::size_t texelHeight,
         Gfx2D::Texture::WrapMode wrapModeS, Gfx2D::Texture::WrapMode wrapModeT, PixelColor borderColor) :
+<<<<<<< HEAD
     texels(texels), texelWidth(texelWidth), texelHeight(texelHeight), wrapModeS(wrapModeS),
     wrapModeT(wrapModeT), borderColor(borderColor) {
         if (texelWidth * texelHeight != texels.size()) {
+=======
+    texels(std::move(texels)), texelWidth(texelWidth), texelHeight(texelHeight), wrapModeS(wrapModeS),
+    wrapModeT(wrapModeT), borderColor(borderColor) {
+        if (texelWidth * texelHeight != this->texels.size()) {
+>>>>>>> main
             throw std::invalid_argument("width times height does not match vector size");
         }
 

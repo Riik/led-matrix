@@ -22,8 +22,8 @@ for row in range(grid_height):
         x_start = 1 + row + row*8
         y_start = 1 + col + col*8
         char_data = pixel_grid[x_start:x_start+8, y_start:y_start+8]
-
-        hex_string = ",".join([hex(bits_to_byte(byte)) for byte in char_data])
+        # np.roll is to compensate for wrong row order on pcb layout
+        hex_string = ",".join([hex(bits_to_byte(np.roll(byte, 1))) for byte in char_data.T])
         output.append(hex_string)
 with open("font_converted.tsv", 'w') as o, open("c_array.txt", 'w') as ot:
     for idx, hex_string in enumerate(output):
