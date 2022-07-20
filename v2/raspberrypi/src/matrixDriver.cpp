@@ -39,10 +39,11 @@ void MatrixDriver::setScreen(MatrixScreen screen)
   for (std::size_t y = 0; y < this->screen.getPixelCountHeight(); ++y) {
       move(y,0);
       for (std::size_t x = 0; x < this->screen.getPixelCountWidth(); ++x) {
-
+        // terminal characters have 5:2 aspect ratio.
+        // Printing two next eachother results in pixels with 5:4 aspect ratio
         if (this->screen(x, y) == PixelColor::on) {
-            addch('.' | A_REVERSE);
-            addch('.' | A_REVERSE);
+            addch('.' | A_REVERSE); // A_REVERSE flips fg / bg color.
+            addch('.' | A_REVERSE); // character can be a space or dot or whatever, dot is clearer for debugging
         } else {
             addch('.');
       			addch('.');
