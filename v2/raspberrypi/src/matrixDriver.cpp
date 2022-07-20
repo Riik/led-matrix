@@ -46,7 +46,7 @@ void MatrixDriver::setScreen(MatrixScreen screen)
             addch('.' | A_REVERSE); // character can be a space or dot or whatever, dot is clearer for debugging
         } else {
             addch('.');
-      			addch('.');
+            addch('.');
         }
       }
   }
