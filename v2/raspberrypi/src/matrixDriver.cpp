@@ -40,18 +40,6 @@ void MatrixDriver::setScreen(MatrixScreen screen)
       move(y,0);
       for (std::size_t x = 0; x < this->screen.getPixelCountWidth(); ++x) {
 
-        // std::cout << std::to_string(x) << ", " << std::to_string(y) << ": ";
-        // if (this->screen(x, y) == PixelColor::on){
-        //   std::cout << "on";
-        // } else if (this->screen(x, y) == PixelColor::off) {
-        //   std::cout << "off";
-        // } else if (this->screen(x, y) == PixelColor::transparent) {
-        //   std::cout << "transparent";
-        // } else {
-        //   std::cout << "unknown";
-        // }
-        // std::cout << std::endl;
-
         if (this->screen(x, y) == PixelColor::on) {
             addch('.' | A_REVERSE);
             addch('.' | A_REVERSE);
