@@ -27,7 +27,7 @@ int main(void) {
     MatrixDriver matrixDriver(spidev, screen);
     Gfx2D::Canvas canvas(screen, PixelColor::off);
 
-    const std::string text = "Hoi, Rik!";
+    const std::string text = "Hoi, Jacko!";
     // Translate the text into a bunch of textures
     std::vector<Gfx2D::Texture> textTextures;
     for (const char &ch : text) {
