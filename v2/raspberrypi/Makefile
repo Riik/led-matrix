@@ -8,6 +8,7 @@ HOST_TARGET_DIR := host
 
 RPI4_RELEASE_TARGET := final
 RPI4_DEBUG_TARGET := final_debug
+RPI4_PROFILE_TARGET := final_profile
 HOST_TEST_TARGET := $(HOST_TARGET_DIR)/final_test
 HOST_DEBUG_TARGET := $(HOST_TARGET_DIR)/final_debug
 HOST_RELEASE_TARGET := $(HOST_TARGET_DIR)/final
@@ -25,15 +26,17 @@ INC := $(addprefix -I,$(INCDIRS))
 
 .DEFAULT_GOAL := host-test
 
-.PHONY: all host-test host-debug host-release rpi4-debug rpi4-release clean rpi4 host-build
+.PHONY: all host-test host-debug host-release rpi4-debug rpi4-release rpi4-profile clean rpi4 host-build
 
-all: rpi4-release rpi4-debug host-test host-debug host-release
+all: rpi4 host
 
-rpi4: rpi4-release rpi4-debug
+rpi4: rpi4-release rpi4-debug rpi4-profile
 
 host-build: host-release host-debug host-test
 
 rpi4-release: $(RPI4_RELEASE_TARGET)
+
+rpi4-profile: $(RPI4_PROFILE_TARGET)
 
 rpi4-debug: $(RPI4_DEBUG_TARGET)
 
@@ -53,6 +56,9 @@ $(RPI4_RELEASE_TARGET) : $(RPI4_RELEASE_OFILES)
 
 $(RPI4_DEBUG_TARGET) : $(RPI4_DEBUG_OFILES)
 	$(RPI4-DEBUG-LINKRECEIPE)
+
+$(RPI4_PROFILE_TARGET) : $(RPI4_PROFILE_OFILES)
+	$(RPI4-PROFILE-LINKRECEIPE)
 
 $(HOST_TEST_TARGET) : $(HOST_TEST_OFILES) | $(HOST_TARGET_DIR)
 	$(HOST-TEST-LINKRECEIPE)
