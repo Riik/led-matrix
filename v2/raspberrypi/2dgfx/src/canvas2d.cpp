@@ -57,32 +57,9 @@ PixelColor Gfx2D::Canvas::getColorOfPoint(const Gfx2D::Point& point) const
 
 PixelColor Gfx2D::Canvas::getColorOfPixel(const Gfx2D::Point& pixelIndex) const
 {
-    static const std::vector<Gfx2D::Point> coordinates = {
-        Gfx2D::Point(0.5, 0.0),
-        Gfx2D::Point(0.0, 0.5),
-        Gfx2D::Point(0.5, 0.5),
-        Gfx2D::Point(1.0, 0.5),
-        Gfx2D::Point(0.5, 1.0)
-    };
-    unsigned int onCount = 0;
-    unsigned int offCount = 0;
-
-    for (auto c : coordinates) {
-        Gfx2D::Point testPoint = this->pixelTransformation * (c + pixelIndex);
-        PixelColor color = this->getColorOfPoint(testPoint);
-
-        if (color == PixelColor::on) {
-            onCount++;
-        } else {
-            offCount++;
-        }
-    }
-
-    if (onCount > offCount) {
-        return PixelColor::on;
-    } else {
-        return PixelColor::off;
-    }
+    Gfx2D::Point pointOffset(0.5, 0.5);
+    Gfx2D::Point testPoint = this->pixelTransformation * (pixelIndex + pointOffset);
+    return this->getColorOfPoint(testPoint);
 }
 
 MatrixScreen Gfx2D::Canvas::generateFrame()
