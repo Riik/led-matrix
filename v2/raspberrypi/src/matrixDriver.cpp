@@ -96,6 +96,27 @@ MatrixDriver::MatrixDriver(const std::string &spiDevName, const MatrixScreen &ex
 
 MatrixDriver::~MatrixDriver()
 {
+    // We explicitly stop the jthread to stop it from interfering with our ledmatrix shutdown code.
+    this->outputWorker.request_stop();
+    this->outputWorker.join();
+
+    // Now we need to bring the ledmatrices into a default state.
+    const std::size_t matrixCount = this->matrixCountWidth * this->matrixCountHeight;
+    std::vector<uint8_t> buf(matrixCount*2, 0);
+    struct spi_ioc_transfer tr = {0};
+    tr.bits_per_word = 8;
+    tr.speed_hz = 10000000;
+    tr.len = buf.size();
+    tr.tx_buf = (unsigned long)buf.data();
+
+    // Transmit a shutdown to every matrix
+    for (std::size_t i = 0; i < buf.size(); i += 2) {
+        buf[i] = 0x0C;
+        buf[i+1] = 0x00;
+    }
+    ioctl(this->spifd, SPI_IOC_MESSAGE(1), &tr);
+
+    // Close our filedescriptor
     close(this->spifd);
 }
 

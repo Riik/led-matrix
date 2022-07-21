@@ -72,8 +72,5 @@ int main(void) {
         matrixDriver.setScreen(canvas.generateFrame());
         frameLimiter.waitForNextFrame();
     }
-    screen.resetScreen(PixelColor::off);
-    matrixDriver.setScreen(screen);
-    frameLimiter.waitForNextFrame();
     return EXIT_SUCCESS;
 }
