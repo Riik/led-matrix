@@ -28,6 +28,11 @@ PixelColor Gfx2D::TexturedTriangle::colorAtPoint(const Gfx2D::Point& point) cons
     return this->texture.get().getColorAt(texelCoords.x(), texelCoords.y());
 }
 
+bool Gfx2D::TexturedTriangle::drawableOverlapsWith(const Gfx2D::BoundaryBox& other) const
+{
+    return this->Gfx2D::Triangle::triangleOverlapsWith(other);
+}
+
 Gfx2D::TexturedTriangle Gfx2D::TexturedTriangle::createTransformedTriangle(const Gfx2D::TransformationMatrix& mat,
         const Gfx2D::Texture& newTexture) const
 {

@@ -7,15 +7,20 @@
 
 class SolidColorSquareDrawable: public Gfx2D::CanvasDrawable {
     private:
-        const float xStart, xEnd, yStart, yEnd;
-        const PixelColor color;
+        float xStart, xEnd, yStart, yEnd;
+        PixelColor color;
+        Gfx2D::BoundaryBox boundaryBox;
     public:
         SolidColorSquareDrawable(const float xStart, const float xEnd, const float yStart, const float yEnd,
                 const PixelColor color) : xStart(xStart), xEnd(xEnd), yStart(yStart), yEnd(yEnd),
-                color(color) { }
+                color(color) {
+            this->boundaryBox = Gfx2D::BoundaryBox({xEnd, yEnd}, {xStart, yStart});
+        }
         SolidColorSquareDrawable(const Gfx2D::Point& bottomLeft, const Gfx2D::Point& topRight,
                 const PixelColor color) : xStart(bottomLeft.x()), xEnd(topRight.x()), yStart(bottomLeft.y()),
-                yEnd(topRight.y()), color(color) {}
+                yEnd(topRight.y()), color(color) {
+            this->boundaryBox = Gfx2D::BoundaryBox(topRight, bottomLeft);
+        }
         bool pointIsInDrawable(const Gfx2D::Point& p) const override final
         {
             return p.x() >= this->xStart && p.x() <= this->xEnd &&
@@ -25,6 +30,11 @@ class SolidColorSquareDrawable: public Gfx2D::CanvasDrawable {
         PixelColor colorAtPoint(const Gfx2D::Point& /*unused*/) const override final
         {
             return this->color;
+        }
+
+        bool drawableOverlapsWith(const Gfx2D::BoundaryBox& other) const override final
+        {
+            return this->boundaryBox.overlapsWith(other);
         }
 };
 

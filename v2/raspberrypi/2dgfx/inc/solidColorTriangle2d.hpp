@@ -13,6 +13,7 @@ namespace Gfx2D {
 
             virtual bool pointIsInDrawable(const Point& p) const override final;
             virtual PixelColor colorAtPoint(const Point& p) const override final;
+            virtual bool drawableOverlapsWith(const BoundaryBox& other) const override final;
 
             SolidColorTriangle createTransformedTriangle(const TransformationMatrix& mat) const;
     };

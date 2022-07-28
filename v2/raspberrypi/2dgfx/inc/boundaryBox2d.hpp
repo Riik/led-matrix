@@ -9,6 +9,7 @@ namespace Gfx2D {
             Point high;
             Point low;
         public:
+            BoundaryBox();
             BoundaryBox(Point high, Point low);
             bool overlapsWith(const BoundaryBox& other) const;
     };

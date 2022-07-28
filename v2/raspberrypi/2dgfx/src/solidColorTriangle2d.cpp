@@ -17,6 +17,11 @@ PixelColor Gfx2D::SolidColorTriangle::colorAtPoint(const Gfx2D::Point& /*unused*
     return this->color;
 }
 
+bool Gfx2D::SolidColorTriangle::drawableOverlapsWith(const Gfx2D::BoundaryBox& other) const
+{
+    return this->Gfx2D::Triangle::triangleOverlapsWith(other);
+}
+
 Gfx2D::SolidColorTriangle Gfx2D::SolidColorTriangle::createTransformedTriangle(const Gfx2D::TransformationMatrix& mat) const
 {
     Gfx2D::Triangle triangle = this->Gfx2D::Triangle::createTransformedTriangle(mat);
