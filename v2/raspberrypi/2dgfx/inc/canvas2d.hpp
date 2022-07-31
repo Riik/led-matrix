@@ -36,5 +36,6 @@ namespace Gfx2D {
             float totalWidth;
             Gfx2D::TransformationMatrix pixelTransformation;
 
+            BoundaryBox boundaryBox;
     };
 }

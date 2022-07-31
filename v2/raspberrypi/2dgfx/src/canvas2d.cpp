@@ -30,11 +30,21 @@ Gfx2D::Canvas::Canvas(const MatrixScreen& referenceScreen, const PixelColor& bac
 
     // First translate, then scale.
     this->pixelTransformation = scaleMat*translateMat;
+
+    // Determine the boundaryBox
+    Gfx2D::Point min{0, 0};
+    min = this->pixelTransformation * min;
+    Gfx2D::Point max(this->referenceScreen.getPixelCountWidth(), this->referenceScreen.getPixelCountHeight());
+    max = this->pixelTransformation * max;
+
+    this->boundaryBox = Gfx2D::BoundaryBox(max, min);
 }
 
 void Gfx2D::Canvas::addToFrame(const Gfx2D::CanvasDrawable& drawable)
 {
-    this->drawables.push_back(drawable);
+    if (drawable.drawableOverlapsWith(this->boundaryBox)) {
+        this->drawables.push_back(drawable);
+    }
 }
 
 PixelColor Gfx2D::Canvas::getColorOfPoint(const Gfx2D::Point& point) const
