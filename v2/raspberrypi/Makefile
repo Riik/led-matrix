@@ -28,7 +28,7 @@ INC := $(addprefix -I,$(INCDIRS))
 
 .PHONY: all host-test host-debug host-release rpi4-debug rpi4-release rpi4-profile clean rpi4 host-build
 
-all: rpi4 host
+all: rpi4 host-build
 
 rpi4: rpi4-release rpi4-debug rpi4-profile
 
