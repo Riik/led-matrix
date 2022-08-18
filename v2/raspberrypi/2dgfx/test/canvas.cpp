@@ -304,4 +304,5 @@ TEST(canvas2d, differentMatrixLayouts)
             screen(x, y) = PixelColor::on;
         }
     }
+    EXPECT_EQ(screen, output);
 }
