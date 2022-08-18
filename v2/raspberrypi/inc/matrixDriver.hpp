@@ -17,7 +17,7 @@ class MatrixDriver {
             bottomLeft
         };
 
-        MatrixDriver(const std::string &spiDevName, const MatrixScreen &exampleScreen,
+        MatrixDriver(const std::string &spiDevName, const MatrixScreen &exampleScreen, uint_fast8_t brightness = 15,
                 const MatrixDriver::PhysicalConnectionLocation physicalConnectionLocation = MatrixDriver::PhysicalConnectionLocation::topLeft);
 
         ~MatrixDriver();

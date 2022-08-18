@@ -3,6 +3,7 @@
 #include <chrono>
 #include <functional>
 #include <sstream>
+#include <cassert>
 
 #include <fcntl.h>
 #include <sys/ioctl.h>
@@ -11,7 +12,7 @@
 #include "matrixDriver.hpp"
 
 
-MatrixDriver::MatrixDriver(const std::string &spiDevName, const MatrixScreen &exampleScreen,
+MatrixDriver::MatrixDriver(const std::string &spiDevName, const MatrixScreen &exampleScreen, uint_fast8_t brightness,
         const MatrixDriver::PhysicalConnectionLocation physicalConnectionLocation) :
     screen{exampleScreen}, matrixCountWidth{exampleScreen.getMatrixCountWidth()}, matrixCountHeight{exampleScreen.getMatrixCountHeight()},
     physicalConnectionLocation{physicalConnectionLocation}, newDataAvailable{0}
@@ -21,6 +22,7 @@ MatrixDriver::MatrixDriver(const std::string &spiDevName, const MatrixScreen &ex
     if (this->spifd < 0) {
         throw std::system_error(errno, std::generic_category(), spiDevName);
     }
+    assert(brightness <= 15);
 
     // Now we need to bring the ledmatrices into a default state.
     const std::size_t matrixCount = this->matrixCountWidth * this->matrixCountHeight;
@@ -79,10 +81,10 @@ MatrixDriver::MatrixDriver(const std::string &spiDevName, const MatrixScreen &ex
         throw std::system_error(errno, std::generic_category(), spiDevName);
     }
 
-    // Finally, we transfer max brightness to every matrix
+    // Finally, we set brightness on every matrix
     for (std::size_t i = 0; i < buf.size(); i += 2) {
         buf[i] = 0x0A;
-        buf[i+1] = 0x0F;
+        buf[i+1] = static_cast<uint8_t>(brightness);
     }
 
     ret = ioctl(this->spifd, SPI_IOC_MESSAGE(1), &tr);
