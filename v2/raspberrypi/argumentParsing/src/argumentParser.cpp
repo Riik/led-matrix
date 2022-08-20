@@ -39,12 +39,27 @@ static uint_fast8_t parseBrightness(const char* arg)
     return static_cast<uint_fast8_t>(num);
 }
 
+static uint_fast32_t parseMaxFramesPerSecond(const char* arg)
+{
+    long long num = str2number(arg);
+    if (num < 0) {
+        throw std::invalid_argument("Fps limit cannot be a negative number");
+    }
+    if (num > static_cast<long long>(UINT_FAST32_MAX)) {
+        std::stringstream ss;
+        ss << "Given fps limit out of range. Max: " << UINT_FAST32_MAX << " given: " << arg;
+        throw std::invalid_argument(ss.str());
+    }
+    return static_cast<uint_fast32_t>(num);
+}
+
 ParsedArguments parseArguments(int argc, char * const argv[]) {
     ParsedArguments ret = defaultArguments;
     // This makes sure that getopt does not print errors
     opterr = 0;
     const struct option longopts[] = {
         {"brightness", required_argument, nullptr, 'b'},
+        {"fpsLimit", required_argument, nullptr, 'f'},
         {0, 0, nullptr, 0}
     };
 
@@ -57,6 +72,9 @@ ParsedArguments parseArguments(int argc, char * const argv[]) {
         switch(c) {
             case 'b':
                 ret.brightness = parseBrightness(optarg);
+                break;
+            case 'f':
+                ret.maxFramesPerSecond = parseMaxFramesPerSecond(optarg);
                 break;
             case ':':
                 {

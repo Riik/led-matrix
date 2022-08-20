@@ -24,7 +24,7 @@ static void sigintHandler(int signum)
 int main(int argc, char * const argv[]) {
     signal(SIGINT, sigintHandler);
 
-    ParsedArguments pArgs;
+    ParsedArguments pArgs = defaultArguments;
     try {
         pArgs = parseArguments(argc, argv);
     } catch (const std::invalid_argument& e) {
@@ -33,7 +33,7 @@ int main(int argc, char * const argv[]) {
     }
 
     MatrixScreen screen(4,4);
-    FrameLimiter frameLimiter(60);
+    FrameLimiter frameLimiter(pArgs.maxFramesPerSecond);
     MatrixDriver matrixDriver(spidev, screen, pArgs.brightness);
     Gfx2D::Canvas canvas(screen, PixelColor::off);
 
