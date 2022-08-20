@@ -12,9 +12,10 @@
 #include "matrixDriver.hpp"
 
 
-MatrixDriver::MatrixDriver(const std::string &spiDevName, const MatrixScreen &exampleScreen, uint_fast8_t brightness,
-        const MatrixDriver::PhysicalConnectionLocation physicalConnectionLocation) :
-    screen{exampleScreen}, matrixCountWidth{exampleScreen.getMatrixCountWidth()}, matrixCountHeight{exampleScreen.getMatrixCountHeight()},
+MatrixDriver::MatrixDriver(const std::string &spiDevName, MatrixScreen exampleScreen, uint_fast8_t brightness,
+        MatrixDriver::PhysicalConnectionLocation physicalConnectionLocation) :
+    screen{std::move(exampleScreen)}, matrixCountWidth{exampleScreen.getMatrixCountWidth()},
+    matrixCountHeight{exampleScreen.getMatrixCountHeight()},
     physicalConnectionLocation{physicalConnectionLocation}, newDataAvailable{0}
 {
     // All spidev stuff will be done c style, since I cant seem to figure out how to do it c++ style.

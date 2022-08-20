@@ -17,8 +17,8 @@ class MatrixDriver {
             bottomLeft
         };
 
-        MatrixDriver(const std::string &spiDevName, const MatrixScreen &exampleScreen, uint_fast8_t brightness = 15,
-                const MatrixDriver::PhysicalConnectionLocation physicalConnectionLocation = MatrixDriver::PhysicalConnectionLocation::topLeft);
+        MatrixDriver(const std::string &spiDevName, MatrixScreen exampleScreen, uint_fast8_t brightness = 15,
+                MatrixDriver::PhysicalConnectionLocation physicalConnectionLocation = MatrixDriver::PhysicalConnectionLocation::topLeft);
 
         ~MatrixDriver();
         // Because this object holds a filedescriptor, which cannot trivially be copied, we need to think about the
