@@ -2,7 +2,7 @@
 
 #include "frameLimiter.hpp"
 
-FrameLimiter::FrameLimiter(const uint32_t framesPerSecond)
+FrameLimiter::FrameLimiter(uint_fast32_t framesPerSecond)
 {
     if (framesPerSecond == 0) {
         timePerFrame = std::chrono::nanoseconds{0};

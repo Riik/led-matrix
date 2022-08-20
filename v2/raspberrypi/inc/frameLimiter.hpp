@@ -6,7 +6,7 @@
 class FrameLimiter {
     public:
         /* zero is a special case, in that case there will be no sleeping. */
-        FrameLimiter(const uint32_t framesPerSecond);
+        FrameLimiter(uint_fast32_t framesPerSecond);
 
         /* Puts the calling thread to sleep until the next frame. */
         void waitForNextFrame();
