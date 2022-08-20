@@ -5,17 +5,17 @@
 
 #include "argumentParser.hpp"
 
-static int64_t str2number(const char *s)
+static long long str2number(const char *s)
 {
     char *end;
     errno = 0;
-    int64_t l = std::strtol(s, &end, 10);
-    if (errno == ERANGE && l == LONG_MAX) {
+    long long l = std::strtoll(s, &end, 10);
+    if (errno == ERANGE && l == LLONG_MAX) {
         std::stringstream ss;
         ss << "Overflow while converting " << s;
         throw std::invalid_argument(ss.str());
     }
-    if (errno == ERANGE && l == LONG_MIN) {
+    if (errno == ERANGE && l == LLONG_MIN) {
         std::stringstream ss;
         ss << "Underflow while converting " << s;
         throw std::invalid_argument(ss.str());
@@ -25,13 +25,12 @@ static int64_t str2number(const char *s)
         ss << s << " is not a number";
         throw std::invalid_argument(ss.str());
     }
-
     return l;
 }
 
 static uint_fast8_t parseBrightness(const char* arg)
 {
-    int64_t num = str2number(arg);
+    long long num = str2number(arg);
     if (num < 0 || num > 15) {
         std::stringstream ss;
         ss << "Brightness must be in [0, 15]";
