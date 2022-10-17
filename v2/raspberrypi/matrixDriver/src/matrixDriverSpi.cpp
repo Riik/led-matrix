@@ -1,7 +1,5 @@
 #if !defined(__APPLE__)
 #include <system_error>
-#include <algorithm>
-#include <chrono>
 #include <functional>
 #include <sstream>
 #include <cassert>
@@ -11,7 +9,6 @@
 #include <linux/spi/spidev.h>
 
 #include "matrixDriverSpi.hpp"
-
 
 MatrixDriverSpi::MatrixDriverSpi(const std::string &spiDevName, MatrixScreen exampleScreen, uint_fast8_t brightness,
         MatrixDriverSpi::PhysicalConnectionLocation physicalConnectionLocation) :
