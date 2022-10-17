@@ -1,3 +1,4 @@
+#if !defined(__APPLE__)
 #include <system_error>
 #include <algorithm>
 #include <chrono>
@@ -231,3 +232,4 @@ void MatrixDriverSpi::screenToSpi(std::stop_token stopToken)
         this->spiFdMutex.unlock();
     }
 }
+#endif //!defined(__APPLE)

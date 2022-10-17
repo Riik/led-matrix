@@ -1,4 +1,5 @@
 #pragma once
+#if !defined(__APPLE__)
 
 #include <thread>
 #include <semaphore>
@@ -43,5 +44,5 @@ class MatrixDriverSpi : public MatrixDriver {
         std::mutex screenMutex;
 
         void screenToSpi(std::stop_token stopToken);
-
 };
+#endif //!defined(__APPLE)
