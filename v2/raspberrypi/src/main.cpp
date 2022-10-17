@@ -9,6 +9,7 @@
 #include "matrixScreen.hpp"
 #include "matrixDriver.hpp"
 #include "matrixDriverSpi.hpp"
+#include "matrixDriverNcurses.hpp"
 #include "frameLimiter.hpp"
 #include "fontToTexture2d.hpp"
 #include "texturedTriangle2d.hpp"
@@ -37,7 +38,11 @@ int main(int argc, char * const argv[]) {
 
     MatrixScreen screen(4,4);
     FrameLimiter frameLimiter(pArgs.maxFramesPerSecond);
+#if defined(__arm__)
     std::unique_ptr<MatrixDriver> matrixDriver(new MatrixDriverSpi(spidev, screen, pArgs.brightness));
+#else //defined(__arm__)
+    std::unique_ptr<MatrixDriver> matrixDriver(new MatrixDriverNcurses());
+#endif //defined(__arm)
     Gfx2D::Canvas canvas(screen, PixelColor::off);
 
     const std::string text = "Hoi, Rik!";
