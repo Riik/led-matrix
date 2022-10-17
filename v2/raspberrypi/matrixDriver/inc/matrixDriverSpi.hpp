@@ -1,14 +1,15 @@
-#ifndef MATRIXDRIVER_HPP
-#define MATRIXDRIVER_HPP
+#pragma once
+
 #include <thread>
 #include <semaphore>
 #include <mutex>
 #include <string>
 
 #include "matrixScreen.hpp"
+#include "matrixDriver.hpp"
 #include "frameLimiter.hpp"
 
-class MatrixDriver {
+class MatrixDriverSpi : public MatrixDriver {
     public:
 
         /* You have to connect the matrices row-based, but you can either go up or down. */
@@ -17,16 +18,16 @@ class MatrixDriver {
             bottomLeft
         };
 
-        MatrixDriver(const std::string &spiDevName, MatrixScreen exampleScreen, uint_fast8_t brightness = 15,
-                MatrixDriver::PhysicalConnectionLocation physicalConnectionLocation = MatrixDriver::PhysicalConnectionLocation::topLeft);
+        MatrixDriverSpi(const std::string &spiDevName, MatrixScreen exampleScreen, uint_fast8_t brightness = 15,
+                MatrixDriverSpi::PhysicalConnectionLocation physicalConnectionLocation = MatrixDriverSpi::PhysicalConnectionLocation::topLeft);
 
-        ~MatrixDriver();
+        ~MatrixDriverSpi();
         // Because this object holds a filedescriptor, which cannot trivially be copied, we need to think about the
         // rule of three. dup and dup2 exist, but for now this is the easiest solution.
-        MatrixDriver& operator=(const MatrixDriver&) = delete;
-        MatrixDriver(const MatrixDriver&) = delete;
+        MatrixDriverSpi& operator=(const MatrixDriverSpi&) = delete;
+        MatrixDriverSpi(const MatrixDriverSpi&) = delete;
 
-        void setScreen(MatrixScreen screen);
+        void setScreen(MatrixScreen screen) final;
 
     private:
         MatrixScreen screen;
@@ -34,7 +35,7 @@ class MatrixDriver {
 
         const std::size_t matrixCountWidth;
         const std::size_t matrixCountHeight;
-        const MatrixDriver::PhysicalConnectionLocation physicalConnectionLocation;
+        const MatrixDriverSpi::PhysicalConnectionLocation physicalConnectionLocation;
 
         std::jthread outputWorker;
         std::binary_semaphore newDataAvailable;
@@ -44,4 +45,3 @@ class MatrixDriver {
         void screenToSpi(std::stop_token stopToken);
 
 };
-#endif //MATRIXDRIVER_HPP

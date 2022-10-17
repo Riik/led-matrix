@@ -4,9 +4,12 @@
 #include <chrono>
 #include <stdexcept>
 #include <iostream>
+#include <memory>
 
 #include "matrixScreen.hpp"
 #include "matrixDriver.hpp"
+#include "matrixDriverSpi.hpp"
+#include "frameLimiter.hpp"
 #include "fontToTexture2d.hpp"
 #include "texturedTriangle2d.hpp"
 #include "canvas2d.hpp"
@@ -34,7 +37,7 @@ int main(int argc, char * const argv[]) {
 
     MatrixScreen screen(4,4);
     FrameLimiter frameLimiter(pArgs.maxFramesPerSecond);
-    MatrixDriver matrixDriver(spidev, screen, pArgs.brightness);
+    std::unique_ptr<MatrixDriver> matrixDriver(new MatrixDriverSpi(spidev, screen, pArgs.brightness));
     Gfx2D::Canvas canvas(screen, PixelColor::off);
 
     const std::string text = "Hoi, Rik!";
@@ -79,7 +82,7 @@ int main(int argc, char * const argv[]) {
         for (const Gfx2D::TexturedTriangle& triangle : transformedTriangles) {
             canvas.addToFrame(triangle);
         }
-        matrixDriver.setScreen(canvas.generateFrame());
+        matrixDriver->setScreen(canvas.generateFrame());
         frameLimiter.waitForNextFrame();
     }
     return EXIT_SUCCESS;

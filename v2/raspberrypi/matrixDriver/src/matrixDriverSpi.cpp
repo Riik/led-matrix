@@ -9,11 +9,11 @@
 #include <sys/ioctl.h>
 #include <linux/spi/spidev.h>
 
-#include "matrixDriver.hpp"
+#include "matrixDriverSpi.hpp"
 
 
-MatrixDriver::MatrixDriver(const std::string &spiDevName, MatrixScreen exampleScreen, uint_fast8_t brightness,
-        MatrixDriver::PhysicalConnectionLocation physicalConnectionLocation) :
+MatrixDriverSpi::MatrixDriverSpi(const std::string &spiDevName, MatrixScreen exampleScreen, uint_fast8_t brightness,
+        MatrixDriverSpi::PhysicalConnectionLocation physicalConnectionLocation) :
     screen{std::move(exampleScreen)}, matrixCountWidth{exampleScreen.getMatrixCountWidth()},
     matrixCountHeight{exampleScreen.getMatrixCountHeight()},
     physicalConnectionLocation{physicalConnectionLocation}, newDataAvailable{0}
@@ -94,10 +94,10 @@ MatrixDriver::MatrixDriver(const std::string &spiDevName, MatrixScreen exampleSc
         throw std::system_error(errno, std::generic_category(), spiDevName);
     }
     // Create and start the thread
-    this->outputWorker = std::jthread(std::bind_front(&MatrixDriver::screenToSpi, this));
+    this->outputWorker = std::jthread(std::bind_front(&MatrixDriverSpi::screenToSpi, this));
 }
 
-MatrixDriver::~MatrixDriver()
+MatrixDriverSpi::~MatrixDriverSpi()
 {
     // We explicitly stop the jthread to stop it from interfering with our ledmatrix shutdown code.
     this->outputWorker.request_stop();
@@ -123,7 +123,7 @@ MatrixDriver::~MatrixDriver()
     close(this->spifd);
 }
 
-void MatrixDriver::setScreen(MatrixScreen screen)
+void MatrixDriverSpi::setScreen(MatrixScreen screen)
 {
 #if defined(DEBUG)
     if (screen.getMatrixCountWidth() != this->screen.getMatrixCountWidth()) {
@@ -145,7 +145,7 @@ void MatrixDriver::setScreen(MatrixScreen screen)
     this->newDataAvailable.release();
 }
 
-void MatrixDriver::screenToSpi(std::stop_token stopToken)
+void MatrixDriverSpi::screenToSpi(std::stop_token stopToken)
 {
     const std::size_t matrixCount = this->matrixCountWidth * this->matrixCountHeight;
 
@@ -202,7 +202,7 @@ void MatrixDriver::screenToSpi(std::stop_token stopToken)
             for (std::size_t matRow = 0; matRow < this->matrixCountHeight; ++matRow) {
                 // Isolate the pixelcoordinates that belong to this matrix
                 std::size_t pixelRowMin;
-                if (this->physicalConnectionLocation == MatrixDriver::PhysicalConnectionLocation::topLeft) {
+                if (this->physicalConnectionLocation == MatrixDriverSpi::PhysicalConnectionLocation::topLeft) {
                     pixelRowMin = this->screen.getPixelCountHeight() - (matRow + 1)*MatrixScreen::matrixPixelCountHeight;
                 } else {
                     pixelRowMin = matRow*MatrixScreen::matrixPixelCountHeight;
