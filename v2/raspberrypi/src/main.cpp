@@ -65,7 +65,7 @@ int main(int argc, char * const argv[]) {
 #endif //defined(__arm)
     Gfx2D::Canvas canvas(screen, PixelColor::off);
 
-    std::uniform_int_distribution<unsigned int> dist(1, 20);
+    std::uniform_int_distribution<unsigned int> dist(1, pArgs.nSides);
     std::random_device urandom("/dev/urandom");
 
     std::chrono::time_point<std::chrono::steady_clock> lastRollTime = std::chrono::steady_clock::now();
@@ -74,7 +74,7 @@ int main(int argc, char * const argv[]) {
     std::vector<Gfx2D::TexturedTriangle> textTriangles;
 
     float rollSpeed = 0.01f;
-    unsigned int diceDigit = 20;
+    unsigned int diceDigit = 1;
 
 
     while(!halt) {

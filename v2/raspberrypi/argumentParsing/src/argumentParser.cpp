@@ -39,6 +39,17 @@ static uint_fast8_t parseBrightness(const char* arg)
     return static_cast<uint_fast8_t>(num);
 }
 
+static uint_fast8_t parseNSides(const char* arg)
+{
+    long long num = str2number(arg);
+    if (num < 1 || num > 99) {
+        std::stringstream ss;
+        ss << "Brightness must be in [1, 99]";
+        throw std::invalid_argument(ss.str());
+    }
+    return static_cast<uint_fast8_t>(num);
+}
+
 static uint_fast32_t parseMaxFramesPerSecond(const char* arg)
 {
     long long num = str2number(arg);
@@ -60,6 +71,7 @@ ParsedArguments parseArguments(int argc, char * const argv[]) {
     const struct option longopts[] = {
         {"brightness", required_argument, nullptr, 'b'},
         {"fpsLimit", required_argument, nullptr, 'f'},
+        {"sides", required_argument, nullptr, 'd'},
         {0, 0, nullptr, 0}
     };
 
@@ -75,6 +87,9 @@ ParsedArguments parseArguments(int argc, char * const argv[]) {
                 break;
             case 'f':
                 ret.maxFramesPerSecond = parseMaxFramesPerSecond(optarg);
+                break;
+            case 'd':
+                ret.nSides = parseNSides(optarg);
                 break;
             case ':':
                 {
