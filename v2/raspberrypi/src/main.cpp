@@ -45,7 +45,7 @@ int main(int argc, char * const argv[]) {
 #endif //defined(__arm)
     Gfx2D::Canvas canvas(screen, PixelColor::off);
 
-    const std::string text = "Hoi, Rik!";
+    const std::string text = "20";
     // Translate the text into a bunch of textures
     std::vector<Gfx2D::Texture> textTextures;
     for (const char &ch : text) {
@@ -76,12 +76,15 @@ int main(int argc, char * const argv[]) {
         if (totalMovement > currentXCoordinate) {
             totalMovement = startPosition;
         }
-        Gfx2D::TransformationMatrix translation = Gfx2D::createTranslationMatrix(-totalMovement, 0.0f);
+
+        Gfx2D::TransformationMatrix transformation =
+            (Gfx2D::createScaleMatrix(0.5f, 0.5f) * Gfx2D::createTranslationMatrix(-0.75f, 0.0f));
+
 
         std::vector<Gfx2D::TexturedTriangle> transformedTriangles;
 
         for (const Gfx2D::TexturedTriangle& triangle : textTriangles) {
-            transformedTriangles.emplace_back(triangle.createTransformedTriangle(translation));
+            transformedTriangles.emplace_back(triangle.createTransformedTriangle(transformation));
         }
 
         for (const Gfx2D::TexturedTriangle& triangle : transformedTriangles) {
