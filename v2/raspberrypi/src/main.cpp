@@ -74,6 +74,7 @@ int main(int argc, char * const argv[]) {
     std::vector<Gfx2D::TexturedTriangle> textTriangles;
 
     float rollSpeed = 0.01f;
+    unsigned int diceDigit = 20;
 
 
     while(!halt) {
@@ -81,15 +82,19 @@ int main(int argc, char * const argv[]) {
         std::chrono::duration<float> diffInSec = curTime - lastRollTime;
         if (diffInSec.count() > rollSpeed && rollSpeed < 0.95f) {
             lastRollTime = curTime;
-            unsigned int x = dist(urandom);
-            const std::string text = std::to_string(x);
+            diceDigit = dist(urandom);
+            const std::string text = std::to_string(diceDigit);
 
             textTriangles = createTextTriangles(textTextures, text);
             rollSpeed *= 1.23f;
         }
 
+        float translationX = diceDigit < 10 ? 0.2f : -0.75f;
+
+
+
         Gfx2D::TransformationMatrix transformation =
-            (Gfx2D::createScaleMatrix(0.5f, 0.5f) * Gfx2D::createTranslationMatrix(-0.75f, 0.0f));
+            (Gfx2D::createScaleMatrix(0.5f, 0.5f) * Gfx2D::createTranslationMatrix(translationX, 0.0f));
 
         std::vector<Gfx2D::TexturedTriangle> transformedTriangles;
 
