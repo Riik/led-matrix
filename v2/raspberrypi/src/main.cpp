@@ -68,21 +68,25 @@ int main(int argc, char * const argv[]) {
     std::uniform_int_distribution<unsigned int> dist(1, 20);
     std::random_device urandom("/dev/urandom");
 
-    std::chrono::time_point<std::chrono::steady_clock> lastWakeTime = std::chrono::steady_clock::now();
+    std::chrono::time_point<std::chrono::steady_clock> lastRollTime = std::chrono::steady_clock::now();
 
     std::vector<Gfx2D::Texture> textTextures;
-    std::vector<Gfx2D::TexturedTriangle> textTriangles = createTextTriangles(textTextures, "20");
+    std::vector<Gfx2D::TexturedTriangle> textTriangles;
+
+    float rollSpeed = 0.01f;
 
 
     while(!halt) {
         std::chrono::time_point<std::chrono::steady_clock> curTime = std::chrono::steady_clock::now();
-        std::chrono::duration<float> diffInSec = curTime - lastWakeTime;
-        lastWakeTime = curTime;
+        std::chrono::duration<float> diffInSec = curTime - lastRollTime;
+        if (diffInSec.count() > rollSpeed && rollSpeed < 0.95f) {
+            lastRollTime = curTime;
+            unsigned int x = dist(urandom);
+            const std::string text = std::to_string(x);
 
-        unsigned int x = dist(urandom);
-        const std::string text = std::to_string(x);
-
-        textTriangles = createTextTriangles(textTextures, text);
+            textTriangles = createTextTriangles(textTextures, text);
+            rollSpeed *= 1.23f;
+        }
 
         Gfx2D::TransformationMatrix transformation =
             (Gfx2D::createScaleMatrix(0.5f, 0.5f) * Gfx2D::createTranslationMatrix(-0.75f, 0.0f));
