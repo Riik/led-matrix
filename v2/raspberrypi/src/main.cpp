@@ -5,11 +5,14 @@
 #include <stdexcept>
 #include <iostream>
 #include <memory>
+#include <random>
 
 #include "matrixScreen.hpp"
 #include "matrixDriver.hpp"
 #include "matrixDriverSpi.hpp"
 #include "matrixDriverNcurses.hpp"
+#include "ioController.hpp"
+#include "ioControllerGpiod.hpp"
 #include "frameLimiter.hpp"
 #include "fontToTexture2d.hpp"
 #include "texturedTriangle2d.hpp"
@@ -25,6 +28,25 @@ static void sigintHandler(int signum)
     halt = true;
 }
 
+std::vector<Gfx2D::TexturedTriangle> createTextTriangles(std::vector<Gfx2D::Texture>& textTextures, const std::string& text) {
+    std::vector<Gfx2D::TexturedTriangle> textTriangles;
+    // Translate the text into a bunch of textures
+    textTextures.clear();
+    for (const char &ch : text) {
+        textTextures.emplace_back(Gfx2D::fontToTexture(ch));
+    }
+    // Now we need a bunch of texturedTriangles to draw the text on
+    float currentXCoordinate = -1.0f;
+    for (const Gfx2D::Texture& texture : textTextures) {
+        textTriangles.push_back(Gfx2D::TexturedTriangle({currentXCoordinate, -1}, {currentXCoordinate, 1}, {currentXCoordinate + 2.0f, -1},
+                texture, {{0,0}, {0,1}, {1,0}}));
+        textTriangles.push_back(Gfx2D::TexturedTriangle({currentXCoordinate + 2.0f, 1}, {currentXCoordinate, 1}, {currentXCoordinate + 2.0f, -1},
+                texture, {{1,1}, {0,1}, {1,0}}));
+        currentXCoordinate += 2.0f;
+    }
+    return textTriangles;
+}
+
 int main(int argc, char * const argv[]) {
     signal(SIGINT, sigintHandler);
 
@@ -36,7 +58,7 @@ int main(int argc, char * const argv[]) {
         return EXIT_FAILURE;
     }
 
-    MatrixScreen screen(4,4);
+    MatrixScreen screen(1,1);
     FrameLimiter frameLimiter(pArgs.maxFramesPerSecond);
 #if defined(__arm__)
     std::unique_ptr<MatrixDriver> matrixDriver(new MatrixDriverSpi(spidev, screen, pArgs.brightness));
@@ -45,43 +67,56 @@ int main(int argc, char * const argv[]) {
 #endif //defined(__arm)
     Gfx2D::Canvas canvas(screen, PixelColor::off);
 
-    const std::string text = "Hoi, Rik!";
-    // Translate the text into a bunch of textures
-    std::vector<Gfx2D::Texture> textTextures;
-    for (const char &ch : text) {
-        textTextures.emplace_back(Gfx2D::fontToTexture(ch));
-    }
-    // Now we need a bunch of texturedTriangles to draw the text on
-    float currentXCoordinate = -1.0f;
-    std::vector<Gfx2D::TexturedTriangle> textTriangles;
-    for (const Gfx2D::Texture& texture : textTextures) {
-        textTriangles.push_back(Gfx2D::TexturedTriangle({currentXCoordinate, -1}, {currentXCoordinate, 1}, {currentXCoordinate + 2.0f, -1},
-                texture, {{0,0}, {0,1}, {1,0}}));
-        textTriangles.push_back(Gfx2D::TexturedTriangle({currentXCoordinate + 2.0f, 1}, {currentXCoordinate, 1}, {currentXCoordinate + 2.0f, -1},
-                texture, {{1,1}, {0,1}, {1,0}}));
-        currentXCoordinate += 2.0f;
-    }
-    currentXCoordinate += 1.0f;
+    std::uniform_int_distribution<unsigned int> dist(1, pArgs.nSides);
+    std::uniform_int_distribution<unsigned int> sideEffectDist(0, 100);
+    std::random_device urandom("/dev/urandom");
 
-    std::chrono::time_point<std::chrono::steady_clock> lastWakeTime = std::chrono::steady_clock::now();
-    constexpr float textSpeedPerSec = 2.0f;
-    constexpr float startPosition = -2.0f;
-    float totalMovement = startPosition;
+    std::chrono::time_point<std::chrono::steady_clock> lastRollTime = std::chrono::steady_clock::now();
+
+    std::vector<Gfx2D::Texture> textTextures;
+    std::vector<Gfx2D::TexturedTriangle> textTriangles;
+
+    std::unique_ptr<IoController> ioController(new IoControllerGpiod());
+
+    unsigned int diceDigit = 1;
+    float translationX = 0.0f;
+    float stoppingRollTime = 0.75f;
+    float rollTime = 0.005f;
 
     while(!halt) {
         std::chrono::time_point<std::chrono::steady_clock> curTime = std::chrono::steady_clock::now();
-        std::chrono::duration<float> diffInSec = curTime - lastWakeTime;
-        lastWakeTime = curTime;
-        totalMovement += diffInSec.count() * textSpeedPerSec;
-        if (totalMovement > currentXCoordinate) {
-            totalMovement = startPosition;
+        std::chrono::duration<float> diffInSec = curTime - lastRollTime;
+        if (rollTime > stoppingRollTime) {
+            ioController->waitForButtonPress();
+            printf("button pressed\n");
+            rollTime = 0.005f;
         }
-        Gfx2D::TransformationMatrix translation = Gfx2D::createTranslationMatrix(-totalMovement, 0.0f);
+        
+        if (diffInSec.count() > rollTime) {
+            rollTime *= 1.23f;
+
+            lastRollTime = curTime;
+            diceDigit = dist(urandom);
+
+            std::string text = std::to_string(diceDigit);
+            translationX = diceDigit < 10 ? 0.2f : -0.75f;
+
+            if (sideEffectDist(urandom) > 98) {
+                text = std::string(1, static_cast<char>(1));
+                translationX = 0.0f;
+            }
+
+            textTriangles = createTextTriangles(textTextures, text);
+        }
+
+
+        Gfx2D::TransformationMatrix transformation =
+            (Gfx2D::createScaleMatrix(0.5f, 0.5f) * Gfx2D::createTranslationMatrix(translationX, 0.0f));
 
         std::vector<Gfx2D::TexturedTriangle> transformedTriangles;
 
         for (const Gfx2D::TexturedTriangle& triangle : textTriangles) {
-            transformedTriangles.emplace_back(triangle.createTransformedTriangle(translation));
+            transformedTriangles.emplace_back(triangle.createTransformedTriangle(transformation));
         }
 
         for (const Gfx2D::TexturedTriangle& triangle : transformedTriangles) {
@@ -89,6 +124,8 @@ int main(int argc, char * const argv[]) {
         }
         matrixDriver->setScreen(canvas.generateFrame());
         frameLimiter.waitForNextFrame();
+
+
     }
     return EXIT_SUCCESS;
 }

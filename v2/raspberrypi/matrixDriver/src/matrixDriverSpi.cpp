@@ -5,6 +5,7 @@
 #include <cassert>
 
 #include <fcntl.h>
+#include <unistd.h>
 #include <sys/ioctl.h>
 #include <linux/spi/spidev.h>
 
@@ -140,7 +141,7 @@ void MatrixDriverSpi::setScreen(MatrixScreen screen)
     this->screenMutex.lock();
     this->screen = std::move(screen);
     this->screenMutex.unlock();
-    this->newDataAvailable.release();
+    this->newDataAvailable.notify();
 }
 
 void MatrixDriverSpi::screenToSpi(std::stop_token stopToken)
@@ -186,11 +187,11 @@ void MatrixDriverSpi::screenToSpi(std::stop_token stopToken)
     }
 
     std::stop_callback cb(stopToken, [&sem = this->newDataAvailable] {
-        sem.release();
+        sem.notify();
     });
 
     while(true) {
-        this->newDataAvailable.acquire();
+        this->newDataAvailable.wait();
         if (stopToken.stop_requested()) {
             return;
         }

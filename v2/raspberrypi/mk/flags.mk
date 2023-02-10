@@ -1,7 +1,7 @@
 DEBUGFLAGS := -D_GLIBCXX_DEBUG -DDEBUG -Og -ggdb
 RELEASEFLAGS := -DNDEBUG -O2
 PROFILEFLAGS := $(RELEASEFLAGS) -pg
-RPI4-ARCHFLAGS :=-mcpu=cortex-a72 -mfloat-abi=hard -mfpu=neon-fp-armv8
+RPI4-ARCHFLAGS :=-mcpu=cortex-a7 -mfloat-abi=hard -mfpu=neon-vfpv4
 CXXLANGFLAGS := -std=gnu++20
 WARNINGFLAGS := -Wall -Wshadow=local -Werror -Wno-error=unused-variable -Wno-error=unused-but-set-variable
 MAKESUPPORTFLAGS := -MMD -MP
