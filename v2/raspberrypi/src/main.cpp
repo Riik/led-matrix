@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include <iostream>
 #include <memory>
+#include <random>
 
 #include "matrixScreen.hpp"
 #include "matrixDriver.hpp"
@@ -45,7 +46,11 @@ int main(int argc, char * const argv[]) {
 #endif //defined(__arm)
     Gfx2D::Canvas canvas(screen, PixelColor::off);
 
-    const std::string text = "20";
+    std::uniform_int_distribution<unsigned int> dist(1, 20);
+    std::random_device urandom("/dev/urandom");
+    unsigned int x = dist(urandom);
+    const std::string text = std::to_string(x);
+
     // Translate the text into a bunch of textures
     std::vector<Gfx2D::Texture> textTextures;
     for (const char &ch : text) {
