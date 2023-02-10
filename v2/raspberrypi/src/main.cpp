@@ -66,6 +66,7 @@ int main(int argc, char * const argv[]) {
     Gfx2D::Canvas canvas(screen, PixelColor::off);
 
     std::uniform_int_distribution<unsigned int> dist(1, pArgs.nSides);
+    std::uniform_int_distribution<unsigned int> sideEffectDist(0, 100);
     std::random_device urandom("/dev/urandom");
 
     std::chrono::time_point<std::chrono::steady_clock> lastRollTime = std::chrono::steady_clock::now();
@@ -75,7 +76,7 @@ int main(int argc, char * const argv[]) {
 
     float rollSpeed = 0.01f;
     unsigned int diceDigit = 1;
-
+    float translationX = 0.0f;
 
     while(!halt) {
         std::chrono::time_point<std::chrono::steady_clock> curTime = std::chrono::steady_clock::now();
@@ -83,13 +84,19 @@ int main(int argc, char * const argv[]) {
         if (diffInSec.count() > rollSpeed && rollSpeed < 0.95f) {
             lastRollTime = curTime;
             diceDigit = dist(urandom);
-            const std::string text = std::to_string(diceDigit);
+
+            std::string text = std::to_string(diceDigit);
+            translationX = diceDigit < 10 ? 0.2f : -0.75f;
+
+            if (sideEffectDist(urandom) > 98) {
+                text = std::string(1, static_cast<char>(1));
+                translationX = 0.0f;
+            }
 
             textTriangles = createTextTriangles(textTextures, text);
             rollSpeed *= 1.23f;
-        }
 
-        float translationX = diceDigit < 10 ? 0.2f : -0.75f;
+        }
 
 
 
