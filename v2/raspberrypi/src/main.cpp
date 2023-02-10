@@ -26,6 +26,25 @@ static void sigintHandler(int signum)
     halt = true;
 }
 
+std::vector<Gfx2D::TexturedTriangle> createTextTriangles(std::vector<Gfx2D::Texture>& textTextures, const std::string& text) {
+    std::vector<Gfx2D::TexturedTriangle> textTriangles;
+    // Translate the text into a bunch of textures
+    textTextures.clear();
+    for (const char &ch : text) {
+        textTextures.emplace_back(Gfx2D::fontToTexture(ch));
+    }
+    // Now we need a bunch of texturedTriangles to draw the text on
+    float currentXCoordinate = -1.0f;
+    for (const Gfx2D::Texture& texture : textTextures) {
+        textTriangles.push_back(Gfx2D::TexturedTriangle({currentXCoordinate, -1}, {currentXCoordinate, 1}, {currentXCoordinate + 2.0f, -1},
+                texture, {{0,0}, {0,1}, {1,0}}));
+        textTriangles.push_back(Gfx2D::TexturedTriangle({currentXCoordinate + 2.0f, 1}, {currentXCoordinate, 1}, {currentXCoordinate + 2.0f, -1},
+                texture, {{1,1}, {0,1}, {1,0}}));
+        currentXCoordinate += 2.0f;
+    }
+    return textTriangles;
+}
+
 int main(int argc, char * const argv[]) {
     signal(SIGINT, sigintHandler);
 
@@ -48,43 +67,25 @@ int main(int argc, char * const argv[]) {
 
     std::uniform_int_distribution<unsigned int> dist(1, 20);
     std::random_device urandom("/dev/urandom");
-    unsigned int x = dist(urandom);
-    const std::string text = std::to_string(x);
-
-    // Translate the text into a bunch of textures
-    std::vector<Gfx2D::Texture> textTextures;
-    for (const char &ch : text) {
-        textTextures.emplace_back(Gfx2D::fontToTexture(ch));
-    }
-    // Now we need a bunch of texturedTriangles to draw the text on
-    float currentXCoordinate = -1.0f;
-    std::vector<Gfx2D::TexturedTriangle> textTriangles;
-    for (const Gfx2D::Texture& texture : textTextures) {
-        textTriangles.push_back(Gfx2D::TexturedTriangle({currentXCoordinate, -1}, {currentXCoordinate, 1}, {currentXCoordinate + 2.0f, -1},
-                texture, {{0,0}, {0,1}, {1,0}}));
-        textTriangles.push_back(Gfx2D::TexturedTriangle({currentXCoordinate + 2.0f, 1}, {currentXCoordinate, 1}, {currentXCoordinate + 2.0f, -1},
-                texture, {{1,1}, {0,1}, {1,0}}));
-        currentXCoordinate += 2.0f;
-    }
-    currentXCoordinate += 1.0f;
 
     std::chrono::time_point<std::chrono::steady_clock> lastWakeTime = std::chrono::steady_clock::now();
-    constexpr float textSpeedPerSec = 2.0f;
-    constexpr float startPosition = -2.0f;
-    float totalMovement = startPosition;
+
+    std::vector<Gfx2D::Texture> textTextures;
+    std::vector<Gfx2D::TexturedTriangle> textTriangles = createTextTriangles(textTextures, "20");
+
 
     while(!halt) {
         std::chrono::time_point<std::chrono::steady_clock> curTime = std::chrono::steady_clock::now();
         std::chrono::duration<float> diffInSec = curTime - lastWakeTime;
         lastWakeTime = curTime;
-        totalMovement += diffInSec.count() * textSpeedPerSec;
-        if (totalMovement > currentXCoordinate) {
-            totalMovement = startPosition;
-        }
+
+        unsigned int x = dist(urandom);
+        const std::string text = std::to_string(x);
+
+        textTriangles = createTextTriangles(textTextures, text);
 
         Gfx2D::TransformationMatrix transformation =
             (Gfx2D::createScaleMatrix(0.5f, 0.5f) * Gfx2D::createTranslationMatrix(-0.75f, 0.0f));
-
 
         std::vector<Gfx2D::TexturedTriangle> transformedTriangles;
 
