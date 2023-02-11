@@ -74,14 +74,14 @@ int main(int argc, char * const argv[]) {
     std::vector<Gfx2D::Texture> textTextures;
     std::vector<Gfx2D::TexturedTriangle> textTriangles;
 
-    float rollSpeed = 0.01f;
+    float rollSpeed = 0.005f;
     unsigned int diceDigit = 1;
     float translationX = 0.0f;
 
     while(!halt) {
         std::chrono::time_point<std::chrono::steady_clock> curTime = std::chrono::steady_clock::now();
         std::chrono::duration<float> diffInSec = curTime - lastRollTime;
-        if (diffInSec.count() > rollSpeed && rollSpeed < 0.95f) {
+        if (diffInSec.count() > rollSpeed && rollSpeed < 0.75f) {
             lastRollTime = curTime;
             diceDigit = dist(urandom);
 
