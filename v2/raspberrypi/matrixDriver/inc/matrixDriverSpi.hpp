@@ -2,13 +2,13 @@
 #if !defined(__APPLE__)
 
 #include <thread>
-#include <semaphore>
 #include <mutex>
 #include <string>
 
 #include "matrixScreen.hpp"
 #include "matrixDriver.hpp"
 #include "frameLimiter.hpp"
+#include "semaphore.hpp"
 
 class MatrixDriverSpi : public MatrixDriver {
     public:
@@ -39,7 +39,7 @@ class MatrixDriverSpi : public MatrixDriver {
         const MatrixDriverSpi::PhysicalConnectionLocation physicalConnectionLocation;
 
         std::jthread outputWorker;
-        std::binary_semaphore newDataAvailable;
+        Semaphore newDataAvailable;
         std::mutex spiFdMutex;
         std::mutex screenMutex;
 
