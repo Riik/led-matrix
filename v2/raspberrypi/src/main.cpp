@@ -11,6 +11,8 @@
 #include "matrixDriver.hpp"
 #include "matrixDriverSpi.hpp"
 #include "matrixDriverNcurses.hpp"
+#include "ioController.hpp"
+#include "ioControllerGpiod.hpp"
 #include "frameLimiter.hpp"
 #include "fontToTexture2d.hpp"
 #include "texturedTriangle2d.hpp"
@@ -74,9 +76,15 @@ int main(int argc, char * const argv[]) {
     std::vector<Gfx2D::Texture> textTextures;
     std::vector<Gfx2D::TexturedTriangle> textTriangles;
 
+    std::unique_ptr<IoController> ioController(new IoControllerGpiod());
+
     float rollSpeed = 0.005f;
     unsigned int diceDigit = 1;
     float translationX = 0.0f;
+
+    printf("Waiting for button press...");
+    ioController.waitForButton();
+    printf("Button press found! Rolling the dice");
 
     while(!halt) {
         std::chrono::time_point<std::chrono::steady_clock> curTime = std::chrono::steady_clock::now();
@@ -95,7 +103,6 @@ int main(int argc, char * const argv[]) {
 
             textTriangles = createTextTriangles(textTextures, text);
             rollSpeed *= 1.23f;
-
         }
 
 
