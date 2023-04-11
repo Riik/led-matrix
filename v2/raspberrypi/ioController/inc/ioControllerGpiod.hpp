@@ -4,13 +4,17 @@
 #include <thread>
 #include <string>
 
+#include <gpiod.h>
+
 #include "ioControllerGpiod.hpp"
 #include "ioController.hpp"
 
-class IoControllerGpiod : public IoControllerGpiod {
+class IoControllerGpiod : public IoController {
     public:
 
-        void waitForButton() final;
+        void waitForButtonPress() final;
+        IoControllerGpiod();
+        ~IoControllerGpiod();
 
     private:
       unsigned int offsets[1];

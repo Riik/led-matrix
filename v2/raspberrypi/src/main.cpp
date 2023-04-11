@@ -58,7 +58,7 @@ int main(int argc, char * const argv[]) {
         return EXIT_FAILURE;
     }
 
-    MatrixScreen screen(4,4);
+    MatrixScreen screen(5,4);
     FrameLimiter frameLimiter(pArgs.maxFramesPerSecond);
 #if defined(__arm__)
     std::unique_ptr<MatrixDriver> matrixDriver(new MatrixDriverSpi(spidev, screen, pArgs.brightness));
@@ -81,15 +81,16 @@ int main(int argc, char * const argv[]) {
     float rollSpeed = 0.005f;
     unsigned int diceDigit = 1;
     float translationX = 0.0f;
+    float stoppingRollSpeed = 0.75f;
 
     printf("Waiting for button press...");
-    ioController.waitForButton();
+    ioController->waitForButtonPress();
     printf("Button press found! Rolling the dice");
 
     while(!halt) {
         std::chrono::time_point<std::chrono::steady_clock> curTime = std::chrono::steady_clock::now();
         std::chrono::duration<float> diffInSec = curTime - lastRollTime;
-        if (diffInSec.count() > rollSpeed && rollSpeed < 0.75f) {
+        if (diffInSec.count() > rollSpeed && rollSpeed < stoppingRollSpeed) {
             lastRollTime = curTime;
             diceDigit = dist(urandom);
 
@@ -104,7 +105,6 @@ int main(int argc, char * const argv[]) {
             textTriangles = createTextTriangles(textTextures, text);
             rollSpeed *= 1.23f;
         }
-
 
 
         Gfx2D::TransformationMatrix transformation =
