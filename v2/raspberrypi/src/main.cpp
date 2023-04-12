@@ -78,19 +78,22 @@ int main(int argc, char * const argv[]) {
 
     std::unique_ptr<IoController> ioController(new IoControllerGpiod());
 
-    float rollTime = 0.005f;
     unsigned int diceDigit = 1;
     float translationX = 0.0f;
     float stoppingRollTime = 0.75f;
+    float rollTime = stoppingRollTime;
 
-    printf("Waiting for button press...");
-    ioController->waitForButtonPress();
-    printf("Button press found! Rolling the dice");
 
     while(!halt) {
+        if(rollTime >= stoppingRollTime){
+          rollTime = 0.005f;
+          ioController->waitForButtonPress();
+        }
         std::chrono::time_point<std::chrono::steady_clock> curTime = std::chrono::steady_clock::now();
         std::chrono::duration<float> diffInSec = curTime - lastRollTime;
-        if (diffInSec.count() > rollTime && rollTime < stoppingRollTime) {
+        if (diffInSec.count() > rollTime) {
+            rollTime *= 1.23f;
+
             lastRollTime = curTime;
             diceDigit = dist(urandom);
 
@@ -103,7 +106,6 @@ int main(int argc, char * const argv[]) {
             }
 
             textTriangles = createTextTriangles(textTextures, text);
-            rollTime *= 1.23f;
         }
 
 
@@ -121,6 +123,8 @@ int main(int argc, char * const argv[]) {
         }
         matrixDriver->setScreen(canvas.generateFrame());
         frameLimiter.waitForNextFrame();
+
+
     }
     return EXIT_SUCCESS;
 }

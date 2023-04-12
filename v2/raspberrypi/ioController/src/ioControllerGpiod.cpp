@@ -65,7 +65,7 @@ void IoControllerGpiod::waitForButtonPress(){
       fprintf(stderr, "unable to get line %d\n", i);
       continue;
     }
-    printf("line %s(%dn", gpiod_line_name(line), gpiod_line_offset(line));
+    printf("line %s(%d)\n", gpiod_line_name(line), gpiod_line_offset(line));
   }
 }
 
