@@ -17,13 +17,9 @@ class IoControllerGpiod : public IoController {
         ~IoControllerGpiod() override;
 
     private:
-      unsigned int offsets[1];
 
-      int values[1];
       struct timespec timeout;
-
       struct gpiod_chip *chip;
-      struct gpiod_line_bulk lines;
-      struct gpiod_line_bulk events;
+      struct gpiod_line *line;
 };
 #endif //!defined(__APPLE)
