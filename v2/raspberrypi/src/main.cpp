@@ -78,10 +78,10 @@ int main(int argc, char * const argv[]) {
 
     std::unique_ptr<IoController> ioController(new IoControllerGpiod());
 
-    float rollSpeed = 0.005f;
+    float rollTime = 0.005f;
     unsigned int diceDigit = 1;
     float translationX = 0.0f;
-    float stoppingRollSpeed = 0.75f;
+    float stoppingRollTime = 0.75f;
 
     printf("Waiting for button press...");
     ioController->waitForButtonPress();
@@ -90,7 +90,7 @@ int main(int argc, char * const argv[]) {
     while(!halt) {
         std::chrono::time_point<std::chrono::steady_clock> curTime = std::chrono::steady_clock::now();
         std::chrono::duration<float> diffInSec = curTime - lastRollTime;
-        if (diffInSec.count() > rollSpeed && rollSpeed < stoppingRollSpeed) {
+        if (diffInSec.count() > rollTime && rollTime < stoppingRollTime) {
             lastRollTime = curTime;
             diceDigit = dist(urandom);
 
@@ -103,7 +103,7 @@ int main(int argc, char * const argv[]) {
             }
 
             textTriangles = createTextTriangles(textTextures, text);
-            rollSpeed *= 1.23f;
+            rollTime *= 1.23f;
         }
 
 

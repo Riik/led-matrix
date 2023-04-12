@@ -14,7 +14,7 @@ class IoControllerGpiod : public IoController {
 
         void waitForButtonPress() final;
         IoControllerGpiod();
-        ~IoControllerGpiod();
+        ~IoControllerGpiod() override;
 
     private:
       unsigned int offsets[1];
