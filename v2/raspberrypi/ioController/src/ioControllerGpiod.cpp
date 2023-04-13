@@ -42,7 +42,8 @@ IoControllerGpiod::~IoControllerGpiod(){
 }
 
 void IoControllerGpiod::waitForButtonPress(){
-  int err = gpiod_line_event_wait(this->line, &this->timeout);
+  gpiod_line_event event;
+  int err = gpiod_line_event_read(this->line, &event);
   if(err == -1) perror("gpiod_line_event_wait_bulk");
   else if(err == 0) fprintf(stderr, "wait timed out\n");
 
