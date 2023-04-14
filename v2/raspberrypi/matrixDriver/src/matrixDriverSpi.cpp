@@ -5,6 +5,7 @@
 #include <cassert>
 
 #include <fcntl.h>
+#include <unistd.h>
 #include <sys/ioctl.h>
 #include <linux/spi/spidev.h>
 
