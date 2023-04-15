@@ -60,6 +60,8 @@ ParsedArguments parseArguments(int argc, char * const argv[]) {
     const struct option longopts[] = {
         {"brightness", required_argument, nullptr, 'b'},
         {"fpsLimit", required_argument, nullptr, 'f'},
+        {"spiDriver", no_argument, nullptr, 's'},
+        {"ncursesDriver", no_argument, nullptr, 'n'},
         {0, 0, nullptr, 0}
     };
 
@@ -75,6 +77,12 @@ ParsedArguments parseArguments(int argc, char * const argv[]) {
                 break;
             case 'f':
                 ret.maxFramesPerSecond = parseMaxFramesPerSecond(optarg);
+                break;
+            case 's':
+                ret.matrixDriver = SelectedMatrixDriver::spi;
+                break;
+            case 'n':
+                ret.matrixDriver = SelectedMatrixDriver::ncurses;
                 break;
             case ':':
                 {

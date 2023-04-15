@@ -38,11 +38,16 @@ int main(int argc, char * const argv[]) {
 
     MatrixScreen screen(4,4);
     FrameLimiter frameLimiter(pArgs.maxFramesPerSecond);
-#if defined(__arm__)
-    std::unique_ptr<MatrixDriver> matrixDriver(new MatrixDriverSpi(spidev, screen, pArgs.brightness));
-#else //defined(__arm__)
-    std::unique_ptr<MatrixDriver> matrixDriver(new MatrixDriverNcurses());
-#endif //defined(__arm)
+    std::unique_ptr<MatrixDriver> matrixDriver;
+#if !defined(__APPLE__)
+    if (pArgs.matrixDriver == SelectedMatrixDriver::spi) {
+        matrixDriver = std::make_unique<MatrixDriverSpi>(spidev, screen, pArgs.brightness);
+    } else {
+#endif //!defined(__APPLE__)
+        matrixDriver = std::make_unique<MatrixDriverNcurses>();
+#if !defined(__APPLE__)
+    }
+#endif //!defined(__APPLE__)
     Gfx2D::Canvas canvas(screen, PixelColor::off);
 
     const std::string text = "Hoi, Rik!";
