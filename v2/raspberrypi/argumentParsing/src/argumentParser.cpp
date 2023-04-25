@@ -45,7 +45,7 @@ static uint_fast32_t parseMaxFramesPerSecond(const char* arg)
     if (num < 0) {
         throw std::invalid_argument("Fps limit cannot be a negative number");
     }
-    if (num > static_cast<long long>(UINT_FAST32_MAX)) {
+    if (INT64_MAX > UINT_FAST32_MAX && num > static_cast<long long>(UINT_FAST32_MAX)) {
         std::stringstream ss;
         ss << "Given fps limit out of range. Max: " << UINT_FAST32_MAX << " given: " << arg;
         throw std::invalid_argument(ss.str());
