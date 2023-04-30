@@ -1,4 +1,4 @@
-DEBUGFLAGS := -D_GLIBCXX_DEBUG -DDEBUG -Og -ggdb
+DEBUGFLAGS := -D_GLIBCXX_DEBUG -DDEBUG -Og -ggdb3
 RELEASEFLAGS := -DNDEBUG -O2
 CXXLANGFLAGS := -std=gnu++20
 WARNINGFLAGS := -Wall -Wshadow=local -Werror -Wno-error=unused-variable -Wno-error=unused-but-set-variable -Wdouble-promotion
