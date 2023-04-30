@@ -70,10 +70,10 @@ TEST(canvas2d, nonOverlappingSquares)
 {
     float pixelDelta = 1.0f/8.0f;
     std::vector<SolidColorSquareDrawable> vec = {
-        SolidColorSquareDrawable(-1.0, -1.0 + pixelDelta, -1.0, -1.0 + pixelDelta, PixelColor::on),
-        SolidColorSquareDrawable(1.0 - pixelDelta, 1.0, -1.0, -1.0 + pixelDelta, PixelColor::on),
-        SolidColorSquareDrawable(-1.0, -1.0 + pixelDelta, 1.0 - pixelDelta, 1.0, PixelColor::on),
-        SolidColorSquareDrawable(1.0 - pixelDelta, 1.0, 1.0 - pixelDelta, 1.0, PixelColor::on)
+        SolidColorSquareDrawable(-1.0f, -1.0f + pixelDelta, -1.0f, -1.0f + pixelDelta, PixelColor::on),
+        SolidColorSquareDrawable(1.0f - pixelDelta, 1.0f, -1.0f, -1.0f + pixelDelta, PixelColor::on),
+        SolidColorSquareDrawable(-1.0f, -1.0f + pixelDelta, 1.0f - pixelDelta, 1.0f, PixelColor::on),
+        SolidColorSquareDrawable(1.0f - pixelDelta, 1.0f, 1.0f - pixelDelta, 1.0f, PixelColor::on)
     };
     MatrixScreen screen(1,1);
     Gfx2D::Canvas canvas = Gfx2D::Canvas(screen, PixelColor::off);
@@ -164,7 +164,7 @@ TEST(canvas2d, canvasShouldEmptyFrame)
 {
     float pixelDelta = 1.0f/8.0f;
     std::vector<SolidColorSquareDrawable> vec = {
-        SolidColorSquareDrawable(-1.0, -1.0 + pixelDelta, -1.0, -1.0 + pixelDelta, PixelColor::on)
+        SolidColorSquareDrawable(-1.0f, -1.0f + pixelDelta, -1.0f, -1.0f + pixelDelta, PixelColor::on)
     };
     MatrixScreen screen(1,1);
     Gfx2D::Canvas canvas = Gfx2D::Canvas(screen, PixelColor::off);
