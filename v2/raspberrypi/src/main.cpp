@@ -58,7 +58,7 @@ int main(int argc, char * const argv[]) {
         return EXIT_FAILURE;
     }
 
-    MatrixScreen screen(4,4);
+    MatrixScreen screen(3,1);
     FrameLimiter frameLimiter(pArgs.maxFramesPerSecond);
     std::unique_ptr<MatrixDriver> matrixDriver;
 #if !defined(__APPLE__)
@@ -86,22 +86,17 @@ int main(int argc, char * const argv[]) {
     unsigned int diceDigit = 1;
     float translationX = 0.0f;
     float stoppingRollTime = 0.75f;
-    float rollTime = stoppingRollTime;
-    // while(!halt) {
-    //   ioController->waitForButtonPress();
-    //   printf("button pressed\n");
-    // }
+    float rollTime = 0.005f;
+    while(!halt) {
+      ioController->waitForButtonPress();
+      printf("button pressed\n");
+    }
 
 
     while(!halt) {
-        // if(rollTime >= stoppingRollTime){
-        //   rollTime = 0.005f;
-        //   ioController->waitForButtonPress();
-        //   ioController->waitForButtonPress();
-        // }
         std::chrono::time_point<std::chrono::steady_clock> curTime = std::chrono::steady_clock::now();
         std::chrono::duration<float> diffInSec = curTime - lastRollTime;
-        if (diffInSec.count() > rollTime) {
+        if (diffInSec.count() > rollTime && rollTime <= stoppingRollTime) {
             rollTime *= 1.23f;
 
             lastRollTime = curTime;
