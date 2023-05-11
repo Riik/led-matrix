@@ -31,8 +31,8 @@ IoControllerGpiod::IoControllerGpiod()
 
   printf("waiting for rising edge event\n");
 
-  timeout.tv_sec = 60;
-  timeout.tv_nsec = 0;
+  this->timeout.tv_sec = 60;
+  this->timeout.tv_nsec = 0;
 
 }
 
@@ -44,8 +44,7 @@ IoControllerGpiod::~IoControllerGpiod(){
 void IoControllerGpiod::waitForButtonPress(){
   gpiod_line_event event;
   int err = gpiod_line_event_read(this->line, &event);
-  if(err == -1) perror("gpiod_line_event_wait_bulk");
-  else if(err == 0) fprintf(stderr, "wait timed out\n");
+  if(err == -1) perror("gpiod_line_event_read");
 
   int value = gpiod_line_get_value(this->line);
 }

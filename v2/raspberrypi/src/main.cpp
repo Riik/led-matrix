@@ -58,7 +58,7 @@ int main(int argc, char * const argv[]) {
         return EXIT_FAILURE;
     }
 
-    MatrixScreen screen(5,4);
+    MatrixScreen screen(4,4);
     FrameLimiter frameLimiter(pArgs.maxFramesPerSecond);
 #if defined(__arm__)
     std::unique_ptr<MatrixDriver> matrixDriver(new MatrixDriverSpi(spidev, screen, pArgs.brightness));
@@ -82,13 +82,18 @@ int main(int argc, char * const argv[]) {
     float translationX = 0.0f;
     float stoppingRollTime = 0.75f;
     float rollTime = stoppingRollTime;
+    // while(!halt) {
+    //   ioController->waitForButtonPress();
+    //   printf("button pressed\n");
+    // }
 
 
     while(!halt) {
-        if(rollTime >= stoppingRollTime){
-          rollTime = 0.005f;
-          ioController->waitForButtonPress();
-        }
+        // if(rollTime >= stoppingRollTime){
+        //   rollTime = 0.005f;
+        //   ioController->waitForButtonPress();
+        //   ioController->waitForButtonPress();
+        // }
         std::chrono::time_point<std::chrono::steady_clock> curTime = std::chrono::steady_clock::now();
         std::chrono::duration<float> diffInSec = curTime - lastRollTime;
         if (diffInSec.count() > rollTime) {
