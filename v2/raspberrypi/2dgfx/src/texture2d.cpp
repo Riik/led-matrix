@@ -31,7 +31,7 @@ static std::size_t getTexelCoordinate(float f, std::size_t numTexels, Gfx2D::Tex
     switch (wrapMode) {
         case Gfx2D::Texture::WrapMode::Repeat:
             {
-                float actF = f - floor(f);
+                float actF = f - floorf(f);
                 // Because floats are hard, this calculation could result in actF being 1.0f.
                 // This happens, for example, if f is the largest possible value below zero (say -delta)
                 // Now floor(f) equals -1, so f - floor(f) should logcally be equivalient to 1 - delta.
@@ -44,7 +44,7 @@ static std::size_t getTexelCoordinate(float f, std::size_t numTexels, Gfx2D::Tex
             }
         case Gfx2D::Texture::WrapMode::MirroredRepeat:
             {
-                float actF = f - floor(f);
+                float actF = f - floorf(f);
                 // In the even case we just repeat and in the odd case we mirror
                 if (static_cast<int>(floor(f)) % 2 != 0) {
                     actF = 1 - actF;

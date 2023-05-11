@@ -56,7 +56,7 @@ static uint_fast32_t parseMaxFramesPerSecond(const char* arg)
     if (num < 0) {
         throw std::invalid_argument("Fps limit cannot be a negative number");
     }
-    if (num > static_cast<long long>(UINT_FAST32_MAX)) {
+    if (INT64_MAX > UINT_FAST32_MAX && num > static_cast<long long>(UINT_FAST32_MAX)) {
         std::stringstream ss;
         ss << "Given fps limit out of range. Max: " << UINT_FAST32_MAX << " given: " << arg;
         throw std::invalid_argument(ss.str());
@@ -72,6 +72,8 @@ ParsedArguments parseArguments(int argc, char * const argv[]) {
         {"brightness", required_argument, nullptr, 'b'},
         {"fpsLimit", required_argument, nullptr, 'f'},
         {"sides", required_argument, nullptr, 'd'},
+        {"spiDriver", no_argument, nullptr, 's'},
+        {"ncursesDriver", no_argument, nullptr, 'n'},
         {0, 0, nullptr, 0}
     };
 
@@ -90,6 +92,11 @@ ParsedArguments parseArguments(int argc, char * const argv[]) {
                 break;
             case 'd':
                 ret.nSides = parseNSides(optarg);
+            case 's':
+                ret.matrixDriver = SelectedMatrixDriver::spi;
+                break;
+            case 'n':
+                ret.matrixDriver = SelectedMatrixDriver::ncurses;
                 break;
             case ':':
                 {
