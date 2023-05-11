@@ -25,6 +25,7 @@ IoControllerGpiod::IoControllerGpiod()
   if(!this->chip) perror("gpiod_chip_open");
 
   this->line = gpiod_chip_get_line(chip, BUTTON_PIN);
+  gpiod_line_set_flags(this->line, GPIOD_LINE_REQUEST_FLAG_OPEN_SOURCE);
 
   int err = gpiod_line_request_rising_edge_events(this->line, "rising edge example");
   if(err) perror("gpiod_line_request_bulk_rising_edge_events");
