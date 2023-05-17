@@ -58,7 +58,7 @@ int main(int argc, char * const argv[]) {
         return EXIT_FAILURE;
     }
 
-    MatrixScreen screen(3,1);
+    MatrixScreen screen(1,1);
     FrameLimiter frameLimiter(pArgs.maxFramesPerSecond);
     std::unique_ptr<MatrixDriver> matrixDriver;
 #if !defined(__APPLE__)
