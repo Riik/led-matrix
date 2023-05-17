@@ -55,11 +55,8 @@ void IoControllerGpiod::waitForButtonPress(){
     gpiod_line_event event;
     ret = gpiod_line_event_wait(this->line, &this->timeout);
     printf("Wait complete! Retcode: %d\n",ret);
-    ret = gpiod_line_event_read_multiple(this->line, &event, 1);
-    while (ret != -1) {
-        printf("Chomping events..: %d\n",ret);
-        ret = gpiod_line_event_read_multiple(this->line, &event, 1);
-    }
+    ret = gpiod_line_event_read_multiple(this->line, NULL, 1000);
+    printf("Chomping events..: %d\n",ret);
     if(ret == -1) perror("gpiod_line_event_read");
 
     int value = gpiod_line_get_value(this->line);
