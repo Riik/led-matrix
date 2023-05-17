@@ -87,16 +87,17 @@ int main(int argc, char * const argv[]) {
     float translationX = 0.0f;
     float stoppingRollTime = 0.75f;
     float rollTime = 0.005f;
-    while(!halt) {
-      ioController->waitForButtonPress();
-      printf("button pressed\n");
-    }
-
 
     while(!halt) {
         std::chrono::time_point<std::chrono::steady_clock> curTime = std::chrono::steady_clock::now();
         std::chrono::duration<float> diffInSec = curTime - lastRollTime;
-        if (diffInSec.count() > rollTime && rollTime <= stoppingRollTime) {
+        if (rollTime > stoppingRollTime) {
+            ioController->waitForButtonPress();
+            printf("button pressed\n");
+            rollTime = 0.005f;
+        }
+        
+        if (diffInSec.count() > rollTime) {
             rollTime *= 1.23f;
 
             lastRollTime = curTime;
