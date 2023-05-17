@@ -1,5 +1,4 @@
 #pragma once
-#if !defined(__arm__)
 
 #include "matrixScreen.hpp"
 #include "matrixDriver.hpp"
@@ -15,4 +14,3 @@ class MatrixDriverNcurses : public MatrixDriver {
 
         void setScreen(MatrixScreen screen) final;
 };
-#endif //!defined(__arm__)
