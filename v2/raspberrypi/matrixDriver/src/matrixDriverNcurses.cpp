@@ -1,4 +1,3 @@
-#if !defined(__arm__)
 #include <ncurses.h>
 
 #include "matrixDriverNcurses.hpp"
@@ -35,4 +34,3 @@ void MatrixDriverNcurses::setScreen(MatrixScreen screen)
   }
   refresh();
 }
-#endif //!defined(__arm__)
