@@ -37,19 +37,19 @@ int main(int argc, char * const argv[]) {
         return EXIT_FAILURE;
     }
 
-    MatrixScreen screen(1,1);
-    FrameLimiter frameLimiter(200);
+    MatrixScreen referenceScreen(pArgs.ledMatrixWidth, pArgs.ledMatrixHeight);
+    FrameLimiter frameLimiter(pArgs.maxFramesPerSecond);
     std::unique_ptr<MatrixDriver> matrixDriver;
 #if !defined(__APPLE__)
     if (pArgs.matrixDriver == SelectedMatrixDriver::spi) {
-        matrixDriver = std::make_unique<MatrixDriverSpi>(spidev, screen, pArgs.brightness);
+        matrixDriver = std::make_unique<MatrixDriverSpi>(spidev, referenceScreen, pArgs.brightness);
     } else {
 #endif //!defined(__APPLE__)
         matrixDriver = std::make_unique<MatrixDriverNcurses>();
 #if !defined(__APPLE__)
     }
 #endif //!defined(__APPLE__)
-    TextScroller textScroller(screen);
+    TextScroller textScroller(referenceScreen);
     while(!halt) {
         matrixDriver->setScreen(textScroller.getScreen());
         frameLimiter.waitForNextFrame();

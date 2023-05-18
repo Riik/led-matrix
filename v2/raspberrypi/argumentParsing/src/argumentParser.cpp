@@ -5,11 +5,11 @@
 
 #include "argumentParser.hpp"
 
-static long long str2number(const char *s)
+static int64_t str2number(const char *s)
 {
     char *end;
     errno = 0;
-    long long l = std::strtoll(s, &end, 10);
+    int64_t l = std::strtoll(s, &end, 10);
     if (errno == ERANGE && l == LLONG_MAX) {
         std::stringstream ss;
         ss << "Overflow while converting " << s;
@@ -30,7 +30,7 @@ static long long str2number(const char *s)
 
 static uint_fast8_t parseBrightness(const char* arg)
 {
-    long long num = str2number(arg);
+    int64_t num = str2number(arg);
     if (num < 0 || num > 15) {
         std::stringstream ss;
         ss << "Brightness must be in [0, 15]";
@@ -41,16 +41,44 @@ static uint_fast8_t parseBrightness(const char* arg)
 
 static uint_fast32_t parseMaxFramesPerSecond(const char* arg)
 {
-    long long num = str2number(arg);
+    int64_t num = str2number(arg);
     if (num < 0) {
         throw std::invalid_argument("Fps limit cannot be a negative number");
     }
-    if (INT64_MAX > UINT_FAST32_MAX && num > static_cast<long long>(UINT_FAST32_MAX)) {
+    if (INT64_MAX > UINT_FAST32_MAX && num > static_cast<int64_t>(UINT_FAST32_MAX)) {
         std::stringstream ss;
         ss << "Given fps limit out of range. Max: " << UINT_FAST32_MAX << " given: " << arg;
         throw std::invalid_argument(ss.str());
     }
     return static_cast<uint_fast32_t>(num);
+}
+
+static uint_fast16_t parseWidth(const char* arg)
+{
+    int64_t num = str2number(arg);
+    if (num < 0) {
+        throw std::invalid_argument("Width must be > 0");
+    }
+    if (INT64_MAX > UINT_FAST16_MAX && num > static_cast<int64_t>(UINT_FAST16_MAX)) {
+        std::stringstream ss;
+        ss << "Given width out of range. Max: " << UINT_FAST16_MAX << " given: " << arg;
+        throw std::invalid_argument(ss.str());
+    }
+    return static_cast<uint_fast16_t>(num);
+}
+
+static uint_fast16_t parseHeight(const char* arg)
+{
+    int64_t num = str2number(arg);
+    if (num < 0) {
+        throw std::invalid_argument("Height must be > 0");
+    }
+    if (INT64_MAX > UINT_FAST16_MAX && num > static_cast<int64_t>(UINT_FAST16_MAX)) {
+        std::stringstream ss;
+        ss << "Given height out of range. Max: " << UINT_FAST16_MAX << " given: " << arg;
+        throw std::invalid_argument(ss.str());
+    }
+    return static_cast<uint_fast16_t>(num);
 }
 
 ParsedArguments parseArguments(int argc, char * const argv[]) {
@@ -62,6 +90,8 @@ ParsedArguments parseArguments(int argc, char * const argv[]) {
         {"fpsLimit", required_argument, nullptr, 'f'},
         {"spiDriver", no_argument, nullptr, 's'},
         {"ncursesDriver", no_argument, nullptr, 'n'},
+        {"width", required_argument, nullptr, 'w'},
+        {"height", required_argument, nullptr, 'h'},
         {0, 0, nullptr, 0}
     };
 
@@ -83,6 +113,12 @@ ParsedArguments parseArguments(int argc, char * const argv[]) {
                 break;
             case 'n':
                 ret.matrixDriver = SelectedMatrixDriver::ncurses;
+                break;
+            case 'w':
+                ret.ledMatrixWidth = parseWidth(optarg);
+                break;
+            case 'h':
+                ret.ledMatrixHeight = parseHeight(optarg);
                 break;
             case ':':
                 {
