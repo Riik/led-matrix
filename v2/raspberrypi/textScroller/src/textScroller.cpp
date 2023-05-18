@@ -1,10 +1,9 @@
 #include "textScroller.hpp"
 #include "fontToTexture2d.hpp"
 
-TextScroller::TextScroller(MatrixScreen templateScreen) : canvas(templateScreen, PixelColor::off) {
-    std::string text = "Hoi, Rik!";
+TextScroller::TextScroller(MatrixScreen referenceScreen, const ParsedArguments& pArgs) : canvas(referenceScreen, PixelColor::off) {
     // Translate the text into a bunch of textures
-    for (const char &ch : text) {
+    for (const char &ch : pArgs.textScrollerText) {
         this->textTextures.emplace_back(Gfx2D::fontToTexture(ch));
     }
     float xCoordinate = -1.0f;

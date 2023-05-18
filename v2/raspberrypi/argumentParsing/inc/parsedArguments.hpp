@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <string>
 
 enum class SelectedMatrixDriver {
     spi,
@@ -13,16 +14,5 @@ struct ParsedArguments {
     SelectedMatrixDriver matrixDriver;
     uint_fast16_t ledMatrixWidth;
     uint_fast16_t ledMatrixHeight;
-};
-
-constexpr ParsedArguments defaultArguments = {
-    .brightness = 7,
-    .maxFramesPerSecond = 200,
-#if defined(__arm__) || defined(__aarch64__)
-    .matrixDriver = SelectedMatrixDriver::spi,
-#else
-    .matrixDriver = SelectedMatrixDriver::ncurses,
-#endif //defined(__arm__) || defined(__aarch64__)
-    .ledMatrixWidth = 1,
-    .ledMatrixHeight = 1
+    std::string textScrollerText;
 };

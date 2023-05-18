@@ -7,10 +7,11 @@
 #include "subProgram.hpp"
 #include "canvas2d.hpp"
 #include "texturedTriangle2d.hpp"
+#include "argumentParser.hpp"
 
 class TextScroller : public SubProgram {
     public:
-        TextScroller(MatrixScreen templateScreen);
+        TextScroller(MatrixScreen referenceScreen, const ParsedArguments& pArgs);
 
         MatrixScreen getScreen() final;
     private:

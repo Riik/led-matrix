@@ -11,10 +11,6 @@
 #include "matrixDriverSpi.hpp"
 #include "matrixDriverNcurses.hpp"
 #include "frameLimiter.hpp"
-#include "fontToTexture2d.hpp"
-#include "texturedTriangle2d.hpp"
-#include "canvas2d.hpp"
-#include "solidColorTriangle2d.hpp"
 #include "argumentParser.hpp"
 #include "textScroller.hpp"
 
@@ -29,7 +25,7 @@ static void sigintHandler(int signum)
 int main(int argc, char * const argv[]) {
     signal(SIGINT, sigintHandler);
 
-    ParsedArguments pArgs = defaultArguments;
+    ParsedArguments pArgs;
     try {
         pArgs = parseArguments(argc, argv);
     } catch (const std::invalid_argument& e) {
@@ -49,7 +45,7 @@ int main(int argc, char * const argv[]) {
 #if !defined(__APPLE__)
     }
 #endif //!defined(__APPLE__)
-    TextScroller textScroller(referenceScreen);
+    TextScroller textScroller(referenceScreen, pArgs);
     while(!halt) {
         matrixDriver->setScreen(textScroller.getScreen());
         frameLimiter.waitForNextFrame();

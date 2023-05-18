@@ -82,6 +82,18 @@ static uint_fast16_t parseHeight(const char* arg)
 }
 
 ParsedArguments parseArguments(int argc, char * const argv[]) {
+    const ParsedArguments defaultArguments = {
+        .brightness = 7,
+        .maxFramesPerSecond = 200,
+#if defined(__arm__) || defined(__aarch64__)
+        .matrixDriver = SelectedMatrixDriver::spi,
+#else
+        .matrixDriver = SelectedMatrixDriver::ncurses,
+#endif //defined(__arm__) || defined(__aarch64__)
+        .ledMatrixWidth = 1,
+        .ledMatrixHeight = 1,
+        .textScrollerText = "Hello, world!",
+    };
     ParsedArguments ret = defaultArguments;
     // This makes sure that getopt does not print errors
     opterr = 0;
@@ -92,6 +104,7 @@ ParsedArguments parseArguments(int argc, char * const argv[]) {
         {"ncursesDriver", no_argument, nullptr, 'n'},
         {"width", required_argument, nullptr, 'w'},
         {"height", required_argument, nullptr, 'h'},
+        {"text", required_argument, nullptr, 't'},
         {0, 0, nullptr, 0}
     };
 
@@ -119,6 +132,9 @@ ParsedArguments parseArguments(int argc, char * const argv[]) {
                 break;
             case 'h':
                 ret.ledMatrixHeight = parseHeight(optarg);
+                break;
+            case 't':
+                ret.textScrollerText = std::string(optarg);
                 break;
             case ':':
                 {
