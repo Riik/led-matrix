@@ -22,6 +22,8 @@ namespace Gfx2D {
 
             // Draw all drawables to a MatrixScreen and then clear the list of drawables.
             MatrixScreen generateFrame();
+
+            BoundaryBox getBoundaryBox() const {return this->boundaryBox;}
         private:
 
             PixelColor getColorOfPixel(const Gfx2D::Point& pixelIndex) const;
@@ -32,8 +34,6 @@ namespace Gfx2D {
             std::vector<std::reference_wrapper<const CanvasDrawable>> drawables;
 
             Gfx2D::Point bottomLeftCoordinate;
-            float totalHeight;
-            float totalWidth;
             Gfx2D::TransformationMatrix pixelTransformation;
 
             BoundaryBox boundaryBox;

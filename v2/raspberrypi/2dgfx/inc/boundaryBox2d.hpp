@@ -12,5 +12,7 @@ namespace Gfx2D {
             BoundaryBox();
             BoundaryBox(Point high, Point low);
             bool overlapsWith(const BoundaryBox& other) const;
+            Point getPointHigh() const { return this->high; }
+            Point getPointLow() const {return this->low; }
     };
 }
