@@ -2,6 +2,7 @@
 #include "fontToTexture2d.hpp"
 
 TextScroller::TextScroller(MatrixScreen referenceScreen, const ParsedArguments& pArgs) : canvas(referenceScreen, PixelColor::off) {
+    this->textSpeedPerSec = pArgs.textScrollerSpeed;
     // Translate the text into a bunch of textures
     for (const char &ch : pArgs.textScrollerText) {
         this->textTextures.emplace_back(Gfx2D::fontToTexture(ch));

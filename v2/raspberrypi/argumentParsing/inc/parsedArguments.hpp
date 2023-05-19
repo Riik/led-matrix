@@ -15,4 +15,5 @@ struct ParsedArguments {
     uint_fast16_t ledMatrixWidth;
     uint_fast16_t ledMatrixHeight;
     std::string textScrollerText;
+    float textScrollerSpeed;
 };

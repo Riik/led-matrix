@@ -90,3 +90,57 @@ TEST_F(argumentParserTest, brightnessInvalidArgument)
     };
     EXPECT_ANY_THROW(parseArguments(argc, argv));
 }
+
+TEST_F(argumentParserTest, textSpeedValid)
+{
+    int argc = 2;
+    char arg0[] = "path";
+    char arg1[] = "--textSpeed=0.5";
+    char * const argv[] = {
+        arg0,
+        arg1,
+        nullptr
+    };
+    ParsedArguments pArgs = parseArguments(argc, argv);
+    EXPECT_EQ(pArgs.textScrollerSpeed, 0.5f);
+}
+
+TEST_F(argumentParserTest, textSpeedNotANumber)
+{
+    int argc = 2;
+    char arg0[] = "path";
+    char arg1[] = "--textSpeed=henk";
+    char * const argv[] = {
+        arg0,
+        arg1,
+        nullptr
+    };
+    EXPECT_ANY_THROW(parseArguments(argc, argv));
+}
+
+
+TEST_F(argumentParserTest, textSpeedNegative)
+{
+    int argc = 2;
+    char arg0[] = "path";
+    char arg1[] = "--textSpeed=-1.0";
+    char * const argv[] = {
+        arg0,
+        arg1,
+        nullptr
+    };
+    EXPECT_ANY_THROW(parseArguments(argc, argv));
+}
+
+TEST_F(argumentParserTest, textSpeedPartialNumber)
+{
+    int argc = 2;
+    char arg0[] = "path";
+    char arg1[] = "--textSpeed=0.5.5";
+    char * const argv[] = {
+        arg0,
+        arg1,
+        nullptr
+    };
+    EXPECT_ANY_THROW(parseArguments(argc, argv));
+}

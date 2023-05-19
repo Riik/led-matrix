@@ -28,6 +28,20 @@ static int64_t str2number(const char *s)
     return l;
 }
 
+static float str2float(const char* s)
+{
+    std::string str(s);
+    float ret;
+    std::stringstream stream(str);
+    stream >> ret;
+    if (stream.fail() || !stream.eof()) {
+        std::stringstream ss;
+        ss << str << " cannot be parsed to float";
+        throw std::invalid_argument(ss.str());
+    }
+    return ret;
+}
+
 static uint_fast8_t parseBrightness(const char* arg)
 {
     int64_t num = str2number(arg);
@@ -81,6 +95,14 @@ static uint_fast16_t parseHeight(const char* arg)
     return static_cast<uint_fast16_t>(num);
 }
 
+static float parseTextSpeed(const char* arg) {
+    float speed = str2float(arg);
+    if (speed <= 0) {
+        throw std::invalid_argument("Text speed must be > 0!");
+    }
+    return speed;
+}
+
 ParsedArguments parseArguments(int argc, char * const argv[]) {
     const ParsedArguments defaultArguments = {
         .brightness = 7,
@@ -93,6 +115,7 @@ ParsedArguments parseArguments(int argc, char * const argv[]) {
         .ledMatrixWidth = 1,
         .ledMatrixHeight = 1,
         .textScrollerText = "Hello, world!",
+        .textScrollerSpeed = 2.0f,
     };
     ParsedArguments ret = defaultArguments;
     // This makes sure that getopt does not print errors
@@ -105,6 +128,7 @@ ParsedArguments parseArguments(int argc, char * const argv[]) {
         {"width", required_argument, nullptr, 'w'},
         {"height", required_argument, nullptr, 'h'},
         {"text", required_argument, nullptr, 't'},
+        {"textSpeed", required_argument, nullptr, 'a'},
         {0, 0, nullptr, 0}
     };
 
@@ -135,6 +159,9 @@ ParsedArguments parseArguments(int argc, char * const argv[]) {
                 break;
             case 't':
                 ret.textScrollerText = std::string(optarg);
+                break;
+            case 'a':
+                ret.textScrollerSpeed = parseTextSpeed(optarg);
                 break;
             case ':':
                 {
