@@ -1,6 +1,6 @@
 #pragma once
 #include <poll.h>
-#include <unistd.h>
+#include <cstdio>
 
 class StdinPoller {
     public:
@@ -11,14 +11,18 @@ class StdinPoller {
         }
 
         bool eventOccured() {
-            int ret = poll(&this->fds, 1, 0);
-            if (ret == 1) {
-                lseek(0, 0, SEEK_END);
-                return true;
-            }else {
+            if (!this->dataInStdin()) {
                 return false;
             }
+            do {
+                getc(stdin);
+            } while(this->dataInStdin());
+            return true;
         }
     private:
+        bool dataInStdin() {
+            int ret = poll(&this->fds, 1, 0);
+            return ret == 1;
+        }
         struct pollfd fds;
 };
