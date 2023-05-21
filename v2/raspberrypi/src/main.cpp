@@ -11,8 +11,7 @@
 #include "matrixDriver.hpp"
 #include "matrixDriverSpi.hpp"
 #include "matrixDriverNcurses.hpp"
-#include "ioController.hpp"
-#include "ioControllerGpiod.hpp"
+#include "gpiodInputEventHandler.hpp"
 #include "frameLimiter.hpp"
 #include "fontToTexture2d.hpp"
 #include "texturedTriangle2d.hpp"
@@ -58,7 +57,7 @@ int main(int argc, char * const argv[]) {
         return EXIT_FAILURE;
     }
 
-    MatrixScreen screen(1,1);
+    MatrixScreen screen(pArgs.ledMatrixWidth, pArgs.ledMatrixHeight);
     FrameLimiter frameLimiter(pArgs.maxFramesPerSecond);
 #if defined(__arm__)
     std::unique_ptr<MatrixDriver> matrixDriver(new MatrixDriverSpi(spidev, screen, pArgs.brightness));
@@ -76,7 +75,7 @@ int main(int argc, char * const argv[]) {
     std::vector<Gfx2D::Texture> textTextures;
     std::vector<Gfx2D::TexturedTriangle> textTriangles;
 
-    std::unique_ptr<IoController> ioController(new IoControllerGpiod());
+    std::unique_ptr<InputEventHandler> eventHandler(new GpiodInputEventHandler());
 
     unsigned int diceDigit = 1;
     float translationX = 0.0f;
@@ -84,14 +83,18 @@ int main(int argc, char * const argv[]) {
     float rollTime = 0.005f;
 
     while(!halt) {
+        if (rollTime > stoppingRollTime) {
+            if (eventHandler->eventWaiting()) {
+                rollTime = 0.005f;
+            } else {
+                frameLimiter.waitForNextFrame();
+                continue;
+            }
+        }
+
         std::chrono::time_point<std::chrono::steady_clock> curTime = std::chrono::steady_clock::now();
         std::chrono::duration<float> diffInSec = curTime - lastRollTime;
-        if (rollTime > stoppingRollTime) {
-            ioController->waitForButtonPress();
-            printf("button pressed\n");
-            rollTime = 0.005f;
-        }
-        
+
         if (diffInSec.count() > rollTime) {
             rollTime *= 1.23f;
 
@@ -125,6 +128,9 @@ int main(int argc, char * const argv[]) {
         matrixDriver->setScreen(canvas.generateFrame());
         frameLimiter.waitForNextFrame();
 
+        if (rollTime > stoppingRollTime) {
+            eventHandler->flushWaitingEvents();
+        }
 
     }
     return EXIT_SUCCESS;
