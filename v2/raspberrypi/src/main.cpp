@@ -58,14 +58,19 @@ int main(int argc, char * const argv[]) {
         return EXIT_FAILURE;
     }
 
-    MatrixScreen screen(pArgs.ledMatrixWidth, pArgs.ledMatrixHeight);
+    MatrixScreen referenceScreen(pArgs.ledMatrixWidth, pArgs.ledMatrixHeight);
     FrameLimiter frameLimiter(pArgs.maxFramesPerSecond);
-#if defined(__arm__)
-    std::unique_ptr<MatrixDriver> matrixDriver(new MatrixDriverSpi(spidev, screen, pArgs.brightness));
-#else //defined(__arm__)
-    std::unique_ptr<MatrixDriver> matrixDriver(new MatrixDriverNcurses());
-#endif //defined(__arm)
-    Gfx2D::Canvas canvas(screen, PixelColor::off);
+    std::unique_ptr<MatrixDriver> matrixDriver;
+#if !defined(__APPLE__)
+    if (pArgs.matrixDriver == SelectedMatrixDriver::spi) {
+        matrixDriver = std::make_unique<MatrixDriverSpi>(spidev, referenceScreen, pArgs.brightness);
+    } else {
+#endif //!defined(__APPLE__)
+        matrixDriver = std::make_unique<MatrixDriverNcurses>();
+#if !defined(__APPLE__)
+    }
+#endif //!defined(__APPLE__)
+    Gfx2D::Canvas canvas(referenceScreen, PixelColor::off);
 
     std::uniform_int_distribution<unsigned int> dist(1, pArgs.nSides);
     std::uniform_int_distribution<unsigned int> sideEffectDist(0, 100);
