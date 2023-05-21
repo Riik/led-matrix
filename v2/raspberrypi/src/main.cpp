@@ -12,6 +12,7 @@
 #include "matrixDriverSpi.hpp"
 #include "matrixDriverNcurses.hpp"
 #include "gpiodInputEventHandler.hpp"
+#include "stdinEventHandler.hpp"
 #include "frameLimiter.hpp"
 #include "fontToTexture2d.hpp"
 #include "texturedTriangle2d.hpp"
@@ -75,7 +76,7 @@ int main(int argc, char * const argv[]) {
     std::vector<Gfx2D::Texture> textTextures;
     std::vector<Gfx2D::TexturedTriangle> textTriangles;
 
-    std::unique_ptr<InputEventHandler> eventHandler(new GpiodInputEventHandler());
+    std::unique_ptr<InputEventHandler> eventHandler(new StdinEventHandler());
 
     unsigned int diceDigit = 1;
     float translationX = 0.0f;
