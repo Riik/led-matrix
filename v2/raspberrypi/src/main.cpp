@@ -13,6 +13,7 @@
 #include "frameLimiter.hpp"
 #include "argumentParser.hpp"
 #include "textScroller.hpp"
+#include "stdinPoller.hpp"
 
 const std::string spidev = "/dev/spidev0.0";
 static std::atomic_bool halt = false;
@@ -46,8 +47,12 @@ int main(int argc, char * const argv[]) {
     }
 #endif //!defined(__APPLE__)
     TextScroller textScroller(referenceScreen, pArgs);
+    StdinPoller poller;
     while(!halt) {
         matrixDriver->setScreen(textScroller.getScreen());
+        if (poller.eventOccured()) {
+            std::cout << "stdin event!" << std::endl;
+        }
         frameLimiter.waitForNextFrame();
     }
     return EXIT_SUCCESS;
