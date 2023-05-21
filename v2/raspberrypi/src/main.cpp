@@ -50,7 +50,7 @@ std::vector<Gfx2D::TexturedTriangle> createTextTriangles(std::vector<Gfx2D::Text
 int main(int argc, char * const argv[]) {
     signal(SIGINT, sigintHandler);
 
-    ParsedArguments pArgs = defaultArguments;
+    ParsedArguments pArgs;
     try {
         pArgs = parseArguments(argc, argv);
     } catch (const std::invalid_argument& e) {
