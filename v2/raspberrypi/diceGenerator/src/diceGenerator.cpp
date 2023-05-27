@@ -12,7 +12,15 @@ DiceGenerator::DiceGenerator(const MatrixScreen& referenceScreen, const ParsedAr
    this->lastRollTime = std::chrono::steady_clock::now();
    this->currentScreen = this->screenFromNumber(pArgs.diceGeneratorSides);
 
+#if defined(__APPLE__)
    this->eventHandler = std::make_unique<StdinEventHandler>();
+#else
+   if (pArgs.inputEvent == SelectedInputEvent::terminal) {
+       this->eventHandler = std::make_unique<StdinEventHandler>();
+   } else {
+       this->eventHandler = std::make_unique<GpiodInputEventHandler>();
+   }
+#endif
    this->waitingForInput = true;
    this->stoppingRollTimeout = 0.75;
    this->startRollTimeout = 0.005;

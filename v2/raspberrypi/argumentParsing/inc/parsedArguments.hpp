@@ -13,6 +13,11 @@ enum class SelectedSubProgram {
     diceGenerator
 };
 
+enum class SelectedInputEvent {
+    terminal,
+    gpiod
+};
+
 struct ParsedArguments {
     uint_fast8_t brightness;
     uint_fast32_t maxFramesPerSecond;
@@ -23,4 +28,5 @@ struct ParsedArguments {
     float textScrollerSpeed;
     uint_fast8_t diceGeneratorSides;
     SelectedSubProgram subProgram;
+    SelectedInputEvent inputEvent;
 };

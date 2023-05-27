@@ -129,6 +129,7 @@ ParsedArguments parseArguments(int argc, char * const argv[]) {
         .textScrollerSpeed = 2.0f,
         .diceGeneratorSides = 20,
         .subProgram = SelectedSubProgram::diceGenerator,
+        .inputEvent = SelectedInputEvent::terminal
     };
     ParsedArguments ret = defaultArguments;
     // This makes sure that getopt does not print errors
@@ -145,6 +146,8 @@ ParsedArguments parseArguments(int argc, char * const argv[]) {
         {"textSpeed", required_argument, nullptr, 9},
         {"textScroller", no_argument, nullptr, 10},
         {"diceGenerator", no_argument, nullptr, 11},
+        {"terminalInput", no_argument, nullptr, 12},
+        {"gpioInput", no_argument, nullptr, 13},
         {0, 0, nullptr, 0}
     };
 
@@ -187,6 +190,12 @@ ParsedArguments parseArguments(int argc, char * const argv[]) {
                 break;
             case 11:
                 ret.subProgram = SelectedSubProgram::diceGenerator;
+                break;
+            case 12:
+                ret.inputEvent = SelectedInputEvent::terminal;
+                break;
+            case 13:
+                ret.inputEvent = SelectedInputEvent::gpiod;
                 break;
             case ':':
                 {
