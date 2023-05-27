@@ -47,7 +47,11 @@ int main(int argc, char * const argv[]) {
     }
 #endif //!defined(__APPLE__)
     std::unique_ptr<SubProgram> subProgram;
-    subProgram = std::make_unique<DiceGenerator>(referenceScreen, pArgs);
+    if (pArgs.subProgram == SelectedSubProgram::diceGenerator) {
+        subProgram = std::make_unique<DiceGenerator>(referenceScreen, pArgs);
+    } else {
+        subProgram = std::make_unique<TextScroller>(referenceScreen, pArgs);
+    }
     while(!halt) {
         matrixDriver->setScreen(subProgram->getScreen());
         frameLimiter.waitForNextFrame();

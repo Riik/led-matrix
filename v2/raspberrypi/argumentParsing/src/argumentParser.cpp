@@ -127,21 +127,24 @@ ParsedArguments parseArguments(int argc, char * const argv[]) {
         .ledMatrixHeight = 1,
         .textScrollerText = "Hello, world!",
         .textScrollerSpeed = 2.0f,
-        .nSides = 20
+        .diceGeneratorSides = 20,
+        .subProgram = SelectedSubProgram::diceGenerator,
     };
     ParsedArguments ret = defaultArguments;
     // This makes sure that getopt does not print errors
     opterr = 0;
     const struct option longopts[] = {
-        {"brightness", required_argument, nullptr, 'b'},
-        {"fpsLimit", required_argument, nullptr, 'f'},
-        {"sides", required_argument, nullptr, 'd'},
-        {"spiDriver", no_argument, nullptr, 's'},
-        {"ncursesDriver", no_argument, nullptr, 'n'},
-        {"width", required_argument, nullptr, 'w'},
-        {"height", required_argument, nullptr, 'h'},
-        {"text", required_argument, nullptr, 't'},
-        {"textSpeed", required_argument, nullptr, 'a'},
+        {"brightness", required_argument, nullptr, 1},
+        {"fpsLimit", required_argument, nullptr, 2},
+        {"sides", required_argument, nullptr, 3},
+        {"spiDriver", no_argument, nullptr, 4},
+        {"ncursesDriver", no_argument, nullptr, 5},
+        {"width", required_argument, nullptr, 6},
+        {"height", required_argument, nullptr, 7},
+        {"text", required_argument, nullptr, 8},
+        {"textSpeed", required_argument, nullptr, 9},
+        {"textScroller", no_argument, nullptr, 10},
+        {"diceGenerator", no_argument, nullptr, 11},
         {0, 0, nullptr, 0}
     };
 
@@ -152,32 +155,38 @@ ParsedArguments parseArguments(int argc, char * const argv[]) {
             break;
         }
         switch(c) {
-            case 'b':
+            case 1:
                 ret.brightness = parseBrightness(optarg);
                 break;
-            case 'f':
+            case 2:
                 ret.maxFramesPerSecond = parseMaxFramesPerSecond(optarg);
                 break;
-            case 'd':
-                ret.nSides = parseNSides(optarg);
+            case 3:
+                ret.diceGeneratorSides = parseNSides(optarg);
                 break;
-            case 's':
+            case 4:
                 ret.matrixDriver = SelectedMatrixDriver::spi;
                 break;
-            case 'n':
+            case 5:
                 ret.matrixDriver = SelectedMatrixDriver::ncurses;
                 break;
-            case 'w':
+            case 6:
                 ret.ledMatrixWidth = parseWidth(optarg);
                 break;
-            case 'h':
+            case 7:
                 ret.ledMatrixHeight = parseHeight(optarg);
                 break;
-            case 't':
+            case 8:
                 ret.textScrollerText = std::string(optarg);
                 break;
-            case 'a':
+            case 9:
                 ret.textScrollerSpeed = parseTextSpeed(optarg);
+                break;
+            case 10:
+                ret.subProgram = SelectedSubProgram::textScroller;
+                break;
+            case 11:
+                ret.subProgram = SelectedSubProgram::diceGenerator;
                 break;
             case ':':
                 {

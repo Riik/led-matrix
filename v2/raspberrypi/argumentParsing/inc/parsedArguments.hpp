@@ -8,6 +8,11 @@ enum class SelectedMatrixDriver {
     ncurses
 };
 
+enum class SelectedSubProgram {
+    textScroller,
+    diceGenerator
+};
+
 struct ParsedArguments {
     uint_fast8_t brightness;
     uint_fast32_t maxFramesPerSecond;
@@ -16,5 +21,6 @@ struct ParsedArguments {
     uint_fast16_t ledMatrixHeight;
     std::string textScrollerText;
     float textScrollerSpeed;
-    uint_fast8_t nSides;
+    uint_fast8_t diceGeneratorSides;
+    SelectedSubProgram subProgram;
 };

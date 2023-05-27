@@ -8,9 +8,9 @@
 #include "stdinEventHandler.hpp"
 
 DiceGenerator::DiceGenerator(const MatrixScreen& referenceScreen, const ParsedArguments& pArgs) :
-    canvas(referenceScreen, PixelColor::off), dist(1, pArgs.nSides), urandom("/dev/urandom"), currentScreen(referenceScreen) {
+    canvas(referenceScreen, PixelColor::off), dist(1, pArgs.diceGeneratorSides), urandom("/dev/urandom"), currentScreen(referenceScreen) {
    this->lastRollTime = std::chrono::steady_clock::now();
-   this->currentScreen = this->screenFromNumber(pArgs.nSides);
+   this->currentScreen = this->screenFromNumber(pArgs.diceGeneratorSides);
 
    this->eventHandler = std::make_unique<StdinEventHandler>();
    this->waitingForInput = true;
