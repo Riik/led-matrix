@@ -61,3 +61,7 @@ tags
 */raspberrypi/final_test
 */raspberrypi/upload.sh
 */raspberrypi/libgpiod
+
+*/artys7-riscv/release
+*/artys7-riscv/diceSimulator
+*/artys7-riscv/diceSimulator.bin

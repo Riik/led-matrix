@@ -1,0 +1,3 @@
+INCDIRS := ./
+ODIRS :=
+OFILES :=
