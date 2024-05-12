@@ -44,12 +44,4 @@ $(RELEASE_TARGET_BIN): $(RELEASE_TARGET)
 clean:
 	rm -rf $(RELEASE_DIR)
 	rm -f $(RELEASE_TARGET)
-
-echo:
-	@echo $(DIRS)
-	@echo $(CXXFLAGS)
-	@echo $(TOP)
-	@echo $(SRCDIR)
-	@echo $(CFILES)
-	@echo $(RELEASEODIR)
-	@echo $(ALLOFILES)
+	rm -f $(RELEASE_TARGET_BIN)
