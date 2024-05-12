@@ -1,4 +1,4 @@
-.section .text.reset_point
+.section .init
 .global __start
 
 __start:
@@ -7,7 +7,7 @@ __start:
     # Load stackpointer
     la      sp, _stack_start
     # Load global pointer
-    la      gp, _global_pointer
+    la      gp, __global_pointer$
 .option pop
     # Clear the bss segment
     la      a0, _bss
@@ -15,10 +15,16 @@ __start:
     sub     a2, a2, a0
     li      a1, 0
     call    memset
+    # Copy over ramfuncs
+    la      a0, __ramfunc_start
+    la      a1, __ramfunc_in_flash_start
+    la      a2, __ramfunc_end
+    sub     a2, a2, a0
+    call    memcpy
     # Copy the data segment
-    la      a0, _data
-    la      a1, _flash_data
-    la      a2, _edata
+    la      a0, __data_start
+    la      a1, __data_in_flash_start
+    la      a2, __data_end
     sub     a2, a2, a0
     call    memcpy
     

@@ -39,7 +39,7 @@ $(RELEASE_TARGET) : $(ALLOFILES)
 	$(CXX) -o $@ $^ $(LDFLAGS) -Tlinker_script.ld $(ARCHFLAGS)
 
 $(RELEASE_TARGET_BIN): $(RELEASE_TARGET)
-	$(OBJCOPY) -j .text -j .data -j .bss -O binary $^ $@
+	$(OBJCOPY) -O binary $^ $@
 
 clean:
 	rm -rf $(RELEASE_DIR)

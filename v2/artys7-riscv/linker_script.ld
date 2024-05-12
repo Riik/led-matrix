@@ -1,5 +1,3 @@
-ENTRY(__start)
-
 MEMORY
 {
     FLASH (rx) : ORIGIN = 0x100000, LENGTH = 0x20000
@@ -8,36 +6,73 @@ MEMORY
 
 SECTIONS
 {
-    .text :
+    .init (READONLY) :
     {
-        *(.text.reset_point)
-        *(.*text*)
-        . = ALIGN(4);
-        PROVIDE_HIDDEN (__preinit_array_start = .);
-        KEEP (*(.preinit_array*))
-        PROVIDE_HIDDEN (__preinit_array_end = .);
-        PROVIDE_HIDDEN (__init_array_start = .);
-        KEEP (*(SORT(.init_array.*)))
-        KEEP (*(.init_array*))
-        PROVIDE_HIDDEN (__init_array_end = .);
-        . = ALIGN(4);
-        _flash_data = .;
+        KEEP (*(SORT_NONE(.init)))
     } > FLASH
+
+    .text (READONLY) :
+    {
+        __text_start = .;
+        *(.text .text.* .gnu.linkonce.t.*)
+        __text_end = .;
+    } > FLASH
+
+    .rodata (READONLY) :
+    {
+        __rodata_start = .;
+        *(.rodata .rodata* .gnu.linkonce.r.*)
+        *(.gcc_except_table .gcc_except_table.*)
+        *(.srodata.cst16) *(.srodata.cst8) *(.srodata.cst4) *(.srodata.cst2) *(.srodata .srodata.*)
+
+        . = ALIGN(4);
+
+        __preinit_array_start = .;
+        KEEP (*(.preinit_array))
+        __preinit_array_end = .;
+
+        __init_array_start = .;
+        KEEP (*(SORT_BY_INIT_PRIORITY(.init_array.*)))
+        KEEP (*(.init_array))
+        __init_array_end = .;
+
+        __fini_array_start = .;
+        KEEP (*(.fini_array))
+        KEEP (*(SORT_BY_INIT_PRIORITY(.fini_array.*)))
+        __fini_array_end = .;
+        __rodata_end = .;
+    } > FLASH
+
+    PROVIDE(__ramfunc_in_flash_start = .);
+
+    .ramfunc :
+    {
+        __ramfunc_start = .;
+        *(.ramfunc .ramfunc.*);
+        __ramfunc_end = .;
+    } > SRAM AT >FLASH
+
+    PROVIDE (__data_in_flash_start = __ramfunc_in_flash_start + SIZEOF(.ramfunc));
 
     .data :
     {
-        _data = .;
-        *(vtable)
-        *(.*data*)
         . = ALIGN(4);
-        _edata = .;
+        __data_start = .;
+        *(.data .data.* .gnu.linkonce.d.*)
+        *(.sdata .sdata.* .gnu.linkonce.s.*)
+        . = ALIGN(4);
+        __data_end = .;
     } > SRAM AT > FLASH
 
-    .bss :
+    .bss (NOLOAD) :
     {
         . = ALIGN(4);
         _bss = .;
-        *(.*bss*)
+        *(.dynsbss)
+        *(.sbss .sbss.* .gnu.linkonce.sb.*)
+        *(.scommon)
+        *(.bss .bss.*)
+        *(COMMON)
         _ebss = .;
     } > SRAM
 
@@ -48,5 +83,5 @@ SECTIONS
     } > SRAM
 
     _stack_start = ORIGIN(SRAM) + LENGTH(SRAM);
-    _global_pointer = ORIGIN(SRAM) + LENGTH(SRAM)/2;
+    __global_pointer$ = __rodata_start + 0x800;
 }
