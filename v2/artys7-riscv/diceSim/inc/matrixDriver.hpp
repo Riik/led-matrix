@@ -8,10 +8,11 @@ class MatrixDriver {
     public:
         MatrixDriver(size_t matrixCount);
 
-        void setScreen(MatrixScreen screen);
+        void setScreen(MatrixScreen screen) const;
+        void setBrightness(uint_fast8_t brightness) const;
     private:
-        void turnScreenOff();
-        void turnScreenOn();
-        void transmitSetOfCols(const std::vector<uint8_t>& buf, size_t colIndex); 
+        void turnScreenOff() const;
+        void turnScreenOn() const;
+        void transmitSetOfCols(const std::vector<uint8_t>& buf, size_t colIndex) const;
         std::size_t matrixCount;
 };

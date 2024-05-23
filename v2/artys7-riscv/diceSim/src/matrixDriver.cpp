@@ -10,7 +10,7 @@ static void doTransaction(const std::vector<uint8_t>& buffer) {
     gpio_setPin(GPIO_PIN_SPI_SS, true);
 }
 
-void MatrixDriver::turnScreenOff() {
+void MatrixDriver::turnScreenOff() const {
     // Shutdown all matrices
     std::vector<uint8_t> buf(this->matrixCount * 2, 0);
     for (std::size_t i = 0; i < buf.size(); i += 2) {
@@ -20,7 +20,7 @@ void MatrixDriver::turnScreenOff() {
     doTransaction(buf);
 }
 
-void MatrixDriver::turnScreenOn() {
+void MatrixDriver::turnScreenOn() const {
     // Shutdown all matrices
     std::vector<uint8_t> buf(this->matrixCount * 2, 0);
     for (std::size_t i = 0; i < buf.size(); i += 2) {
@@ -30,7 +30,7 @@ void MatrixDriver::turnScreenOn() {
     doTransaction(buf);
 }
 
-void MatrixDriver::transmitSetOfCols(const std::vector<uint8_t>& buffer, size_t colIndex){
+void MatrixDriver::transmitSetOfCols(const std::vector<uint8_t>& buffer, size_t colIndex) const {
     std::vector<uint8_t> transmitData(this->matrixCount*2, 0);
     for (size_t i = 0; i < transmitData.size(); i += 2) {
         transmitData[i] = colIndex + 1;
@@ -74,7 +74,7 @@ MatrixDriver::MatrixDriver(size_t matrixCount) {
     doTransaction(buf);
 }
 
-void MatrixDriver::setScreen(MatrixScreen screen) {
+void MatrixDriver::setScreen(MatrixScreen screen) const {
     // We expect to be connected on bottom-right
     this->turnScreenOff();
     std::vector<uint8_t> transmissionData(this->matrixCount, 0);
@@ -99,4 +99,16 @@ void MatrixDriver::setScreen(MatrixScreen screen) {
         transmitSetOfCols(transmissionData, colIndex);
     }
     this->turnScreenOn();
+}
+
+void MatrixDriver::setBrightness(uint_fast8_t brightness) const {
+    if (brightness > 15) {
+        brightness = 15;
+    }
+    std::vector<uint8_t> buf(this->matrixCount * 2, 0);
+    for (std::size_t i = 0; i < buf.size(); i += 2) {
+        buf[i] = 0x0A;
+        buf[i+1] = brightness;
+    }
+    doTransaction(buf);
 }
