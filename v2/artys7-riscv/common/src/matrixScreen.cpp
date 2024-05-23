@@ -21,14 +21,10 @@ void MatrixScreen::resetScreen(PixelColor color)
 PixelColor MatrixScreen::operator()(std::size_t width, std::size_t height) const
 {
     if (width >= this->pixelCountWidth) {
-        std::stringstream ss;
-        ss << "width out of range: max: " << this->pixelCountWidth << " got " << width;
-        throw std::out_of_range(ss.str());
+        width = this->pixelCountWidth - 1;
     }
     if (height >= this->pixelCountHeight) {
-        std::stringstream ss;
-        ss << "height out of range: max: " << this->pixelCountHeight << " got " << height;
-        throw std::out_of_range(ss.str());
+        height = this->pixelCountHeight - 1;
     }
     return this->screen.at(this->pixelCountWidth*height + width);
 }
@@ -37,14 +33,10 @@ PixelColor MatrixScreen::operator()(std::size_t width, std::size_t height) const
 PixelColor& MatrixScreen::operator()(std::size_t width, std::size_t height)
 {
     if (width >= this->pixelCountWidth) {
-        std::stringstream ss;
-        ss << "width out of range: max: " << this->pixelCountWidth << " got " << width;
-        throw std::out_of_range(ss.str());
+        width = this->pixelCountWidth - 1;
     }
     if (height >= this->pixelCountHeight) {
-        std::stringstream ss;
-        ss << "height out of range: max: " << this->pixelCountHeight << " got " << height;
-        throw std::out_of_range(ss.str());
+        height = this->pixelCountHeight - 1;
     }
     return this->screen.at(this->pixelCountWidth*height + width);
 }
