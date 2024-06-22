@@ -9,7 +9,7 @@ ALLOFILES :=
 INCLUDES := -I./
 
 ARCHFLAGS := -march=rv32i -mabi=ilp32 -mlittle-endian
-LDFLAGS := -Wl,--gc-sections -nodefaultlibs -lstdc++ -lc -lgcc -lm
+LDFLAGS := -Wl,--gc-sections -nodefaultlibs -lm -lstdc++_nano -lc -lgcc
 
 TOP:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 
