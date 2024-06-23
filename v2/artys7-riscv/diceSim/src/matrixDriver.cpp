@@ -75,23 +75,23 @@ MatrixDriver::MatrixDriver(size_t matrixCount) {
 }
 
 void MatrixDriver::setScreen(MatrixScreen screen) const {
-    // We expect to be connected on bottom-right
+    // We expect to be connected on bottom-left
     this->turnScreenOff();
     std::vector<uint8_t> transmissionData(this->matrixCount, 0);
 
     for (int colIndex = 0; colIndex < 8; ++colIndex) {
         size_t matrixIndex = 0;
         for (int matrixYCoord = screen.getMatrixCountHeight() - 1; matrixYCoord >= 0; --matrixYCoord) {
-            for (size_t matrixXCoord = 0; matrixXCoord < screen.getMatrixCountWidth(); ++matrixXCoord) {
+            for (int matrixXCoord = screen.getMatrixCountWidth() - 1; matrixXCoord >= 0; --matrixXCoord) {
                 // 7 - colIndex, since highest index is closest to male connector
-                size_t pixelXCoord = matrixXCoord*8 + (7 - colIndex);
+                size_t pixelXCoord = matrixXCoord*8 + colIndex;
                 size_t pixelYCoord = matrixYCoord*8;
                 uint8_t &ref = transmissionData[matrixIndex];
                 ref = 0;
-                for (size_t pixelCount = 0; pixelCount < 8; ++pixelCount) {
+                for (int pixelCount = 0; pixelCount < 8; ++pixelCount) {
                     if (screen(pixelXCoord, pixelYCoord + pixelCount) !=  PixelColor::on) continue;
                     // -1%8 to compensate for hardware error where bit 8 maps to led 0, bit 0 to led 1, etc.
-                    ref |= 1 << ((7 - pixelCount - 1)%8);
+                    ref |= 1 << ((pixelCount - 1)%8);
                 }
                 matrixIndex++;
             }
