@@ -3,7 +3,7 @@ DIR := $(subst ./,,$(dir $(subst $(TOP)/,,$(abspath $(lastword $(MAKEFILE_LIST))
 OPTFLAGS := -mbranch-cost=3 -DNDEBUG -Os
 CXXLANGFLAGS := -std=gnu++20 -fno-rtti -fno-exceptions
 CLANGFLAGS := -std=gnu17
-WARNINGFLAGS := -Wall -Wshadow=local -Werror -Wno-error=unused-variable -Wno-error=unused-but-set-variable -Wdouble-promotion
+WARNINGFLAGS := -Wall -Wshadow=local -Werror -Wno-error=unused-variable -Wno-error=unused-but-set-variable -Wno-error=unused-function -Wdouble-promotion
 MAKESUPPORTFLAGS := -MMD -MP
 CFLAGS := $(CLANGFLAGS) $(OPTFLAGS) $(WARNINGFLAGS) $(MAKESUPPORTFLAGS) $(ARCHFLAGS)
 CXXFLAGS := $(CXXLANGFLAGS) $(OPTFLAGS) $(WARNINGFLAGS) $(MAKESUPPORTFLAGS) $(ARCHFLAGS)
