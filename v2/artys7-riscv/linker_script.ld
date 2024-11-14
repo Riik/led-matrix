@@ -1,3 +1,5 @@
+ENTRY(_start)
+
 MEMORY
 {
     FLASH (rx) : ORIGIN = 0x100000, LENGTH = 0x20000
@@ -6,14 +8,10 @@ MEMORY
 
 SECTIONS
 {
-    .init (READONLY) :
-    {
-        KEEP (*(SORT_NONE(.init)))
-    } > FLASH
-
     .text (READONLY) :
     {
         __text_start = .;
+        *(.text.initial)
         *(.text .text.* .gnu.linkonce.t.*)
         __text_end = .;
     } > FLASH

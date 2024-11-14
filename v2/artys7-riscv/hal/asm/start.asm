@@ -1,7 +1,7 @@
-.section .init
-.global __start
+.section .text.initial
+.global _start
 
-__start:
+_start:
 .option push
 .option norelax
     # Load stackpointer
@@ -27,7 +27,7 @@ __start:
     la      a2, __data_end
     sub     a2, a2, a0
     call    memcpy
-    
+
     call    __libc_init_array
     call    main
 _l1:
