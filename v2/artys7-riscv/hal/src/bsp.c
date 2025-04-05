@@ -23,6 +23,9 @@ int _close(int fd) {
 int _write (int fd, char *buf, int count) {
     (void)fd;
     for (int i = 0; i < count; ++i) {
+        if (buf[i] == '\n') {
+            uart_putCharBlocking('\r');
+        }
         uart_putCharBlocking(buf[i]);
     }
     return count;
@@ -57,8 +60,8 @@ int _isatty(int file) {
 }
 
 void _exit(int status) {
-    printf("Entering exit..\r\n");
-    (void)status;
+    uart_init(115200);
+    printf("_exit was called with status %d\n", status);
     while(1);
 }
 
