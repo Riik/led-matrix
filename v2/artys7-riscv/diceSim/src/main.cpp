@@ -27,11 +27,11 @@ static MatrixScreen screenFromNumber(Gfx2D::Canvas& canvas, uint_fast8_t num) {
     // Now we need a bunch of texturedTriangles to draw the text on
     float currentXCoordinate = -1.0f;
     for (const Gfx2D::Texture& texture : textTextures) {
-        textTriangles.push_back(
+        textTriangles.emplace_back(
                 Gfx2D::TexturedTriangle(
                     {currentXCoordinate, -1}, {currentXCoordinate, 1}, {currentXCoordinate + 2.0f, -1}, texture,
                     {{0,0}, {0,1}, {1,0}}));
-        textTriangles.push_back(
+        textTriangles.emplace_back(
                 Gfx2D::TexturedTriangle(
                     {currentXCoordinate + 2.0f, 1}, {currentXCoordinate, 1}, {currentXCoordinate + 2.0f, -1}, texture,
                     {{1,1}, {0,1}, {1,0}}));
