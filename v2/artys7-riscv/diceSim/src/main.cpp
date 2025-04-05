@@ -1,7 +1,9 @@
 #include <iostream>
 #include <math.h>
+#include <cinttypes>
 
 #include "hal/inc/uart.h"
+#include "hal/inc/asm_utils.h"
 #include "common/inc/matrixScreen.hpp"
 #include "matrixDriver.hpp"
 
@@ -62,13 +64,25 @@ int main() {
     driver.setBrightness(0);
     Gfx2D::Canvas canvas(screen, PixelColor::on);
 
+    volatile uint64_t startTime;
+    volatile uint64_t endTime;
+    uint64_t timeDiff;
+
     while(true) {
+        startTime = getSystemTimeUs();
         for (uint_fast8_t i = 0; i < 100; ++i) {
             driver.setScreen(screenFromNumber(canvas, i));
         }
+        endTime = getSystemTimeUs();
+        timeDiff = endTime - startTime;
+        printf("Time spend climbing up: %" PRId64 "\n", timeDiff);
+        startTime = getSystemTimeUs();
         for (uint_fast8_t i = 1; i < 99; ++i) {
             driver.setScreen(screenFromNumber(canvas, 99 - i));
         }
+        endTime = getSystemTimeUs();
+        timeDiff = endTime - startTime;
+        printf("Time spend climbing down: %" PRId64 "\n", timeDiff);
     }
     return 0;
 }
