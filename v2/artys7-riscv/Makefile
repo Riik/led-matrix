@@ -8,7 +8,7 @@ ODIRS :=
 ALLOFILES :=
 INCLUDES := -I./
 
-ARCHFLAGS := -march=rv32i -mabi=ilp32 -mlittle-endian
+ARCHFLAGS := -march=rv32im -mabi=ilp32 -mlittle-endian
 LDFLAGS := -Wl,--gc-sections -nodefaultlibs -nostartfiles -lm -lstdc++_nano -lc -lgcc
 
 TOP:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
