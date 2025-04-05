@@ -41,7 +41,7 @@ static MatrixScreen screenFromNumber(Gfx2D::Canvas& canvas, uint_fast8_t num) {
     }
     float translationX = num < 10 ? 0.2f : -0.75f;
     Gfx2D::TransformationMatrix translationMatrix = Gfx2D::createTranslationMatrix(translationX, 0.0f);
-    Gfx2D::TransformationMatrix rotateMatrix = Gfx2D::createRotationMatrix(M_PI);
+    Gfx2D::TransformationMatrix rotateMatrix = Gfx2D::createRotationMatrix(0);
     Gfx2D::TransformationMatrix scaleMatrix = Gfx2D::createScaleMatrix(0.5f, 0.5f);
     Gfx2D::TransformationMatrix transformation = scaleMatrix * rotateMatrix * translationMatrix;
     std::vector<Gfx2D::TexturedTriangle> transformedTriangles;
