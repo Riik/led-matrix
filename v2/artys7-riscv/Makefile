@@ -23,6 +23,7 @@ DIRS := $(shell ls -d */)
 DIRS := $(DIRS:=rules.mk)
 
 -include $(DIRS)
+-include hal_rules.mk
 -include $(ALLOFILES:%.o=%.d)
 
 .DEFAULT_GOAL := all

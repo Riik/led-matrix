@@ -1,0 +1,3 @@
+[submodule "v2/artys7-riscv/hal"]
+	path = v2/artys7-riscv/hal
+	url = git@github.com:RISC-V-SoC/hal.git

@@ -1,7 +1,6 @@
-DIR := $(subst ./,,$(dir $(subst $(TOP)/,,$(abspath $(lastword $(MAKEFILE_LIST))))))
+DIR := hal/
 
 OPTFLAGS := -mbranch-cost=3 -DNDEBUG -O3
-CXXLANGFLAGS := -std=gnu++23 -fno-rtti -fno-exceptions
 CLANGFLAGS := -std=gnu23
 WARNINGFLAGS := -Wall -Wextra -Wshadow=local -Werror -Wno-error=unused-variable -Wno-error=unused-but-set-variable -Wno-error=unused-function -Wdouble-promotion
 MAKESUPPORTFLAGS := -MMD -MP
@@ -18,11 +17,11 @@ ODIRS += $(RELEASEODIR)
 
 CXXFILES := $(wildcard $(SRCDIR)*.cpp)
 CFILES := $(wildcard $(SRCDIR)*.c)
-ASMFILES := $(wildcard $(ASMDIR)*.asm)
+ASMFILES := $(wildcard $(ASMDIR)*.S)
 
 ALLOFILES += $(patsubst $(SRCDIR)%,$(RELEASEODIR)%,$(patsubst %.cpp,%.cpp.o,$(CXXFILES)))
 ALLOFILES += $(patsubst $(SRCDIR)%,$(RELEASEODIR)%,$(patsubst %.c,%.c.o,$(CFILES)))
-ALLOFILES += $(patsubst $(ASMDIR)%,$(RELEASEODIR)%,$(patsubst %.asm,%.asm.o,$(ASMFILES)))
+ALLOFILES += $(patsubst $(ASMDIR)%,$(RELEASEODIR)%,$(patsubst %.S,%.S.o,$(ASMFILES)))
 
 $(RELEASEODIR)%.cpp.o: $(SRCDIR)%.cpp | $(RELEASEODIR)
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
@@ -30,5 +29,5 @@ $(RELEASEODIR)%.cpp.o: $(SRCDIR)%.cpp | $(RELEASEODIR)
 $(RELEASEODIR)%.c.o: $(SRCDIR)%.c | $(RELEASEODIR)
 	$(GCC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-$(RELEASEODIR)%.asm.o : $(ASMDIR)%.asm | $(RELEASEODIR)
-	$(AS) $(ARCHFLAGS) $< -o $@
+$(RELEASEODIR)%.S.o : $(ASMDIR)%.S | $(RELEASEODIR)
+	$(GCC) $(ARCHFLAGS) -c $< -o $@
