@@ -4,12 +4,19 @@
 
 #include "hal/inc/uart.h"
 #include "hal/inc/asm_utils.h"
+#include "hal/inc/sysInterrupt.h"
+#include "hal/inc/exceptionManager.h"
 #include "common/inc/matrixScreen.hpp"
 #include "matrixDriver.hpp"
 
 #include "2dgfx/inc/canvas2d.hpp"
 #include "2dgfx/inc/texturedTriangle2d.hpp"
 #include "2dgfx/inc/fontToTexture2d.hpp"
+
+static void exceptionHandling(enum exceptionManager_ExceptionSource source, uintptr_t programCounter) {
+    printf("\nException! Code: %d, PC: 0x%x\n", (int)source, (unsigned int)programCounter);
+    while(true);
+}
 
 static MatrixScreen screenFromNumber(Gfx2D::Canvas& canvas, uint_fast8_t num) {
     if (num >= 100) {
@@ -20,7 +27,7 @@ static MatrixScreen screenFromNumber(Gfx2D::Canvas& canvas, uint_fast8_t num) {
     std::vector<Gfx2D::Texture> textTextures;
     std::vector<Gfx2D::TexturedTriangle> textTriangles;
 
-    Gfx2D::FontColorMap colorMap = {PixelColor::off, PixelColor::transparent};
+    Gfx2D::FontColorMap colorMap = {PixelColor::on, PixelColor::transparent};
 
     // Translate the text into a bunch of textures
     for (const char &ch : text) {
@@ -59,10 +66,13 @@ static MatrixScreen screenFromNumber(Gfx2D::Canvas& canvas, uint_fast8_t num) {
 
 int main() {
     uart_init(115200);
+    printf("Hello, world!\n");
+    exceptionManager_setFallbackHandler(exceptionHandling);
+    MGI_EN;
     MatrixScreen screen(2, 2);
     MatrixDriver driver(screen.getMatrixCountHeight() * screen.getMatrixCountWidth());
     driver.setBrightness(0);
-    Gfx2D::Canvas canvas(screen, PixelColor::on);
+    Gfx2D::Canvas canvas(screen, PixelColor::off);
 
     volatile uint64_t startTime;
     volatile uint64_t endTime;

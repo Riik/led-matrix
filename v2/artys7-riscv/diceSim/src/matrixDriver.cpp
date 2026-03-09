@@ -2,12 +2,17 @@
 
 #include "matrixDriver.hpp"
 #include "gpio.h"
-#include "spi.h"
+#include "spiDevice.h"
 
 static void doTransaction(const std::vector<uint8_t>& buffer) {
-    gpio_setPin(GPIO_PIN_SPI_SS, false);
-    spi_transaction(buffer.data(), buffer.size(), nullptr, 0);
-    gpio_setPin(GPIO_PIN_SPI_SS, true);
+    struct SpiDevice_transfer transfer = {
+        .tx_buf = (uint8_t*)buffer.data(),
+        .rx_buf = nullptr,
+        .len = buffer.size(),
+        .cs_change = true,
+        .trueOnComplete = nullptr
+    };
+    spiDevice_transaction(&transfer);
 }
 
 void MatrixDriver::turnScreenOff() const {
@@ -40,12 +45,7 @@ void MatrixDriver::transmitSetOfCols(const std::vector<uint8_t>& buffer, size_t 
 }
 
 MatrixDriver::MatrixDriver(size_t matrixCount) {
-    // Configure slave select/chip select pin to be out
-    gpio_setPinInoutType(GPIO_PIN_SPI_SS, GPIO_INOUT_TYPE_OUT);
-    // Pull the pin high to deselect the matrices
-    gpio_setPin(GPIO_PIN_SPI_SS, true);
-    // Initialize the spi device to 10 MHz
-    spi_init(10000000, false, false);
+    spiDevice_init(10000000, false, false);
 
     this->matrixCount = matrixCount;
     this->turnScreenOff();
